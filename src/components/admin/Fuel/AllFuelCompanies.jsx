@@ -1,12 +1,10 @@
 import { useState } from "react";
 
-// Table actions ke colors aur format aapke custom theme ke mutabik
 const actionStyles = {
   view: "p-2 rounded-xl bg-[#E6F7F5] text-[#00A389] hover:bg-[#D4F2EE] transition cursor-pointer",
   delete: "p-2 rounded-xl bg-[#FFF2F3] text-[#D93F4C] hover:bg-[#FFE5E7] transition cursor-pointer",
 };
 
-// Dummy data jo exact aapki image (image_d6c116.png) ki tarah rendering sequence follow karega
 const initialData = Array.from({ length: 50 }, (_, i) => {
   const companies = ["PSO", "Shell"];
   const litters = [25, 600];
@@ -155,7 +153,6 @@ export default function AllFuelCompanies() {
                       {/* Action Triggers (View & Delete Icons) */}
                       <td className="py-2.5 px-4 text-center pr-8">
                         <div className="flex items-center justify-center gap-3">
-                          {/* View Button */}
                           <button
                             onClick={() => handleEdit(row)}
                             type="button"
@@ -167,7 +164,6 @@ export default function AllFuelCompanies() {
                             </svg>
                           </button>
 
-                          {/* Delete Button */}
                           <button
                             onClick={() => handleDelete(row.id)}
                             className={actionStyles.delete}
@@ -189,7 +185,6 @@ export default function AllFuelCompanies() {
           {/* --- TABLE FOOTER SECTION --- */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-4 bg-white">
             
-            {/* Left Control Arrow Buttons */}
             <div className="flex items-center gap-1">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
@@ -224,7 +219,6 @@ export default function AllFuelCompanies() {
                 )}
               </div>
 
-              {/* Right Pagination Trigger */}
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
@@ -236,7 +230,6 @@ export default function AllFuelCompanies() {
               </button>
             </div>
 
-            {/* Pagination Standard Info Labels */}
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
               <span>
                 Showing {(page - 1) * perPage + 1} to {Math.min(page * perPage, initialData.length)} of {initialData.length} entries

@@ -1,98 +1,29 @@
-import { useState } from 'react';
-import { useFormik } from 'formik';
-import { clientValidation } from './../../../validations/ClientValidation';
-import { FiChevronDown } from 'react-icons/fi';
-import { FaArrowLeft } from 'react-icons/fa';
-import SearchSelect from '../../global/SearchSelect';
-
-// ==========================================
-// REUSABLE HELPER COMPONENTS (With Matching Colors & Sizes)
-// ==========================================
-
-const InputField = ({ label, id, placeholder, type = 'text', formik }) => {
-  const isError = formik.touched[id] && formik.errors[id];
-  
-  return (
-    <div className="relative w-full group">
-      <label htmlFor={id} className="absolute -top-2.5 left-3 bg-white px-1 text-[11px] font-medium text-gray-400 z-10 transition-colors group-focus-within:text-black">
-        {label}
-      </label>
-      <input
-        type={type}
-        id={id}
-        placeholder={placeholder}
-        {...formik.getFieldProps(id)}
-        className={`w-full px-4 py-3 border rounded-xl text-xs font-normal text-black placeholder:text-gray-400 focus:outline-none transition-all ${
-          isError
-            ? 'border-red-500 focus:border-red-500'
-            : 'border-gray-200 focus:border-black'
-        }`}
-      />
-      {isError && (
-        <p className="text-[11px] text-red-500 mt-0.5 ml-1 block">{formik.errors[id]}</p>
-      )}
-    </div>
-  );
-};
-
-const SelectField = ({ label, id, options, formik, defaultOption }) => {
-  const isError = formik.touched[id] && formik.errors[id];
-  const hasValue = !!formik.values[id] && formik.values[id] !== "";
-
-  return (
-    <div className="relative w-full group">
-      <label htmlFor={id} className="absolute -top-2.5 left-3 bg-white px-1 text-[11px] font-medium text-gray-400 z-10">
-        {label}
-      </label>
-      <div className="relative">
-        <select
-          id={id}
-          {...formik.getFieldProps(id)}
-          className={`w-full px-4 py-3 border rounded-xl text-xs font-normal appearance-none bg-white focus:outline-none transition-all ${
-            isError
-              ? 'border-red-500 focus:border-red-500'
-              : 'border-gray-200 focus:border-black'
-          } ${hasValue ? 'text-black' : 'text-gray-400'}`}
-        >
-          {defaultOption && <option value="" className="text-gray-400">{defaultOption}</option>}
-          {options.map((opt) => (
-            <option key={opt} value={opt} className="text-black">
-              {opt}
-            </option>
-          ))}
-        </select>
-        <FiChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-base" />
-      </div>
-      {isError && (
-        <p className="text-[11px] text-red-500 mt-0.5 ml-1 block">{formik.errors[id]}</p>
-      )}
-    </div>
-  );
-};
-
-// ==========================================
-// MAIN ADD CLIENT COMPONENT
-// ==========================================
+import { useState } from "react";
+import { useFormik } from "formik";
+import { clientValidation } from "./../../../validations/ClientValidation";
+import { FaArrowLeft } from "react-icons/fa";
+import SearchSelect from "../../global/SearchSelect";
+import FormInput from "../../global/FormInput";
 
 const AddClient = () => {
   const [profileImage, setProfileImage] = useState(null);
 
   const formik = useFormik({
     initialValues: {
-      name: '',
-      fatherOrHusbandName: '',
-      cnic: '',
-      phoneNumber: '',
-      whatsAppNumber: '',
-      email: '',
-      address: '',
-      city: '', // Dropdown consistent behavior ke liye default empty rakha hai taake placeholder show ho
-      state: '',
-      status: '',
+      name: "",
+      fatherOrHusbandName: "",
+      cnic: "",
+      phoneNumber: "",
+      whatsAppNumber: "",
+      email: "",
+      address: "",
+      city: "",
+      state: "",
+      status: "",
     },
     validationSchema: clientValidation,
     onSubmit: (values) => {
-      console.log('Form Submitted Data:', { ...values, profileImage });
+      console.log("Form Submitted Data:", { ...values, profileImage });
     },
   });
 
@@ -122,19 +53,32 @@ const AddClient = () => {
           onClick={() => window.history.back()}
           className="text-gray-500 hover:text-gray-700 transition-colors"
         >
-          <FaArrowLeft className="cursor-pointer bg-white p-2 rounded-xl w-12 h-9 border border-gray-100 shadow-sm" size={20} />
+          <FaArrowLeft
+            className="cursor-pointer bg-white p-2 rounded-xl w-12 h-9 border border-gray-100 shadow-sm"
+            size={20}
+          />
         </button>
       </div>
 
-      <form onSubmit={formik.handleSubmit} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100/80">
-        
+      <form
+        onSubmit={formik.handleSubmit}
+        className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100/80"
+      >
         {/* Avatar / Image Upload Section */}
         <div className="flex items-center gap-4 mb-8">
           <div className="w-20 h-20 rounded-2xl bg-purple-50 overflow-hidden flex items-center justify-center border border-gray-100">
             {profileImage ? (
-              <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+              <img
+                src={profileImage}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
             ) : (
-              <svg className="w-12 h-12 text-purple-200" fill="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-12 h-12 text-purple-200"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
             )}
@@ -143,7 +87,12 @@ const AddClient = () => {
             <div className="flex gap-3 mb-1">
               <label className="cursor-pointer bg-black text-white px-4 py-2 rounded-xl text-xs font-medium hover:bg-gray-800 transition shadow-sm">
                 Upload new
-                <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageUpload}
+                />
               </label>
               <button
                 type="button"
@@ -153,39 +102,93 @@ const AddClient = () => {
                 Delete
               </button>
             </div>
-            <p className="text-[11px] text-gray-400">Allowed JPG, GIF or PNG. Max size of 800K</p>
+            <p className="text-[11px] text-gray-400">
+              Allowed JPG, GIF or PNG. Max size of 800K
+            </p>
           </div>
         </div>
 
         {/* Form Fields Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-7">
-          <InputField label="Name" id="name" placeholder="Client Name" formik={formik} />
-          <InputField label="Father's / Husband Name" id="fatherOrHusbandName" placeholder="Father Name" formik={formik} />
-          
-          <InputField label="CNIC / NICOP Number" id="cnic" placeholder="36302-1234567-1" formik={formik} />
-          <InputField label="Phone Number" id="phoneNumber" placeholder="+92-301-1234567" formik={formik} />
-          
-          <InputField label="WhatsApp Number" id="whatsAppNumber" placeholder="+92-301-1234567" formik={formik} />
-          <InputField label="Email" id="email" placeholder="---" type="email" formik={formik} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-7">
+          <FormInput
+            label="Name"
+            id="name"
+            placeholder="Enter client name"
+            formik={formik}
+          />
+          <FormInput
+            label="Father's / Husband Name"
+            id="fatherOrHusbandName"
+            placeholder="Enter client's father or husband name"
+            formik={formik}
+          />
+
+          <FormInput
+            label="CNIC / NICOP Number"
+            id="cnic"
+            placeholder="Enter client CNIC "
+            formik={formik}
+          />
+          <FormInput
+            label="Phone Number"
+            id="phoneNumber"
+            placeholder="Enter client phone number"
+            formik={formik}
+          />
+
+          <FormInput
+            label="WhatsApp Number"
+            id="whatsAppNumber"
+            placeholder="Enter client whatsApp number"
+            formik={formik}
+          />
+          <FormInput
+            label="Email"
+            id="email"
+            placeholder="Enter client email"
+            type="email"
+            formik={formik}
+          />
 
           {/* Address Header Line */}
           <div className="col-span-1 md:col-span-2 pt-2">
-            <h3 className="text-xs font-semibold text-gray-800 uppercase tracking-wider">Address</h3>
+            <h3 className="text-xs font-semibold text-gray-800 uppercase tracking-wider">
+              Address
+            </h3>
           </div>
 
-          <InputField label="Address/Flat Number" id="address" placeholder="41-42 B" formik={formik} />
-   <SearchSelect
+          <FormInput
+            label="Address/Flat Number"
+            id="address"
+            placeholder="Enter client address or flat number"
+            formik={formik}
+          />
+          <SearchSelect
             label="City"
             placeholder="Choose a city"
             options={["Multan", "Lahore", "Karachi", "Islamabad"]}
             value={formik.values.city}
-            onChange={(val) => formik.setFieldValue("city", val)}
-            onBlur={() => formik.setFieldTouched("city", true)}
+            onChange={(val) => formik.setFieldValue("city", val, true)}
+            onBlur={() => formik.setFieldTouched("city", true, true)}
             isError={formik.touched.city && !!formik.errors.city}
             errorMessage={formik.errors.city}
-          />        
-          <SelectField label="State" id="state" defaultOption="Select State" options={['Punjab', 'Sindh', 'KPK', 'Balochistan']} formik={formik} />
-          <SelectField label="Status" id="status" defaultOption="Select Status" options={['Active', 'InActive']} formik={formik} />
+          />
+          <FormInput
+            label="State"
+            type="select"
+            id="state"
+            defaultOption="Select State"
+            options={["Punjab", "Sindh", "KPK", "Balochistan"]}
+            formik={formik}
+          />
+          <FormInput
+            label="Status"
+            type="select"
+            id="status"
+            defaultOption="Select Status"
+            options={["Active", "InActive"]}
+            formik={formik}
+          />
         </div>
 
         {/* Action Buttons */}
@@ -204,7 +207,6 @@ const AddClient = () => {
             Confirm
           </button>
         </div>
-
       </form>
     </div>
   );

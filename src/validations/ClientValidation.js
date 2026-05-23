@@ -23,6 +23,7 @@ export const clientValidation = Yup.object().shape({
   
   email: Yup.string()
     .email('Invalid email address')
+    .required('Email is required')
     .nullable()
     .transform((value) => (value === '---' || value?.trim() === '' ? null : value)),
   

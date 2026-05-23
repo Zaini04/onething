@@ -4,43 +4,42 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import SearchFilters from "../../components/global/SearchFilter";
 
-// `w-full` keeps it perfectly aligned with standard admin routing flow view templates
 function EntryVehicles() {
   const navigate = useNavigate();
 
   const clientVendorConfig = [
-    { 
-      name: "client", 
-      type: "select", 
-      placeholder: "Search Client", 
+    {
+      name: "client",
+      type: "select",
+      placeholder: "Search Client",
       searchable: true,
       options: [
         { label: "Salman", value: "salman" },
         { label: "Imran Khan", value: "imran" },
-        { label: "Saad", value: "saad" }
-      ] 
+        { label: "Saad", value: "saad" },
+      ],
     },
-    { 
-      name: "vendor", 
-      type: "select", 
-      placeholder: "Search Vendor", 
+    {
+      name: "vendor",
+      type: "select",
+      placeholder: "Search Vendor",
       searchable: true,
       options: [
         { label: "Vendor A", value: "vendor_a" },
-        { label: "Vendor B", value: "vendor_b" }
-      ] 
+        { label: "Vendor B", value: "vendor_b" },
+      ],
     },
-    { 
-      name: "date", 
-      type: "date", 
-      placeholder: "Date", 
+    {
+      name: "date",
+      type: "date",
+      placeholder: "Date",
       searchable: false,
       options: [
         { label: "Today", value: "today" },
         { label: "Yesterday", value: "yesterday" },
-        { label: "This Week", value: "this_week" }
-      ] 
-    }
+        { label: "This Week", value: "this_week" },
+      ],
+    },
   ];
 
   const [filters, setFilters] = useState({ client: "", vendor: "", date: "" });
@@ -55,9 +54,7 @@ function EntryVehicles() {
 
   return (
     <div className="w-full max-w-full px-4 md:px-6 py-6 min-h-screen bg-[#F7F7F7] overflow-hidden">
-      
       <div className="w-full flex flex-col  animate-in fade-in duration-200">
-        
         {/* Top Header Box */}
         <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
           <div>
@@ -89,19 +86,17 @@ function EntryVehicles() {
 
         {/* Search Filters Component */}
         <div className="w-full">
-          <SearchFilters 
-            config={clientVendorConfig} 
-            filters={filters} 
-            onFilterChange={handleFilterChange} 
+          <SearchFilters
+            config={clientVendorConfig}
+            filters={filters}
+            onFilterChange={handleFilterChange}
             onSubmit={handleSearchSubmit}
           />
         </div>
 
-        {/* Data Table Wrapper Layout Section */}
         <div className="w-full max-w-full  overflow-hidden">
           <AllVehiclesAndCustomers />
         </div>
-
       </div>
     </div>
   );

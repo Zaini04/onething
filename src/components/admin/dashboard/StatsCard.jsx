@@ -34,9 +34,14 @@ export default function StatsCards() {
     },
   ];
 
-  // Uniform SVG Grid Menu Icon used across the metrics panel
   const GridIcon = () => (
-    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5}>
+    <svg
+      viewBox="0 0 24 24"
+      className="w-4 h-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2.5}
+    >
       <rect x="3" y="3" width="6" height="6" rx="1.5" />
       <rect x="15" y="3" width="6" height="6" rx="1.5" />
       <rect x="3" y="15" width="6" height="6" rx="1.5" />
@@ -52,36 +57,43 @@ export default function StatsCards() {
           className={`rounded-2xl p-4 flex flex-col justify-between border cursor-pointer
             transition-all duration-200 ease-in-out
             ${
-              card.dark 
-                ? "bg-black text-white border-transparent shadow-sm hover:bg-[#121212] hover:shadow-[0_4px_20px_rgba(0,0,0,0.25)]" 
+              card.dark
+                ? "bg-black text-white border-transparent shadow-sm hover:bg-[#121212] hover:shadow-[0_4px_20px_rgba(0,0,0,0.25)]"
                 : "bg-gray-50/60 text-gray-900 border-gray-100/50 shadow-sm hover:bg-white hover:border-gray-300 hover:shadow-[0_4px_20px_rgba(0,0,0,0.05)]"
             }`}
         >
-          {/* Card Header Info */}
           <div className="flex items-center justify-between w-full">
-            <span className={`text-xs font-semibold ${card.dark ? "text-white" : "text-black"}`}>
+            <span
+              className={`text-xs font-semibold ${card.dark ? "text-white" : "text-black"}`}
+            >
               {card.title}
             </span>
-            <span className={`w-7 h-7 flex items-center justify-center rounded-lg ${card.iconColor}`}>
+            <span
+              className={`w-7 h-7 flex items-center justify-center rounded-lg ${card.iconColor}`}
+            >
               <GridIcon />
             </span>
           </div>
 
-          {/* Metric Figure Text Content */}
           <div className="mt-5">
             <h3 className="text-xl font-bold tracking-tight flex items-baseline">
-              <span className={card.dark ? "text-white" : "text-black"}>{card.value}</span>
+              <span className={card.dark ? "text-white" : "text-black"}>
+                {card.value}
+              </span>
               {card.valueSuffix && (
-                <span className={`text-sm font-bold ml-0.5 ${card.dark ? "text-white/80" : "text-black/80"}`}>
+                <span
+                  className={`text-sm font-bold ml-0.5 ${card.dark ? "text-white/80" : "text-black/80"}`}
+                >
                   {card.valueSuffix}
                 </span>
               )}
             </h3>
 
-            {/* Growth Rate / Status Flags */}
-            <p className={`text-[11px] font-medium mt-1.5 flex items-center gap-0.5 ${
-              card.dark ? "text-white/90" : "text-black/90"
-            }`}>
+            <p
+              className={`text-[11px] font-medium mt-1.5 flex items-center gap-0.5 ${
+                card.dark ? "text-white/90" : "text-black/90"
+              }`}
+            >
               <span className="text-green-500 font-bold text-xs">↑</span>
               {card.change}
             </p>

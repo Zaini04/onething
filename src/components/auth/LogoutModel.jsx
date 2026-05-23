@@ -4,7 +4,6 @@ import { createPortal } from "react-dom"; // 1. Ye import karein
 function LogoutModal({ isOpen, onClose, onConfirm }) {
   if (!isOpen) return null;
 
-  // 2. Pure UI ko createPortal ke andar wrap kar dein
   return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* --- BACKGROUND OVERLAY WITH BLUR --- */}
@@ -13,15 +12,12 @@ function LogoutModal({ isOpen, onClose, onConfirm }) {
         onClick={onClose} 
       />
 
-      {/* --- CENTRAL MODAL CARD --- */}
       <div className="relative bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-[320px] flex flex-col items-center text-center z-10 animate-in fade-in zoom-in-95 duration-200">
         
-        {/* Warning Icon Container */}
         <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mb-4 text-red-500">
           <AlertCircle size={28} className="stroke-[1.8]" />
         </div>
 
-        {/* Modal Texts */}
         <h2 className="text-xl font-medium text-gray-900 tracking-tight mb-2">
           Logout
         </h2>
@@ -29,7 +25,6 @@ function LogoutModal({ isOpen, onClose, onConfirm }) {
           Are you sure you want to logout?
         </p>
 
-        {/* Action Buttons Layout */}
         <div className="flex items-center gap-3 w-full">
           <button
             type="button"
@@ -49,7 +44,7 @@ function LogoutModal({ isOpen, onClose, onConfirm }) {
         </div>
       </div>
     </div>,
-    document.body // 3. Target body element
+    document.body
   );
 }
 

@@ -24,23 +24,6 @@ function Login() {
 
   return (
     <div className="flex flex-col bg-black overflow-x-hidden justify-center items-center h-screen w-screen ">
-      {/* Left Side */}
-      {/* <div className="hidden lg:flex relative w-7/12 h-[97%] items-center justify-center m-2">
-        <img
-          className="w-full h-full object-cover rounded-2xl"
-          src={loginImage}
-          alt="Login"
-        />
-
-        <div className="absolute left-8 top-16 z-10 text-white">
-          <p className="font-medium text-lg">Grow Your Business</p>
-
-          <h1 className="font-medium text-3xl w-8/12 mt-2">
-            Manage inventory, orders, and ledger, all in one place.
-          </h1>
-        </div>
-      </div> */}
-
       <svg
         className=" hidden sm:flex absolute left-0 top-5"
         width="80"
@@ -124,10 +107,6 @@ function Login() {
             <p className="font-medium text-lg">Admin Log In</p>
             <p className="text-xs font-normal">Please Enter Your Details</p>
           </div>
-
-          {/* <h1 className="font-bold text-2xl text-black">
-            Welcome Back
-          </h1> */}
 
           <Formik
             initialValues={initialLoginValue}

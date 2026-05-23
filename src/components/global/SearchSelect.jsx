@@ -1,37 +1,49 @@
-import { useState, useRef, useEffect } from 'react';
-import { FiChevronDown, FiSearch } from 'react-icons/fi';
+import { useState, useRef, useEffect } from "react";
+import { FiChevronDown, FiSearch } from "react-icons/fi";
 
-function SearchSelect({ label, placeholder, options = [], value, onChange, onBlur, isError, errorMessage }) {
+function SearchSelect({
+  label,
+  placeholder,
+  options = [],
+  value,
+  onChange,
+  onBlur,
+  isError,
+  errorMessage,
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef(null);
 
-  // Click outside listener taake dropdown baahar click karne par band ho jaye
   useEffect(() => {
     const handleClickOutside = (event) => {
+      if (!document.body.contains(event.target)) return;
+
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        if (isOpen && onBlur) {
+          onBlur();
+        }
         setIsOpen(false);
-        if (isOpen && onBlur) onBlur(); // Jab band ho toh formik touched trigger ho
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpen, onBlur]);
 
-  // Filter options based on search query
   const filteredOptions = options.filter((opt) => {
     const textToSearch = typeof opt === "object" ? opt.name : opt;
     return textToSearch?.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
-  // Selected item find karne ke liye (Handles both String array and Object array)
   const selectedItem = options.find((opt) => {
     if (typeof opt === "object") return opt.id === value || opt.name === value;
     return opt === value;
   });
 
-  const displayLabel = selectedItem 
-    ? (typeof selectedItem === "object" ? selectedItem.name : selectedItem) 
+  const displayLabel = selectedItem
+    ? typeof selectedItem === "object"
+      ? selectedItem.name
+      : selectedItem
     : placeholder;
 
   return (
@@ -46,17 +58,22 @@ function SearchSelect({ label, placeholder, options = [], value, onChange, onBlu
       {/* Main Select Box Click Area */}
       <div
         onClick={() => {
+          if (isOpen && onBlur) onBlur();
           setIsOpen(!isOpen);
           setSearchQuery("");
         }}
         className={`w-full px-4 py-3 border rounded-xl text-xs font-normal bg-white focus:outline-none transition-all cursor-pointer flex items-center justify-between ${
-          isError 
-            ? 'border-red-500 focus:border-red-500' 
-            : isOpen ? 'border-black' : 'border-gray-200'
-        } ${value ? 'text-black' : 'text-gray-400'}`}
+          isError
+            ? "border-red-500 focus:border-red-500"
+            : isOpen
+              ? "border-black"
+              : "border-gray-200"
+        } ${value ? "text-black" : "text-gray-400"}`}
       >
         <span>{displayLabel}</span>
-        <FiChevronDown className={`text-gray-400 text-base transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <FiChevronDown
+          className={`text-gray-400 text-base transition-transform ${isOpen ? "rotate-180" : ""}`}
+        />
       </div>
 
       {/* Dropdown Options List Overlay */}
@@ -88,10 +105,11 @@ function SearchSelect({ label, placeholder, options = [], value, onChange, onBlu
                     onClick={() => {
                       onChange(optValue);
                       setIsOpen(false);
-                      if (onBlur) onBlur();
                     }}
                     className={`px-3 py-2 text-xs rounded-lg cursor-pointer transition-colors ${
-                      value === optValue ? 'bg-black text-white' : 'text-black hover:bg-gray-50'
+                      value === optValue
+                        ? "bg-black text-white"
+                        : "text-black hover:bg-gray-50"
                     }`}
                   >
                     {optLabel}
@@ -99,7 +117,9 @@ function SearchSelect({ label, placeholder, options = [], value, onChange, onBlu
                 );
               })
             ) : (
-              <div className="px-3 py-2 text-xs text-gray-400 text-center">No results found</div>
+              <div className="px-3 py-2 text-xs text-gray-400 text-center">
+                No results found
+              </div>
             )}
           </div>
         </div>
@@ -107,7 +127,9 @@ function SearchSelect({ label, placeholder, options = [], value, onChange, onBlu
 
       {/* Error Message Rendering Block */}
       {isError && errorMessage && (
-        <p className="text-[11px] text-red-500 mt-0.5 ml-1 block">{errorMessage}</p>
+        <p className="text-[11px] text-red-500 mt-0.5 ml-1 block">
+          {errorMessage}
+        </p>
       )}
     </div>
   );

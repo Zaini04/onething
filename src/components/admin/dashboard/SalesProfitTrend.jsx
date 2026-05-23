@@ -53,7 +53,6 @@ export default function SalesProfitTrend() {
 
   return (
     <div className="w-full h-full flex flex-col justify-between">
-      {/* Header */}
       <div>
         <h2 className="text-sm font-medium text-black">Sales & Profit Trend</h2>
         <p className="text-xs text-black mt-1 mb-2">
@@ -61,13 +60,11 @@ export default function SalesProfitTrend() {
         </p>
       </div>
 
-      {/* Subheader row */}
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs font-bold text-gray-800">Revenue and Profit</span>
         <CustomLegend />
       </div>
 
-      {/* Chart Wrapper Container with explicit height */}
       <div className="w-full h-[160px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
@@ -91,7 +88,6 @@ export default function SalesProfitTrend() {
         </ResponsiveContainer>
       </div>
 
-      {/* Footer */}
       <p className="text-xs font-medium text-black mt-3">
         Peak sales: Rs. {peakSales.toLocaleString()}
       </p>

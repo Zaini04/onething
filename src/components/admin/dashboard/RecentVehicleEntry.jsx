@@ -1,7 +1,5 @@
 import { useState } from "react";
-// Image standard import as per your requirement
-import profile from '../../../assets/images/profileImage.jpg'
-
+import profile from "../../../assets/images/profileImage.jpg";
 
 const statusStyles = {
   Active: "bg-[#E6F6EC] text-[#15803D] border border-[#DCFCE7]",
@@ -11,24 +9,23 @@ const statusStyles = {
 
 const initialData = Array.from({ length: 50 }, (_, i) => {
   const names = ["Imran Khan", "Saad"];
-  // const sites = ["Multan", "Overseas", "Lahore"];
   const name = names[i % 2];
-  
+
   const site =
     i === 0
       ? "Multan"
       : i === 1
-      ? "Overseas"
-      : i === 7 || i === 8 || i === 9
-      ? "Multan"
-      : "Lahore";
-      
+        ? "Overseas"
+        : i === 7 || i === 8 || i === 9
+          ? "Multan"
+          : "Lahore";
+
   const status =
     i === 0 || i === 1 || i === 7 || i === 8
       ? "Active"
       : i === 9
-      ? "Block"
-      : "InActive";
+        ? "Block"
+        : "InActive";
 
   return {
     id: i + 1,
@@ -50,7 +47,11 @@ function SortIcon() {
       stroke="currentColor"
       strokeWidth={2}
     >
-      <path d="M5 1v12M1 9l4 4 4-4M1 5l4-4 4 4" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M5 1v12M1 9l4 4 4-4M1 5l4-4 4 4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -68,7 +69,9 @@ export default function RecentVehicleEntry() {
 
   const toggleAll = () => {
     if (allSelected) {
-      setSelected((prev) => prev.filter((id) => !pageData.map((r) => r.id).includes(id)));
+      setSelected((prev) =>
+        prev.filter((id) => !pageData.map((r) => r.id).includes(id)),
+      );
     } else {
       setSelected((prev) => [
         ...prev,
@@ -79,7 +82,7 @@ export default function RecentVehicleEntry() {
 
   const toggleRow = (id) => {
     setSelected((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );
   };
 
@@ -90,7 +93,11 @@ export default function RecentVehicleEntry() {
     } else {
       nums.push(1);
       if (page > 3) nums.push("...");
-      for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) {
+      for (
+        let i = Math.max(2, page - 1);
+        i <= Math.min(totalPages - 1, page + 1);
+        i++
+      ) {
         nums.push(i);
       }
       if (page < totalPages - 2) nums.push("...");
@@ -102,7 +109,6 @@ export default function RecentVehicleEntry() {
   return (
     <div className="w-full bg-white rounded-2xl py-6 px-4 md:px-6">
       <div className="w-full max-w-[1400px] mx-auto">
-        
         {/* Title */}
         <h2 className="text-[15px] font-medium text-black mb-4 tracking-tight">
           Recent Vehicle Entry
@@ -142,7 +148,7 @@ export default function RecentVehicleEntry() {
                   </th>
                 </tr>
               </thead>
-              
+
               <tbody className="divide-y divide-gray-50">
                 {pageData.map((row) => {
                   const isRowSelected = selected.includes(row.id);
@@ -169,9 +175,9 @@ export default function RecentVehicleEntry() {
                       </td>
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-3">
-                          <img 
-                            src={profile} 
-                            alt={row.clientName} 
+                          <img
+                            src={profile}
+                            alt={row.clientName}
                             className="w-8 h-8 rounded-full object-cover border border-gray-100 shadow-sm"
                           />
                           <span className="text-[12px] font-normal text-black">
@@ -201,9 +207,7 @@ export default function RecentVehicleEntry() {
             </table>
           </div>
 
-          {/* Table Footer with Pagination Controls */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-4 border-t border-gray-100 bg-white">
-            
             {/* Pagination Controls */}
             <div className="flex items-center gap-1.5 order-2 sm:order-1">
               {/* Prev Button */}
@@ -212,15 +216,28 @@ export default function RecentVehicleEntry() {
                 disabled={page === 1}
                 className="w-8 h-8 flex items-center justify-center rounded-lg font-medium cursor-pointer border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
               </button>
 
               {/* Page Numbers */}
               {getPaginationNumbers().map((num, i) =>
                 num === "..." ? (
-                  <span key={`ellipsis-${i}`} className="w-8 h-8 flex items-center justify-center text-gray-400 text-sm">
+                  <span
+                    key={`ellipsis-${i}`}
+                    className="w-8 h-8 flex items-center justify-center text-gray-400 text-sm"
+                  >
                     ...
                   </span>
                 ) : (
@@ -235,40 +252,58 @@ export default function RecentVehicleEntry() {
                   >
                     {num}
                   </button>
-                )
+                ),
               )}
 
-              {/* Next Button */}
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
                 className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium cursor-pointer transition"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </button>
             </div>
 
-            {/* Pagination Info & Selector */}
             <div className="flex items-center justify-between sm:justify-end gap-5 w-full sm:w-auto text-[13px] text-gray-400 order-1 sm:order-2 font-normal">
               <span>
                 Showing {(page - 1) * perPage + 1} to{" "}
                 {Math.min(page * perPage, initialData.length)} of{" "}
                 {initialData.length} entries
               </span>
-              
+
               <div className="relative">
                 <button
                   onClick={() => setShowPerPage((s) => !s)}
                   className="flex items-center gap-2 px-3 py-1.5 rounded cursor-pointer border border-gray-200 text-black hover:bg-gray-50 transition text-xs font-normal"
                 >
                   Show {perPage}
-                  <svg className={`w-3 h-3 text-black transition-transform duration-200 ${showPerPage ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  <svg
+                    className={`w-3 h-3 text-black transition-transform duration-200 ${showPerPage ? "rotate-180" : ""}`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </button>
-                
+
                 {showPerPage && (
                   <div className="absolute bottom-full right-0 mb-1 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden z-20 min-w-[90px]">
                     {[5, 10, 20, 50].map((n) => (
@@ -280,7 +315,9 @@ export default function RecentVehicleEntry() {
                           setShowPerPage(false);
                         }}
                         className={`block w-full text-left px-4 py-2.5 text-xs hover:bg-gray-50 transition ${
-                          perPage === n ? "font-normal text-black bg-gray-50" : "text-gray-600"
+                          perPage === n
+                            ? "font-normal text-black bg-gray-50"
+                            : "text-gray-600"
                         }`}
                       >
                         {n}
@@ -289,10 +326,8 @@ export default function RecentVehicleEntry() {
                   </div>
                 )}
               </div>
-
             </div>
           </div>
-
         </div>
       </div>
     </div>

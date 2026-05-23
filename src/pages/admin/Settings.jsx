@@ -20,7 +20,6 @@ export default function Settings() {
     },
   });
 
-  // Handle Logo Uploading
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -33,7 +32,6 @@ export default function Settings() {
     }
   };
 
-  // Handle Logo Deletion
   const handleDeleteLogo = () => {
     formik.setFieldValue("companyLogo", null);
     setLogoPreview(null);
@@ -42,17 +40,23 @@ export default function Settings() {
 
   return (
     <div className="w-[90%] flex flex-col h-full mt-2  bg-gray-50/50  items-start  justify-center ">
-        <h2 className="font-medium  text-lg text-left text-black">Settings</h2>
+      <h2 className="font-medium  text-lg text-left text-black">Settings</h2>
       <div className="w-full mt-4 bg-white rounded-3xl border border-gray-100  shadow-sm p-8 ">
         <form onSubmit={formik.handleSubmit} className="space-y-8">
-          
-          {/* --- PROFILE AVATAR / LOGO FILE UPLOAD SECTION --- */}
           <div className="flex items-center gap-5">
             <div className="w-20 h-20 bg-[#F4F4F6] rounded-xl flex items-center justify-center border border-gray-100 overflow-hidden ">
               {logoPreview ? (
-                <img src={logoPreview} alt="Logo preview" className="w-full h-full object-cover" />
+                <img
+                  src={logoPreview}
+                  alt="Logo preview"
+                  className="w-full h-full object-cover"
+                />
               ) : (
-                <svg className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-6 h-6 text-gray-400"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
                 </svg>
               )}
@@ -86,14 +90,15 @@ export default function Settings() {
                 Allowed JPG, GIF or PNG. Max size of 800K
               </p>
               {formik.touched.companyLogo && formik.errors.companyLogo && (
-                <p className="text-[11px] text-red-500 font-normal">{formik.errors.companyLogo}</p>
+                <p className="text-[11px] text-red-500 font-normal">
+                  {formik.errors.companyLogo}
+                </p>
               )}
             </div>
           </div>
 
           {/* --- INPUT FIELDS GRID --- */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-7">
-            
             {/* Field: Company Name */}
             <div className="relative">
               <label className="absolute -top-2 left-3 bg-white px-1.5 text-[11px] text-gray-400 font-medium tracking-tight z-10">
@@ -107,13 +112,15 @@ export default function Settings() {
                 onBlur={formik.handleBlur}
                 value={formik.values.companyName}
                 className={`w-full px-4 py-3 text-xs  text-gray-800 bg-white border ${
-                  formik.touched.companyName && formik.errors.companyName 
-                    ? "border-red-400 focus:border-red-500" 
+                  formik.touched.companyName && formik.errors.companyName
+                    ? "border-red-400 focus:border-red-500"
                     : "border-gray-200 focus:border-gray-900"
                 } rounded-xl outline-none placeholder:text-gray-400  transition font-normal`}
               />
               {formik.touched.companyName && formik.errors.companyName && (
-                <p className="text-[11px] text-red-500 mt-1 pl-1 font-normal">{formik.errors.companyName}</p>
+                <p className="text-[11px] text-red-500 mt-1 pl-1 font-normal">
+                  {formik.errors.companyName}
+                </p>
               )}
             </div>
 
@@ -130,13 +137,15 @@ export default function Settings() {
                 placeholder="1233456789"
                 value={formik.values.phoneNumber}
                 className={`w-full px-4 py-3 text-xs  text-gray-800 bg-white border ${
-                  formik.touched.phoneNumber && formik.errors.phoneNumber 
-                    ? "border-red-400 focus:border-red-500" 
+                  formik.touched.phoneNumber && formik.errors.phoneNumber
+                    ? "border-red-400 focus:border-red-500"
                     : "border-gray-200 focus:border-gray-900"
                 } rounded-xl outline-none placeholder:text-gray-400  transition font-normal`}
               />
               {formik.touched.phoneNumber && formik.errors.phoneNumber && (
-                <p className="text-[11px] text-red-500 mt-1 pl-1 font-normal">{formik.errors.phoneNumber}</p>
+                <p className="text-[11px] text-red-500 mt-1 pl-1 font-normal">
+                  {formik.errors.phoneNumber}
+                </p>
               )}
             </div>
 
@@ -153,13 +162,15 @@ export default function Settings() {
                 placeholder="36301-1234567-9"
                 value={formik.values.accountNumber}
                 className={`w-full px-4 py-3 text-xs  text-gray-800 bg-white border ${
-                  formik.touched.accountNumber && formik.errors.accountNumber 
-                    ? "border-red-400 focus:border-red-500" 
+                  formik.touched.accountNumber && formik.errors.accountNumber
+                    ? "border-red-400 focus:border-red-500"
                     : "border-gray-200 focus:border-gray-900"
                 } rounded-xl outline-none placeholder:text-gray-400  transition font-normal`}
               />
               {formik.touched.accountNumber && formik.errors.accountNumber && (
-                <p className="text-[11px] text-red-500 mt-1 pl-1 font-normal">{formik.errors.accountNumber}</p>
+                <p className="text-[11px] text-red-500 mt-1 pl-1 font-normal">
+                  {formik.errors.accountNumber}
+                </p>
               )}
             </div>
 
@@ -176,16 +187,19 @@ export default function Settings() {
                 placeholder="Imran Khan"
                 value={formik.values.accountHolderName}
                 className={`w-full px-4 py-3 text-xs  text-gray-800 bg-white border ${
-                  formik.touched.accountHolderName && formik.errors.accountHolderName 
-                    ? "border-red-400 focus:border-red-500" 
+                  formik.touched.accountHolderName &&
+                  formik.errors.accountHolderName
+                    ? "border-red-400 focus:border-red-500"
                     : "border-gray-200 focus:border-gray-900"
                 } rounded-xl outline-none placeholder:text-gray-400  transition font-normal`}
               />
-              {formik.touched.accountHolderName && formik.errors.accountHolderName && (
-                <p className="text-[11px] text-red-500 mt-1 pl-1 font-normal">{formik.errors.accountHolderName}</p>
-              )}
+              {formik.touched.accountHolderName &&
+                formik.errors.accountHolderName && (
+                  <p className="text-[11px] text-red-500 mt-1 pl-1 font-normal">
+                    {formik.errors.accountHolderName}
+                  </p>
+                )}
             </div>
-
           </div>
 
           {/* --- ACTION BUTTONS --- */}
@@ -207,7 +221,6 @@ export default function Settings() {
               Confirm
             </button>
           </div>
-
         </form>
       </div>
     </div>

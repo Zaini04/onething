@@ -3,80 +3,10 @@ import { entryVehicleValidation } from "../../../validations/EntryVehicleValidat
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import SearchSelect from "../../global/SearchSelect";
+import FormInput from "../../global/FormInput";
+import { TbRulerMeasure2 } from "react-icons/tb";
 
-// ==========================================
-// 1. REUSABLE INPUT COMPONENT (Local)
-// ==========================================
-function FormInput({ label, name, formik, placeholder, type = "text", children }) {
-  const isError = formik.touched[name] && formik.errors[name];
-  
-  return (
-    <div className="relative group w-full">
-      <label className="absolute left-3 -top-2.5 z-10 bg-white px-1 text-[11px] font-medium text-gray-400 transition-colors group-focus-within:text-black">
-        {label}
-      </label>
-      <div className="relative flex items-center">
-        <input
-          type={type}
-          name={name}
-          placeholder={placeholder}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values[name] || ""}
-          className={`w-full px-4 py-3 bg-white border ${
-            isError ? "border-red-500" : "border-gray-200"
-          } focus:border-black rounded-xl text-xs placeholder:text-xs font-normal text-black placeholder:text-gray-400 outline-none transition-all ${children ? "pr-10" : ""}`}
-        />
-        {children}
-      </div>
-      {isError && (
-        <span className="text-[11px] text-red-500 ml-1 mt-0.5 block">{formik.errors[name]}</span>
-      )}
-    </div>
-  );
-}
-
-// ==========================================
-// 2. REUSABLE SELECT COMPONENT (Local)
-// ==========================================
-function FormSelect({ label, name, formik, defaultOption, options }) {
-  const isError = formik.touched[name] && formik.errors[name];
-  const hasValue = !!formik.values[name];
-
-  return (
-    <div className="relative group w-full">
-      <label className="absolute left-3 -top-2.5 z-10 bg-white px-1 text-[11px] font-medium text-gray-400">
-        {label}
-      </label>
-      <select
-        name={name}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values[name] || ""}
-        className={`w-full px-4 py-3 bg-white border ${
-          isError ? "border-red-500" : "border-gray-200"
-        } focus:border-black placeholder:text-xs rounded-xl text-xs font-normal outline-none transition-all appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%239ca3af%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:18px] bg-[right_14px_center] bg-no-repeat ${
-          hasValue ? "text-black" : "text-gray-400"
-        }`}
-      >
-        <option value="" className="text-gray-400 placeholder:text-xs">{defaultOption}</option>
-        {options.map((opt, index) => (
-          <option key={index} value={opt.value || opt} className="text-black placeholder:text-xs">
-            {opt.label || opt}
-          </option>
-        ))}
-      </select>
-      {isError && (
-        <span className="text-[11px] text-red-500 ml-1 mt-0.5 block">{formik.errors[name]}</span>
-      )}
-    </div>
-  );
-}
-
-// ==========================================
-// 3. MAIN CONTAINER COMPONENT
-// ==========================================
-export default function EntryVehicle({ onSubmitSuccess }) {
+export default function EntryVehicle() {
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -95,9 +25,10 @@ export default function EntryVehicle({ onSubmitSuccess }) {
       totalPrice: "",
     },
     validationSchema: entryVehicleValidation,
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       console.log("Form Submitted Data:", values);
-      if (onSubmitSuccess) onSubmitSuccess();
+
+      resetForm();
     },
   });
 
@@ -111,103 +42,144 @@ export default function EntryVehicle({ onSubmitSuccess }) {
           onClick={() => navigate(-1)}
           className="text-gray-500 hover:text-gray-700 transition-colors"
         >
-          <FaArrowLeft className="cursor-pointer bg-white p-2 rounded-xl w-12 h-9 border border-gray-100 shadow-sm" size={20} />
+          <FaArrowLeft
+            className="cursor-pointer bg-white p-2 rounded-xl w-12 h-9 border border-gray-100 shadow-sm"
+            size={20}
+          />
         </button>
       </div>
 
-      <form onSubmit={formik.handleSubmit} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100/80">
-        
-        {/* 2-Column Responsive Grid Layout */}
+      <form
+        onSubmit={formik.handleSubmit}
+        className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100/80"
+      >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-7">
-          
           {/* 1. Date Field */}
-          <FormInput label="Date" name="date" type="date" formik={formik}>
-            {/* <Calendar size={18} className="absolute right-3.5 text-gray-400 pointer-events-none" /> */}
-          </FormInput>
+          <FormInput
+            label="Date"
+            id="date"
+            name="date"
+            type="date"
+            formik={formik}
+          ></FormInput>
 
-          {/* 2. Client Dropdown */}
-          {/* <FormSelect 
-            label="Client" 
-            name="client" 
-            formik={formik} 
-            defaultOption="Select Client" 
-            options={["Salman", "Imran Khan", "Saad"]} 
-          /> */}
           <SearchSelect
-  label="Client"
-  placeholder="Select Client"
-  options={["Salman", "Imran Khan", "Saad"]}
-  value={formik.values.client}
-  onChange={(val) => formik.setFieldValue("client", val)}
-    onBlur={() => formik.setFieldTouched("client", true)}
-    isError={formik.touched.client && !!formik.errors.client}  
-    errorMessage={formik.errors.client}
-/>
-
-          {/* 3. Site Dropdown */}
-               <SearchSelect
-  label="site"
-  placeholder="Select Site"
-  options={["Multan", "Lahore", "Karachi", "Islamabad"]}
-  value={formik.values.site}
-  onChange={(val) => formik.setFieldValue("site", val)}
-  onBlur={() => formik.setFieldTouched("site", true)}
-  isError={formik.touched.site && !!formik.errors.site}
-  errorMessage={formik.errors.site}
-/>
-
-          {/* 4. Vehicle Dropdown */}
-              <SearchSelect
-  label="Vehicle"
-  placeholder="Select Vehicle"
-  options={["Standard Dump Truck", "Mini Dump Trucks"]}
-  value={formik.values.vehicle}
-  onChange={(val) => formik.setFieldValue("vehicle", val)}
-  onBlur={()=>formik.setFieldTouched("vehicle", true)}
-  isError={formik.touched.vehicle && !!formik.errors.vehicle}
-  errorMessage={formik.errors.vehicle}
-/>
-
-          {/* 5. Material Dropdown */}
-              <SearchSelect
-  label="Material"
-  placeholder="Select Material"
-  options={["Concrete", "Sand"]}
-  value={formik.values.material}
-  onChange={(val) => formik.setFieldValue("material", val)}
-  onBlur={() => formik.setFieldTouched("material", true)}
-  isError={formik.touched.material && !!formik.errors.material}
-  errorMessage={formik.errors.material}
-/>
-
-          {/* 6. Rate Type Dropdown */}
-          <FormSelect 
-            label="Rate Type" 
-            name="rateType" 
-            formik={formik} 
-            defaultOption="Select Rate Type" 
-            options={["per sqft", "per vehicle"]} 
-            
+            label="Client"
+            placeholder="Select Client"
+            options={["Salman", "Imran Khan", "Saad"]}
+            value={formik.values.client}
+            onChange={(val) => formik.setFieldValue("client", val, true)}
+            onBlur={() => formik.setFieldTouched("client", true, true)}
+            isError={formik.touched.client && !!formik.errors.client}
+            errorMessage={formik.errors.client}
           />
 
+          {/* 3. Site Dropdown */}
+          <SearchSelect
+            label="site"
+            placeholder="Select Site"
+            options={["Multan", "Lahore", "Karachi", "Islamabad"]}
+            value={formik.values.site}
+            onChange={(val) =>
+              formik.setFieldValue("site", val, TbRulerMeasure2)
+            }
+            onBlur={() => formik.setFieldTouched("site", true)}
+            isError={formik.touched.site && !!formik.errors.site}
+            errorMessage={formik.errors.site}
+          />
+
+          {/* 4. Vehicle Dropdown */}
+          <SearchSelect
+            label="Vehicle"
+            placeholder="Select Vehicle"
+            options={["Standard Dump Truck", "Mini Dump Trucks"]}
+            value={formik.values.vehicle}
+            onChange={(val) => formik.setFieldValue("vehicle", val, true)}
+            onBlur={() => formik.setFieldTouched("vehicle", true)}
+            isError={formik.touched.vehicle && !!formik.errors.vehicle}
+            errorMessage={formik.errors.vehicle}
+          />
+
+          {/* 5. Material Dropdown */}
+          <FormInput
+            label="Material"
+            id="material"
+            type="select"
+            defaultOption="Select Material"
+            options={["Concrete", "Sand"]}
+            formik={formik}
+          />
+
+          {/* 6. Rate Type Dropdown */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-7">
+  <FormInput
+            label="Rate Type"
+            id="rateType"
+            type="select"
+            formik={formik}
+            defaultOption="Select Rate Type"
+            options={["per sqft", "per vehicle"]}
+          />
+
+            <FormInput
+            label="Rate "
+            id="rate"
+            type="text"
+            placeholder="please enter rate"
+            formik={formik}
+          />
+          </div>
+        
+
           {/* 7. Vendor */}
-          <FormInput label="Vendor (optional)" name="vendor" placeholder="----" formik={formik} />
+          <FormInput
+            label="Vendor (optional)"
+            id="vendor"
+            type="text"
+            placeholder="----"
+            formik={formik}
+          />
 
           {/* 8. Fuel */}
-          <FormInput label="Fuel (optional)" name="fuel" placeholder="----" formik={formik} />
+          <FormInput
+            label="Fuel (optional)"
+            id="fuel"
+            type="text"
+            placeholder="----"
+            formik={formik}
+          />
 
           {/* 9. Driver Expense */}
-          <FormInput label="Driver Expense" name="driverExpense" placeholder="1000" formik={formik} />
+          <FormInput
+            label="Driver Expense"
+            id="driverExpense"
+            placeholder="please enter amount"
+            formik={formik}
+          />
 
           {/* 10. Loading */}
-          <FormInput label="Loading" name="loading" placeholder="10000" formik={formik} />
+          <FormInput
+            label="Loading"
+            id="loading"
+            placeholder="please enter amount"
+            formik={formik}
+          />
 
           {/* 11. Miscellaneous Expenses */}
-          <FormInput label="Miscellaneous Expenses" name="miscellaneousExpenses" placeholder="5000" formik={formik} />
+          <FormInput
+            label="Miscellaneous Expenses"
+            id="miscellaneousExpenses"
+            placeholder="please enter amount"
+            formik={formik}
+          />
 
           {/* 12. Total Price */}
-          <FormInput label="Total Price" name="totalPrice" placeholder="20000" formik={formik} />
-
+          <FormInput
+            label="Total Price"
+            id="totalPrice"
+            placeholder="please enter amount"
+            formik={formik}
+          />
         </div>
 
         {/* --- FORM ACTION BUTTONS --- */}
@@ -227,7 +199,6 @@ export default function EntryVehicle({ onSubmitSuccess }) {
             Confirm
           </button>
         </div>
-
       </form>
     </div>
   );

@@ -10,6 +10,10 @@ export const entryVehicleValidation = Yup.object({
   vehicle: Yup.string().required("Please select a vehicle"),
   material: Yup.string().required("Please select a material"),
   rateType: Yup.string().required("Please select a rate type"),
+  rate: Yup.number()
+    .typeError("Must be a valid number")
+    .min(0, "Cannot be negative")
+    .required("Rate is required"),
   vendor: Yup.string().optional(),
   fuel: Yup.string().optional(),
   driverExpense: Yup.number()
