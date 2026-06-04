@@ -81,7 +81,6 @@ const AddSite = () => {
 
   return (
     <div className="w-full mx-auto p-4 md:p-6 bg-[#F9FAFB] rounded-2xl">
-      {/* Form Heading Section */}
       <div className="flex justify-between items-center text-gray-900 mb-6 tracking-tight">
         <h2 className="text-lg font-medium">Add Site</h2>
         <button
@@ -100,8 +99,7 @@ const AddSite = () => {
         onSubmit={formik.handleSubmit}
         className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100/80"
       >
-        {/* Avatar Area */}
-        <div className="flex items-center gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
           <div className="w-20 h-20 rounded-2xl bg-purple-50 overflow-hidden flex items-center justify-center border border-gray-100">
             {siteImage ? (
               <img
@@ -144,7 +142,6 @@ const AddSite = () => {
           </div>
         </div>
 
-        {/* Form Fields Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-7">
           <SearchSelect
             label="Client"
@@ -195,7 +192,6 @@ const AddSite = () => {
               )}
           </div>
 
-          {/* Dynamic Selection Rows */}
           {formik.values.materials.length > 0 && (
             <div className="col-span-1  md:col-span-2 flex flex-col gap-5 mt-2">
               {formik.values.materials.map((material, index) => {
@@ -204,7 +200,6 @@ const AddSite = () => {
 
                 return (
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full lg:flex-1">
-                    {/* 1. Material Type  */}
                     <FormInput
                       label="Material Type"
                       id={`materialName-${index}`}
@@ -212,7 +207,6 @@ const AddSite = () => {
                       readOnly={true}
                     />
 
-                    {/* 2. Rate Type Dropdown */}
                     <div>
                       <FormInput
                         label="Rate Type"
@@ -245,7 +239,6 @@ const AddSite = () => {
                       )}
                     </div>
 
-                    {/* 3. Rate Input (Numbers Only, No Arrows) */}
                     <div>
                       <FormInput
                         label="Rate"
@@ -284,14 +277,12 @@ const AddSite = () => {
                       <FiTrash2 size={16} />
                     </button>
                   </div>
-
                 );
               })}
             </div>
           )}
         </div>
 
-        {/* Form Action Buttons */}
         <div className="flex justify-end gap-4 mt-8 pt-2">
           <button
             type="button"

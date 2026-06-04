@@ -23,12 +23,10 @@ function SearchFilters({ config, filters, onFilterChange, onSubmit }) {
 
   return (
     <div className="w-full bg-white rounded-2xl border border-gray-100 p-5 md:p-4 shadow-sm mb-6">
-      {/* Container Title */}
       <h2 className="text-sm font-normal text-gray-700 mb-4 tracking-tight">
         Search Filters
       </h2>
 
-      {/* --- FORM LAYOUT --- */}
       <form
         onSubmit={handleSubmit}
         className="flex flex-col lg:flex-row items-center gap-4"
@@ -40,7 +38,7 @@ function SearchFilters({ config, filters, onFilterChange, onSubmit }) {
             if (field.type === "select" && field.searchable) {
               return (
                 <SearchSelect
-                  key={field.name} // Unique key mandatory hai
+                  key={field.name}
                   label={field.label || ""}
                   placeholder={field.placeholder}
                   options={field.options || []}
@@ -50,7 +48,6 @@ function SearchFilters({ config, filters, onFilterChange, onSubmit }) {
               );
             }
 
-            // 2. NORMAL DROPDOWN SELECT
             if (field.type === "select" && !field.searchable) {
               return (
                 <FormInput
@@ -59,14 +56,13 @@ function SearchFilters({ config, filters, onFilterChange, onSubmit }) {
                   label={field.label || ""}
                   id={field.name}
                   defaultOption={field.placeholder}
-                  options={field.options?.map((opt) => opt.value) || []} // Agar value/label structure hai
+                  options={field.options?.map((opt) => opt.value) || []}
                   value={filters[field.name] || ""}
                   onChange={(e) => onFilterChange(field.name, e.target.value)}
                 />
               );
             }
 
-            // 3. DATE PICKER INPUT
             if (field.type === "date") {
               return (
                 <FormInput
@@ -80,7 +76,6 @@ function SearchFilters({ config, filters, onFilterChange, onSubmit }) {
               );
             }
 
-            // 4. NORMAL TEXT INPUT
             return (
               <FormInput
                 key={field.name}

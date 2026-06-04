@@ -18,7 +18,6 @@ export default function AddFuelCompany() {
   return (
     <div className=" bg-white rounded-2xl flex items-start justify-center p-4">
       <div className="w-full lg:max-w-[440px]">
-        {/* Form Heading */}
         <h2 className="text-lg font-medium text-black mb-6 tracking-tight">
           Add Fuel Company
         </h2>
@@ -27,9 +26,7 @@ export default function AddFuelCompany() {
           onSubmit={formik.handleSubmit}
           className=" rounded-2xl  flex flex-col  justify-between"
         >
-          {/* Fields Group */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-x-6 gap-y-7 pt-2">
-            {/* 1. Fuel Company Input */}
             <FormInput
               label="Fuel Company"
               id="fuelCompany"
@@ -38,7 +35,6 @@ export default function AddFuelCompany() {
               formik={formik}
             />
 
-            {/* 2. Fuel Litter Input */}
             <FormInput
               label="Fuel Litter"
               id="fuelLitter"
@@ -48,7 +44,6 @@ export default function AddFuelCompany() {
             />
           </div>
 
-          {/* Action Buttons Footer */}
           <div className="flex items-center gap-4 mt-8 justify-start lg:justify-end">
             <button
               type="button"

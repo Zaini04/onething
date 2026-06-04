@@ -103,9 +103,8 @@ export default function AllSitesTable() {
   };
 
   return (
-    <div className="w-full bg-white rounded-2xl py-2 px-1">
+    <div className="w-full bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm ">
       <div className="w-full mx-auto">
-        {/* --- MAIN SITES INTERACTIVE TABLE --- */}
         <div className="bg-white rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[900px]">
@@ -150,7 +149,6 @@ export default function AllSitesTable() {
                         isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
                       }`}
                     >
-                      {/* Checkbox */}
                       <td className="py-3.5 px-5 text-center">
                         <input
                           type="checkbox"
@@ -160,12 +158,10 @@ export default function AllSitesTable() {
                         />
                       </td>
 
-                      {/* Serial Number */}
                       <td className="py-3.5 px-4 text-[11px] font-normal text-black">
                         {row.no}
                       </td>
 
-                      {/* Client Profile & Name */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2.5">
                           <img
@@ -179,24 +175,20 @@ export default function AllSitesTable() {
                         </div>
                       </td>
 
-                      {/* Site Tag Style */}
                       <td className="py-3.5 px-4">
-                        <span className="bg-[#E4E7EC] text-black text-[11px] font-normal px-2.5 py-1 rounded-md">
+                        <span className="inline-block bg-[#F1F3F5] text-gray-700 text-[11px] font-medium px-2 py-1 rounded border border-gray-200/50">
                           {row.site}
                         </span>
                       </td>
 
-                      {/* Address */}
                       <td className="py-3.5 px-4 text-[11px] font-normal text-black">
                         {row.address}
                       </td>
 
-                      {/* SFT / Per Vehicle Price Column */}
                       <td className="py-3.5 px-4 text-[11px] font-normal text-black tracking-wide">
                         {row.sftPerVehicle}
                       </td>
 
-                      {/* Status Pills */}
                       <td className="py-3.5 px-4 text-right pr-8">
                         <span
                           className={`inline-block min-w-[80px] ${statusStyles[row.status]}`}
@@ -211,9 +203,7 @@ export default function AllSitesTable() {
             </table>
           </div>
 
-          {/* --- TABLE FOOTER SECTION --- */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-4 bg-white">
-            {/* Left Control Arrow Buttons */}
             <div className="flex items-center gap-1">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
@@ -235,7 +225,6 @@ export default function AllSitesTable() {
                 </svg>
               </button>
 
-              {/* Page Selection Numbers */}
               <div className="flex items-center gap-1">
                 {getPaginationNumbers().map((num, i) =>
                   num === "..." ? (
@@ -282,7 +271,6 @@ export default function AllSitesTable() {
               </button>
             </div>
 
-            {/* Pagination Info Labels */}
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
               <span>
                 Showing {(page - 1) * perPage + 1} to{" "}

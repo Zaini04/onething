@@ -45,7 +45,6 @@ const AddVendor = () => {
 
   return (
     <div className="w-full mx-auto p-4 md:p-6 bg-[#F9FAFB] rounded-2xl">
-      {/* Form Heading Section */}
       <div className="flex justify-between items-center text-gray-900 mb-6 tracking-tight">
         <h2 className="text-lg font-medium">Add Vendor</h2>
         <button
@@ -64,8 +63,7 @@ const AddVendor = () => {
         onSubmit={formik.handleSubmit}
         className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100/80"
       >
-        {/* Avatar / Image Upload Section */}
-        <div className="flex items-center gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
           <div className="w-20 h-20 rounded-2xl bg-purple-50 overflow-hidden flex items-center justify-center border border-gray-100">
             {profileImage ? (
               <img
@@ -108,7 +106,6 @@ const AddVendor = () => {
           </div>
         </div>
 
-        {/* Form Fields Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-7">
           <FormInput
             label="Name"
@@ -150,7 +147,6 @@ const AddVendor = () => {
             formik={formik}
           />
 
-          {/* Address Header Line */}
           <div className="col-span-1 md:col-span-2 pt-2">
             <h3 className="text-xs font-semibold text-gray-800 uppercase tracking-wider">
               Address
@@ -191,7 +187,6 @@ const AddVendor = () => {
           />
         </div>
 
-        {/* Action Buttons */}
         <div className="flex justify-end gap-4 mt-8 pt-2">
           <button
             type="button"

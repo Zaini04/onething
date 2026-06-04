@@ -48,14 +48,12 @@ function SearchSelect({
 
   return (
     <div className="relative w-full group" ref={dropdownRef}>
-      {/* Floating Input Label */}
       {label && (
         <label className="absolute -top-2.5 left-3 bg-white px-1 text-[11px] font-medium text-gray-400 z-10 transition-colors group-focus-within:text-black">
           {label}
         </label>
       )}
 
-      {/* Main Select Box Click Area */}
       <div
         onClick={() => {
           if (isOpen && onBlur) onBlur();
@@ -76,10 +74,8 @@ function SearchSelect({
         />
       </div>
 
-      {/* Dropdown Options List Overlay */}
       {isOpen && (
         <div className="absolute left-0 right-0 mt-1 bg-white border border-gray-100 rounded-xl shadow-lg z-50 p-2 flex flex-col gap-2 max-h-56">
-          {/* Search Input Box Inside Dropdown */}
           <div className="relative">
             <input
               type="text"
@@ -92,7 +88,6 @@ function SearchSelect({
             <FiSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
           </div>
 
-          {/* Options Wrapper Container */}
           <div className="overflow-y-auto flex-1 max-h-36 scrollbar-thin scrollbar-thumb-gray-200">
             {filteredOptions.length > 0 ? (
               filteredOptions.map((opt) => {
@@ -125,7 +120,6 @@ function SearchSelect({
         </div>
       )}
 
-      {/* Error Message Rendering Block */}
       {isError && errorMessage && (
         <p className="text-[11px] text-red-500 mt-0.5 ml-1 block">
           {errorMessage}

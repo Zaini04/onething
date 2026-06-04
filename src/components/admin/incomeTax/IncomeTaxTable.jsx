@@ -75,7 +75,6 @@ export default function IncomeTaxTable() {
   return (
     <div className="w-full bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm">
       <div className="w-full mx-auto">
-        {/* --- MAIN INTERACTIVE PRICING TABLE CONTAINER --- */}
         <div className="bg-white rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[700px]">
@@ -114,7 +113,6 @@ export default function IncomeTaxTable() {
                         isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
                       }`}
                     >
-                      {/* Checkbox Selector */}
                       <td className="py-3.5 px-5 text-center">
                         <input
                           type="checkbox"
@@ -124,22 +122,18 @@ export default function IncomeTaxTable() {
                         />
                       </td>
 
-                      {/* Sequential Data Row Index */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-500">
                         {row.no}
                       </td>
 
-                      {/* Vehicle Cost Metrics Column */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide">
                         {row.vehicleEntryPrice}
                       </td>
 
-                      {/* Fuel Value Metrics Column */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
                         {row.fuelEntryPrice}
                       </td>
 
-                      {/* Vendor Ledger Metrics Column */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
                         {row.vendorPrice}
                       </td>
@@ -150,7 +144,6 @@ export default function IncomeTaxTable() {
             </table>
           </div>
 
-          {/* --- CONTROL UTILITY FOOTER SYSTEM --- */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-4 bg-white">
             <div className="flex items-center gap-1">
               <button

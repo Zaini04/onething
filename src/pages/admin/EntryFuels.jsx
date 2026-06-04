@@ -1,9 +1,10 @@
-import { Plus, Upload, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { useState } from "react";
 import EntryFuel from "../../components/admin/Fuel/EntryFuel";
 import SearchFilters from "../../components/global/SearchFilter";
 import EntryFuelTable from "../../components/admin/Fuel/EntryfuelTable";
 import { useLocation, useNavigate } from "react-router-dom";
+import ExportButton from "../../components/global/ExportButton";
 
 function EntryFuels() {
   const location = useLocation();
@@ -78,16 +79,8 @@ function EntryFuels() {
           </h1>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          {/* Export Button */}
-          <button
-            type="button"
-            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-200 hover:border-gray-300 text-gray-700 hover:text-gray-900 font-normal sm:font-medium text-[14px] sm:text-sm rounded-xl active:scale-[0.98] transition-all cursor-pointer shadow-sm"
-          >
-            <Upload size={16} className="text-gray-500 stroke-[2]" />
-            <span>Export</span>
-          </button>
+          <ExportButton />
 
           <button
             onClick={handleToggleSidebar}

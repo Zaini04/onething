@@ -16,21 +16,19 @@ import EntryVehicle from "./components/admin/vehicles/EntryVehicle";
 import AddClient from "./components/admin/clients/AddClient";
 import AddVendor from "./components/admin/vendors/AddVendor";
 import AddSite from "./components/admin/sites/AddSite";
+import VehicleDetails from "./pages/admin/VehicleDetails";
+import ClientDetails from "./pages/admin/ClientDetails";
 
 function App() {
   return (
     <>
     <ScrollToTop />
       <Routes>
-        {/* Auth Routes */}
         <Route path="/auth/login" element={<Login />} />
         
-        {/* Admin Dashboard Layout Wrapper */}
         <Route path="/app" element={<AdminLayout />}>
-          {/* Default Route: Agar user sirf /app par aaye to dashboard par redirect ho */}
           <Route index element={<Navigate to="dashboard" replace />} />
           
-          {/* Sub-routes under /app/ (Inme dobara /app lagane ki zaroori nahi hoti) */}
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="vehicles" element={<Vehicles />} />
           <Route path="entry-vehicles" element={<EntryVehicles />} />
@@ -45,9 +43,10 @@ function App() {
           <Route path ='entry-fuel' element={<EntryFuels />} />
           <Route path ='income-expense' element={<IncomeTax />} />
           <Route path ='settings' element={<Settings />} />
+          <Route path="vehicles/:id" element={<VehicleDetails />} />
+          <Route path="clients/:id" element={<ClientDetails />} />
         </Route>
 
-        {/* Catch-all global redirect */}
         <Route path="*" element={<Navigate to="/auth/login" replace />} />
       </Routes>
     </>

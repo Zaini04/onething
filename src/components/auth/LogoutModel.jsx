@@ -1,4 +1,4 @@
-import {  AlertCircle } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { createPortal } from "react-dom"; // 1. Ye import karein
 
 function LogoutModal({ isOpen, onClose, onConfirm }) {
@@ -6,14 +6,12 @@ function LogoutModal({ isOpen, onClose, onConfirm }) {
 
   return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      {/* --- BACKGROUND OVERLAY WITH BLUR --- */}
-      <div 
+      <div
         className="absolute inset-0 bg-black/20 backdrop-blur-sm transition-opacity duration-300"
-        onClick={onClose} 
+        onClick={onClose}
       />
 
       <div className="relative bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-[320px] flex flex-col items-center text-center z-10 animate-in fade-in zoom-in-95 duration-200">
-        
         <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mb-4 text-red-500">
           <AlertCircle size={28} className="stroke-[1.8]" />
         </div>
@@ -33,7 +31,7 @@ function LogoutModal({ isOpen, onClose, onConfirm }) {
           >
             Cancel
           </button>
-          
+
           <button
             type="button"
             onClick={onConfirm}
@@ -44,7 +42,7 @@ function LogoutModal({ isOpen, onClose, onConfirm }) {
         </div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }
 

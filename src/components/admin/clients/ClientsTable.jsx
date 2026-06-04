@@ -1,5 +1,8 @@
 import { useState } from "react";
 import profile from "../../../assets/images/profileImage.jpg";
+import DeleteButton from "../../global/DeleteButton";
+import { useNavigate } from "react-router-dom";
+import { clientInitialData } from "../../../assets/mockData";
 
 const statusStyles = {
   Active:
@@ -10,32 +13,32 @@ const statusStyles = {
     "bg-[#FEE2E2] text-[#DC2626] font-semibold rounded-lg text-xs px-3 py-1.5 text-center border border-transparent",
 };
 
-const initialData = Array.from({ length: 50 }, (_, i) => {
-  const names = ["Imran Khan", "Saad"];
-  const phones = ["0301-2345678", "0322-9876543"];
-  const locations = ["Multan", "Overseas", "Lahore"];
+// const initialData = Array.from({ length: 50 }, (_, i) => {
+//   const names = ["Imran Khan", "Saad"];
+//   const phones = ["0301-2345678", "0322-9876543"];
+//   const locations = ["Multan", "Overseas", "Lahore"];
 
-  const name = names[i % 2];
-  const phone = phones[i % 2];
-  const location = locations[i % 3];
+//   const name = names[i % 2];
+//   const phone = phones[i % 2];
+//   const location = locations[i % 3];
 
-  const status =
-    i === 0 || i === 1 || i === 7 || i === 8 || i === 9
-      ? i === 9
-        ? "Block"
-        : "Active"
-      : "InActive";
+//   const status =
+//     i === 0 || i === 1 || i === 7 || i === 8 || i === 9
+//       ? i === 9
+//         ? "Block"
+//         : "Active"
+//       : "InActive";
 
-  return {
-    id: i + 1,
-    no: String(i + 1).padStart(2, "0"),
-    clientName: name,
-    phoneNumber: phone,
-    createdDate: "24-10-2025",
-    location: location,
-    status,
-  };
-});
+//   return {
+//     id: i + 1,
+//     no: String(i + 1).padStart(2, "0"),
+//     clientName: name,
+//     phoneNumber: phone,
+//     createdDate: "24-10-2025",
+//     location: location,
+//     status,
+//   };
+// });
 
 function SortIcon() {
   return (
@@ -57,8 +60,13 @@ export default function ClientsTable() {
   const [perPage, setPerPage] = useState(10);
   const [showPerPage, setShowPerPage] = useState(false);
 
-  const totalPages = Math.ceil(initialData.length / perPage);
-  const pageData = initialData.slice((page - 1) * perPage, page * perPage);
+  const navigate = useNavigate();
+
+  const totalPages = Math.ceil(clientInitialData.length / perPage);
+  const pageData = clientInitialData.slice(
+    (page - 1) * perPage,
+    page * perPage,
+  );
   const allSelected =
     pageData.length > 0 && pageData.every((r) => selected.includes(r.id));
 
@@ -105,17 +113,16 @@ export default function ClientsTable() {
     console.log("Edit clicked for client:", row);
   };
 
-  const handleDelete = (id) => {
-    console.log("Delete clicked for client ID:", id);
+  const handleView = (id) => {
+    console.log("View details for client ID:", id);
+    navigate(`/app/clients/${id}`);
   };
 
   return (
     <div className="w-full bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm">
       <div className="w-full mx-auto">
-        {/* --- MAIN DASHBOARD INTERACTIVE TABLE INNER CARD --- */}
         <div className="bg-white rounded-xl overflow-hidden w-full">
           <div className="overflow-x-auto w-full ">
-            {/* min-w layout locked at 1050px to perfectly blend extra actions column */}
             <table className="w-full text-left border-collapse min-w-[1050px] table-fixed">
               <thead>
                 <tr className="bg-[#F7F7F7] border-b border-gray-100">
@@ -145,7 +152,6 @@ export default function ClientsTable() {
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center w-[130px]">
                     Status <SortIcon />
                   </th>
-                  {/* Action Header Column */}
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight text-center w-[110px]">
                     Action
                   </th>
@@ -162,7 +168,6 @@ export default function ClientsTable() {
                         isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
                       }`}
                     >
-                      {/* Checkbox */}
                       <td className="py-3.5 px-5 text-center">
                         <input
                           type="checkbox"
@@ -172,12 +177,10 @@ export default function ClientsTable() {
                         />
                       </td>
 
-                      {/* Serial Number */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 truncate">
                         {row.no}
                       </td>
 
-                      {/* Profile Image & Name */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2.5 max-w-full">
                           <img
@@ -191,24 +194,20 @@ export default function ClientsTable() {
                         </div>
                       </td>
 
-                      {/* Phone Number */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide truncate">
                         {row.phoneNumber}
                       </td>
 
-                      {/* Created Date */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700 truncate">
                         {row.createdDate}
                       </td>
 
-                      {/* Location Badge */}
                       <td className="py-3.5 px-4">
                         <span className="inline-block bg-[#F1F3F5] text-gray-700 text-[11px] font-medium px-2 py-1 rounded border border-gray-200/50 truncate max-w-full">
                           {row.location}
                         </span>
                       </td>
 
-                      {/* Status Pills */}
                       <td className="py-3.5 px-4 text-center">
                         <span
                           className={`inline-block min-w-[85px] ${statusStyles[row.status]}`}
@@ -217,10 +216,32 @@ export default function ClientsTable() {
                         </span>
                       </td>
 
-                      {/* ACTIONS COLUMN BUTTONS */}
                       <td className="py-3.5 px-4 text-center">
                         <div className="flex items-center justify-center gap-2">
-                          {/* Edit Action Button */}
+                          <button
+                            onClick={() => handleView(row.id)}
+                            className="p-2 rounded-xl bg-[#E6F7F5] text-[#00A389] hover:bg-[#D4F2EE] transition cursor-pointer"
+                            title="View Record Details"
+                          >
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                              />
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                              />
+                            </svg>
+                          </button>
                           <button
                             onClick={() => handleEdit(row)}
                             type="button"
@@ -242,8 +263,9 @@ export default function ClientsTable() {
                             </svg>
                           </button>
 
-                          {/* Delete Action Button */}
-                          <button
+
+                          <DeleteButton row={row} />
+                          {/* <button
                             onClick={() => handleDelete(row.id)}
                             type="button"
                             title="Delete Client"
@@ -262,7 +284,7 @@ export default function ClientsTable() {
                                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                               />
                             </svg>
-                          </button>
+                          </button> */}
                         </div>
                       </td>
                     </tr>
@@ -272,7 +294,6 @@ export default function ClientsTable() {
             </table>
           </div>
 
-          {/* --- TABLE FOOTER SECTION --- */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-4 bg-white">
             <div className="flex items-center gap-1">
               <button
@@ -344,8 +365,8 @@ export default function ClientsTable() {
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
               <span>
                 Showing {(page - 1) * perPage + 1} to{" "}
-                {Math.min(page * perPage, initialData.length)} of{" "}
-                {initialData.length} entries
+                {Math.min(page * perPage, clientInitialData.length)} of{" "}
+                {clientInitialData.length} entries
               </span>
 
               <div className="relative">

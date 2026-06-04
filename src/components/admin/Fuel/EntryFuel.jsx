@@ -34,9 +34,7 @@ export default function EntryFuel() {
           onSubmit={formik.handleSubmit}
           className=" rounded-2xl flex flex-col justify-between"
         >
-          {/* Fields Container */}
           <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-x-6 gap-y-7 pt-2">
-            {/* 1. Vehicle Input */}
             <FormInput
               label="Vehicle"
               id="vehicle"
@@ -45,7 +43,6 @@ export default function EntryFuel() {
               formik={formik}
             />
 
-            {/* 2. Fuel Company Input */}
             <FormInput
               label="Fuel Company"
               id="fuelCompany"
@@ -54,7 +51,6 @@ export default function EntryFuel() {
               formik={formik}
             />
 
-            {/* 3. Fuel Litter Input */}
             <FormInput
               label="Fuel Litter"
               id="fuelLitter"
@@ -64,7 +60,6 @@ export default function EntryFuel() {
               value={formik.values.fuelLitter}
             />
 
-            {/* 4. Total Price Input (with dynamic commas formatting) */}
             <FormInput
               label="Total Price"
               id="totalPrice"
@@ -75,7 +70,6 @@ export default function EntryFuel() {
             />
           </div>
 
-          {/* Action Buttons Footer */}
           <div className="flex items-center gap-4 mt-8 justify-start lg:justify-end">
             <button
               type="button"

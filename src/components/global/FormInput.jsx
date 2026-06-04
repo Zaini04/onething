@@ -15,6 +15,7 @@ const FormInput = ({
   isCustomError,
   materialsList = [],
   onRemoveMaterial,
+  rows = 3,
 }) => {
   const isError =
     isCustomError || (formik ? formik.touched[id] && formik.errors[id] : false);
@@ -29,7 +30,7 @@ const FormInput = ({
       <div className="relative w-full">
         <label
           htmlFor={id}
-          className="absolute -top-2.5 left-3 bg-white px-1 text-[11px] font-medium text-gray-400 z-10 transition-colors group-focus-within:text-black"
+          className={`absolute -top-2.5 left-3  bg-white px-1 text-[11px] font-medium text-gray-400 z-10 transition-colors group-focus-within:text-black`}
         >
           {label}
         </label>
@@ -76,6 +77,21 @@ const FormInput = ({
             </select>
             <FiChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-base" />
           </div>
+        ) : type === "textarea" ? (
+          <textarea
+            id={id}
+            rows={rows}
+            placeholder={placeholder}
+            value={value}
+            onChange={onChange}
+            onBlur={onBlur}
+            disabled={readOnly}
+            readOnly={readOnly}
+            {...(formik && !onChange ? formik.getFieldProps(id) : {})}
+            className={`w-full px-4 py-2.5 border rounded-xl text-xs font-normal text-black placeholder:text-gray-400 focus:outline-none transition-all resize-none ${
+              readOnly ? "bg-gray-100/50 cursor-not-allowed select-none" : ""
+            } ${isError ? "border-red-500 focus:border-red-500" : "border-gray-200 focus:border-black"}`}
+          />
         ) : (
           <input
             type={type}
@@ -87,7 +103,7 @@ const FormInput = ({
             readOnly={readOnly}
             {...(formik && !onChange ? formik.getFieldProps(id) : {})}
             className={`w-full px-4 py-2.5 border rounded-xl text-xs font-normal text-black placeholder:text-gray-400 focus:outline-none transition-all ${
-              readOnly ? "bg-gray-50/50 cursor-not-allowed select-none" : ""
+              readOnly ? "bg-gray-100/50 cursor-not-allowed select-none" : ""
             } ${isError ? "border-red-500 focus:border-red-500" : "border-gray-200 focus:border-black"}`}
           />
         )}

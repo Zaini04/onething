@@ -19,7 +19,7 @@ materials: Yup.array()
       rateType: Yup.string().required('Rate Type is required'),
       rate: Yup.string()
         .required('Rate is required')
-        .matches(/^[0-9]+$/, 'Please write numbers only') // Yup validation check
+        .matches(/^[0-9]+$/, 'Please write numbers only') 
         .test('is-positive', 'Rate must be greater than 0', value => Number(value) > 0)
     })
   )

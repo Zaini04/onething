@@ -1,9 +1,10 @@
-import { Plus, Upload, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { useState } from "react";
 import AddFuelCompany from "../../components/admin/Fuel/AddFuelComapany";
 import SearchFilters from "../../components/global/SearchFilter";
 import AllFuelCompanies from "../../components/admin/Fuel/AllFuelCompanies";
 import { useNavigate, useLocation } from "react-router-dom";
+import ExportButton from "../../components/global/ExportButton";
 
 function FuelCompany() {
   const location = useLocation();
@@ -63,16 +64,8 @@ function FuelCompany() {
           </h1>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          {/* Export Button */}
-          <button
-            type="button"
-            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-200 hover:border-gray-300 text-gray-700 hover:text-gray-900 font-normal sm:font-medium text-[14px] sm:text-sm rounded-xl active:scale-[0.98] transition-all cursor-pointer shadow-sm"
-          >
-            <Upload size={16} className="text-gray-500 stroke-[2]" />
-            <span>Export</span>
-          </button>
+          <ExportButton />
 
           <button
             onClick={handleToggleSidebar}
@@ -98,7 +91,6 @@ function FuelCompany() {
         </div>
       </div>
 
-      {/* --- FILTER CONTAINER (Hamesha Full Width) --- */}
       <div className="w-full mb-6">
         <SearchFilters
           config={clientVendorConfig}
@@ -111,7 +103,6 @@ function FuelCompany() {
       <div
         className={`w-full flex flex-col-reverse lg:flex-row ${addFuelOpen ? "gap-6" : ""}  items-start`}
       >
-        {/* LEFT SIDE: Table Wrapper (Smooth Width Switch) */}
         <div
           className={`transition-all duration-300 ease-in-out ${
             addFuelOpen ? "w-full lg:w-[65%] shrink-0" : "w-full"
@@ -120,7 +111,6 @@ function FuelCompany() {
           <AllFuelCompanies />
         </div>
 
-        {/* RIGHT SIDE: Add Vehicle Form Container */}
         <div
           className={`transition-all duration-300 ease-in-out ${
             addFuelOpen

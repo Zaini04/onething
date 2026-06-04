@@ -50,7 +50,7 @@ export default function StatsCards() {
   );
 
   return (
-    <div className="grid grid-cols-2 gap-3 w-full h-full">
+    <div className="grid grid-cols-1  xs:grid-cols-2 gap-3 w-full h-full">
       {cards.map((card, i) => (
         <div
           key={i}

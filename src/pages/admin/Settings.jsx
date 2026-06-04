@@ -39,12 +39,17 @@ export default function Settings() {
   };
 
   return (
-    <div className="w-[90%] flex flex-col h-full mt-2  bg-gray-50/50  items-start  justify-center ">
-      <h2 className="font-medium  text-lg text-left text-black">Settings</h2>
-      <div className="w-full mt-4 bg-white rounded-3xl border border-gray-100  shadow-sm p-8 ">
+    <div className="w-full px-4 md:px-6 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
+      <div className="w-full pb-4">
+        <h1 className="text-xl font-medium text-black tracking-tight">
+          Settings
+        </h1>
+      </div>
+
+      <div className="w-full mt-4 bg-white rounded-3xl border border-gray-100 shadow-sm p-8">
         <form onSubmit={formik.handleSubmit} className="space-y-8">
-          <div className="flex items-center gap-5">
-            <div className="w-20 h-20 bg-[#F4F4F6] rounded-xl flex items-center justify-center border border-gray-100 overflow-hidden ">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+            <div className="w-20 h-20 bg-[#F4F4F6] rounded-xl flex items-center justify-center border border-gray-100 overflow-hidden">
               {logoPreview ? (
                 <img
                   src={logoPreview}
@@ -97,9 +102,7 @@ export default function Settings() {
             </div>
           </div>
 
-          {/* --- INPUT FIELDS GRID --- */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-7">
-            {/* Field: Company Name */}
             <div className="relative">
               <label className="absolute -top-2 left-3 bg-white px-1.5 text-[11px] text-gray-400 font-medium tracking-tight z-10">
                 Company Name
@@ -111,11 +114,11 @@ export default function Settings() {
                 placeholder="onething"
                 onBlur={formik.handleBlur}
                 value={formik.values.companyName}
-                className={`w-full px-4 py-3 text-xs  text-gray-800 bg-white border ${
+                className={`w-full px-4 py-3 text-xs text-gray-800 bg-white border ${
                   formik.touched.companyName && formik.errors.companyName
                     ? "border-red-400 focus:border-red-500"
                     : "border-gray-200 focus:border-gray-900"
-                } rounded-xl outline-none placeholder:text-gray-400  transition font-normal`}
+                } rounded-xl outline-none placeholder:text-gray-400 transition font-normal`}
               />
               {formik.touched.companyName && formik.errors.companyName && (
                 <p className="text-[11px] text-red-500 mt-1 pl-1 font-normal">
@@ -124,7 +127,6 @@ export default function Settings() {
               )}
             </div>
 
-            {/* Field: Phone Number */}
             <div className="relative">
               <label className="absolute -top-2 left-3 bg-white px-1.5 text-[11px] text-gray-400 font-medium tracking-tight z-10">
                 Phone Number
@@ -136,11 +138,11 @@ export default function Settings() {
                 onBlur={formik.handleBlur}
                 placeholder="1233456789"
                 value={formik.values.phoneNumber}
-                className={`w-full px-4 py-3 text-xs  text-gray-800 bg-white border ${
+                className={`w-full px-4 py-3 text-xs text-gray-800 bg-white border ${
                   formik.touched.phoneNumber && formik.errors.phoneNumber
                     ? "border-red-400 focus:border-red-500"
                     : "border-gray-200 focus:border-gray-900"
-                } rounded-xl outline-none placeholder:text-gray-400  transition font-normal`}
+                } rounded-xl outline-none placeholder:text-gray-400 transition font-normal`}
               />
               {formik.touched.phoneNumber && formik.errors.phoneNumber && (
                 <p className="text-[11px] text-red-500 mt-1 pl-1 font-normal">
@@ -149,7 +151,6 @@ export default function Settings() {
               )}
             </div>
 
-            {/* Field: Account Number */}
             <div className="relative">
               <label className="absolute -top-2 left-3 bg-white px-1.5 text-[11px] text-gray-400 font-medium tracking-tight z-10">
                 Account Number
@@ -161,11 +162,11 @@ export default function Settings() {
                 onBlur={formik.handleBlur}
                 placeholder="36301-1234567-9"
                 value={formik.values.accountNumber}
-                className={`w-full px-4 py-3 text-xs  text-gray-800 bg-white border ${
+                className={`w-full px-4 py-3 text-xs text-gray-800 bg-white border ${
                   formik.touched.accountNumber && formik.errors.accountNumber
                     ? "border-red-400 focus:border-red-500"
                     : "border-gray-200 focus:border-gray-900"
-                } rounded-xl outline-none placeholder:text-gray-400  transition font-normal`}
+                } rounded-xl outline-none placeholder:text-gray-400 transition font-normal`}
               />
               {formik.touched.accountNumber && formik.errors.accountNumber && (
                 <p className="text-[11px] text-red-500 mt-1 pl-1 font-normal">
@@ -174,7 +175,6 @@ export default function Settings() {
               )}
             </div>
 
-            {/* Field: Account Holder Name */}
             <div className="relative">
               <label className="absolute -top-2 left-3 bg-white px-1.5 text-[11px] text-gray-400 font-medium tracking-tight z-10">
                 Account Holder Name
@@ -186,12 +186,12 @@ export default function Settings() {
                 onBlur={formik.handleBlur}
                 placeholder="Imran Khan"
                 value={formik.values.accountHolderName}
-                className={`w-full px-4 py-3 text-xs  text-gray-800 bg-white border ${
+                className={`w-full px-4 py-3 text-xs text-gray-800 bg-white border ${
                   formik.touched.accountHolderName &&
                   formik.errors.accountHolderName
                     ? "border-red-400 focus:border-red-500"
                     : "border-gray-200 focus:border-gray-900"
-                } rounded-xl outline-none placeholder:text-gray-400  transition font-normal`}
+                } rounded-xl outline-none placeholder:text-gray-400 transition font-normal`}
               />
               {formik.touched.accountHolderName &&
                 formik.errors.accountHolderName && (
@@ -202,7 +202,6 @@ export default function Settings() {
             </div>
           </div>
 
-          {/* --- ACTION BUTTONS --- */}
           <div className="flex items-center justify-end gap-3 pt-4">
             <button
               type="button"

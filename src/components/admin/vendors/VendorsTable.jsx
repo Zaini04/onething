@@ -1,5 +1,6 @@
 import { useState } from "react";
 import profile from "../../../assets/images/profileImage.jpg";
+import DeleteButton from "../../global/DeleteButton";
 
 const statusStyles = {
   Active:
@@ -105,17 +106,11 @@ export default function VendorsTable() {
     console.log("Edit clicked for client:", row);
   };
 
-  const handleDelete = (id) => {
-    console.log("Delete clicked for client ID:", id);
-  };
-
   return (
     <div className="w-full bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm">
       <div className="w-full mx-auto">
-        {/* --- MAIN DASHBOARD INTERACTIVE TABLE INNER CARD --- */}
         <div className="bg-white rounded-xl overflow-hidden w-full">
           <div className="overflow-x-auto w-full">
-            {/* min-w layout locked at 1050px to perfectly blend extra actions column */}
             <table className="w-full text-left border-collapse min-w-[1050px] table-fixed">
               <thead>
                 <tr className="bg-[#F7F7F7] border-b border-gray-100">
@@ -145,7 +140,6 @@ export default function VendorsTable() {
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center w-[130px]">
                     Status <SortIcon />
                   </th>
-                  {/* Action Header Column */}
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight text-center w-[110px]">
                     Action
                   </th>
@@ -162,7 +156,6 @@ export default function VendorsTable() {
                         isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
                       }`}
                     >
-                      {/* Checkbox */}
                       <td className="py-3.5 px-5 text-center">
                         <input
                           type="checkbox"
@@ -172,12 +165,10 @@ export default function VendorsTable() {
                         />
                       </td>
 
-                      {/* Serial Number */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 truncate">
                         {row.no}
                       </td>
 
-                      {/* Profile Image & Name */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2.5 max-w-full">
                           <img
@@ -191,24 +182,20 @@ export default function VendorsTable() {
                         </div>
                       </td>
 
-                      {/* Phone Number */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide truncate">
                         {row.phoneNumber}
                       </td>
 
-                      {/* Created Date */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700 truncate">
                         {row.createdDate}
                       </td>
 
-                      {/* Location Badge */}
                       <td className="py-3.5 px-4">
                         <span className="inline-block bg-[#F1F3F5] text-gray-700 text-[11px] font-medium px-2 py-1 rounded border border-gray-200/50 truncate max-w-full">
                           {row.location}
                         </span>
                       </td>
 
-                      {/* Status Pills */}
                       <td className="py-3.5 px-4 text-center">
                         <span
                           className={`inline-block min-w-[85px] ${statusStyles[row.status]}`}
@@ -217,7 +204,6 @@ export default function VendorsTable() {
                         </span>
                       </td>
 
-                      {/* ACTIONS COLUMN BUTTONS */}
                       <td className="py-3.5 px-4 text-center">
                         <div className="flex items-center justify-center gap-2">
                           <button
@@ -241,26 +227,7 @@ export default function VendorsTable() {
                             </svg>
                           </button>
 
-                          <button
-                            onClick={() => handleDelete(row.id)}
-                            type="button"
-                            title="Delete Client"
-                            className="w-7 h-7 flex items-center justify-center bg-[#FEE2E2] hover:bg-[#FEE2E2]/90 text-[#DC2626] rounded-lg transition-colors cursor-pointer active:scale-95"
-                          >
-                            <svg
-                              className="w-3.5 h-3.5"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2.5}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                              />
-                            </svg>
-                          </button>
+                          <DeleteButton row={row} />
                         </div>
                       </td>
                     </tr>
@@ -270,7 +237,6 @@ export default function VendorsTable() {
             </table>
           </div>
 
-          {/* --- TABLE FOOTER SECTION --- */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-4 bg-white">
             <div className="flex items-center gap-1">
               <button

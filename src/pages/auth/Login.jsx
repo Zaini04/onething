@@ -98,9 +98,7 @@ function Login() {
         <p className="font-extrabold text-2xl mt-1 text-white">onething.</p>
       </div>
 
-      {/* Right Side */}
       <div className="w-full max-w-xs sm:max-w-md lg:max-w-none lg:w-4/12 bg-white shadow-lg rounded-2xl p-6 sm:p-8 m-2">
-        {/* Logo */}
 
         <div className="w-full flex flex-col gap-y-6">
           <div className=" flex flex-col gap-y-1 mb-4">
@@ -114,7 +112,6 @@ function Login() {
             onSubmit={handleLogin}
           >
             <Form className="w-full flex flex-col gap-y-5">
-              {/* Email */}
               <div className="relative">
                 <label className="absolute -top-2 left-3 bg-white px-1 text-sm text-gray-500">
                   Email
@@ -134,7 +131,6 @@ function Login() {
                 />
               </div>
 
-              {/* Password */}
               <div className="relative">
                 <label className="absolute -top-2 left-3 bg-white px-1 text-sm text-gray-500">
                   Password
@@ -162,7 +158,6 @@ function Login() {
                 />
               </div>
 
-              {/* Submit */}
               <button
                 type="submit"
                 className="bg-[#1A1917] text-white font-semibold rounded-xl px-4 py-3 w-full mt-2 hover:bg-black transition-colors cursor-pointer"

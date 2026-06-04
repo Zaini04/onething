@@ -20,7 +20,6 @@ export default function AddVehicle({ onSubmitSuccess }) {
 
   return (
     <div className="w-full lg:max-w-[540px] bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
-      {/* Form Heading Heading */}
       <div className=" flex justify-between  text-gray-900 mb-6 tracking-tight">
         <h2 className="text-lg font-medium">Add Vehicle</h2>
       </div>
@@ -29,8 +28,6 @@ export default function AddVehicle({ onSubmitSuccess }) {
         onSubmit={formik.handleSubmit}
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-x-6 gap-y-7 pt-2"
       >
-        {/* 1. Vehicle Number Field */}
-
         <FormInput
           label="Number"
           id="number"
@@ -38,7 +35,6 @@ export default function AddVehicle({ onSubmitSuccess }) {
           placeholder="Enter vehicle number"
           formik={formik}
         />
-        {/* 2. Owner Name Field */}
 
         <FormInput
           label="Owner Name"
@@ -48,8 +44,6 @@ export default function AddVehicle({ onSubmitSuccess }) {
           formik={formik}
         />
 
-        {/* 3. Type of Vehicle Field */}
-
         <FormInput
           label="Type Vehicle"
           id="typeVehicle"
@@ -58,7 +52,6 @@ export default function AddVehicle({ onSubmitSuccess }) {
           formik={formik}
         />
 
-        {/* 4. Status Field */}
         <FormInput
           label="Status"
           id="status"
@@ -71,7 +64,6 @@ export default function AddVehicle({ onSubmitSuccess }) {
           formik={formik}
         />
 
-        {/* --- BOTTOM ACTION BUTTONS --- */}
         <div className="flex items-center gap-4 pt-4 justify-start lg:justify-end">
           <button
             type="button"

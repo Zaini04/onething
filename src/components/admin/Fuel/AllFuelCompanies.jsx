@@ -1,9 +1,5 @@
 import { useState } from "react";
-
-const actionStyles = {
-  view: "p-2 rounded-xl bg-[#E6F7F5] text-[#00A389] hover:bg-[#D4F2EE] transition cursor-pointer",
-  delete: "p-2 rounded-xl bg-[#FFF2F3] text-[#D93F4C] hover:bg-[#FFE5E7] transition cursor-pointer",
-};
+import DeleteButton from "../../global/DeleteButton";
 
 const initialData = Array.from({ length: 50 }, (_, i) => {
   const companies = ["PSO", "Shell"];
@@ -13,7 +9,7 @@ const initialData = Array.from({ length: 50 }, (_, i) => {
     id: i + 1,
     no: String(i + 1).padStart(2, "0"),
     fuelCompany: i % 2 === 0 ? companies[0] : companies[1],
-    fuelLitter: i === 9 ? litters[1] : litters[0], // 10th entry par 600 litter baki sab 25
+    fuelLitter: i === 9 ? litters[1] : litters[0],
   };
 });
 
@@ -39,11 +35,14 @@ export default function AllFuelCompanies() {
 
   const totalPages = Math.ceil(initialData.length / perPage);
   const pageData = initialData.slice((page - 1) * perPage, page * perPage);
-  const allSelected = pageData.length > 0 && pageData.every((r) => selected.includes(r.id));
+  const allSelected =
+    pageData.length > 0 && pageData.every((r) => selected.includes(r.id));
 
   const toggleAll = () => {
     if (allSelected) {
-      setSelected((prev) => prev.filter((id) => !pageData.map((r) => r.id).includes(id)));
+      setSelected((prev) =>
+        prev.filter((id) => !pageData.map((r) => r.id).includes(id)),
+      );
     } else {
       setSelected((prev) => [
         ...prev,
@@ -54,7 +53,7 @@ export default function AllFuelCompanies() {
 
   const toggleRow = (id) => {
     setSelected((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );
   };
 
@@ -65,7 +64,11 @@ export default function AllFuelCompanies() {
     } else {
       nums.push(1);
       if (page > 3) nums.push("...");
-      for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) {
+      for (
+        let i = Math.max(2, page - 1);
+        i <= Math.min(totalPages - 1, page + 1);
+        i++
+      ) {
         nums.push(i);
       }
       if (page < totalPages - 2) nums.push("...");
@@ -74,19 +77,13 @@ export default function AllFuelCompanies() {
     return nums;
   };
 
-  const handleEdit = (row) => {
-    console.log("Editing Fuel Company Details:", row);
-  };
-
-  const handleDelete = (id) => {
-    console.log("Deleting Fuel Company Entry for ID:", id);
+  const handleView = (id) => {
+    console.log("Viewing details for Fuel Entry ID:", id);
   };
 
   return (
     <div className="w-full bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm">
       <div className="w-full mx-auto">
-        
-        {/* --- MAIN INTERACTIVE TABLE INNER CARD --- */}
         <div className="bg-white rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[500px]">
@@ -114,7 +111,7 @@ export default function AllFuelCompanies() {
                   </th>
                 </tr>
               </thead>
-              
+
               <tbody className="divide-y divide-gray-50/60">
                 {pageData.map((row) => {
                   const isRowSelected = selected.includes(row.id);
@@ -125,7 +122,6 @@ export default function AllFuelCompanies() {
                         isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
                       }`}
                     >
-                      {/* Checkbox */}
                       <td className="py-3.5 px-5 text-center">
                         <input
                           type="checkbox"
@@ -134,45 +130,48 @@ export default function AllFuelCompanies() {
                           className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
                         />
                       </td>
-                      
-                      {/* Serial Number */}
+
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-500">
                         {row.no}
                       </td>
-                      
-                      {/* Fuel Company Name */}
+
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-900 tracking-wide">
                         {row.fuelCompany}
                       </td>
-                      
-                      {/* Fuel Litter Quantity */}
+
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
                         {row.fuelLitter}
                       </td>
-                      
-                      {/* Action Triggers (View & Delete Icons) */}
+
                       <td className="py-2.5 px-4 text-center pr-8">
                         <div className="flex items-center justify-center gap-3">
                           <button
-                            onClick={() => handleEdit(row)}
+                            onClick={() => handleView(row.id)}
                             type="button"
                             title="Edit Client"
-                            className="w-7 h-7 flex items-center justify-center bg-[#F4F4F5] hover:bg-[#E4E4E7] text-gray-700 rounded-lg transition-colors cursor-pointer active:scale-95"
+                            className="p-2 rounded-xl bg-[#E6F7F5] text-[#00A389] hover:bg-[#D4F2EE] transition cursor-pointer"
                           >
-                            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                              />
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                              />
                             </svg>
                           </button>
 
-                          <button
-                            onClick={() => handleDelete(row.id)}
-                            className={actionStyles.delete}
-                            title="Delete Company"
-                          >
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                          </button>
+                          <DeleteButton row={row} />
                         </div>
                       </td>
                     </tr>
@@ -182,25 +181,35 @@ export default function AllFuelCompanies() {
             </table>
           </div>
 
-          {/* --- TABLE FOOTER SECTION --- */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-4 bg-white">
-            
             <div className="flex items-center gap-1">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
                 className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:text-black disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
               </button>
 
-              {/* Page Selection Numbers */}
               <div className="flex items-center gap-1">
                 {getPaginationNumbers().map((num, i) =>
                   num === "..." ? (
-                    <span key={`ellipsis-${i}`} className="w-6 h-8 flex items-center justify-center text-gray-400 text-xs">
+                    <span
+                      key={`ellipsis-${i}`}
+                      className="w-6 h-8 flex items-center justify-center text-gray-400 text-xs"
+                    >
                       ...
                     </span>
                   ) : (
@@ -208,14 +217,14 @@ export default function AllFuelCompanies() {
                       key={num}
                       onClick={() => setPage(num)}
                       className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm font-normal cursor-pointer transition ${
-                      page === num
-                        ? "bg-black text-white"
-                        : "text-black hover:bg-gray-100 border border-gray-200"
-                    }`}
+                        page === num
+                          ? "bg-black text-white"
+                          : "text-black hover:bg-gray-100 border border-gray-200"
+                      }`}
                     >
                       {num}
                     </button>
-                  )
+                  ),
                 )}
               </div>
 
@@ -224,28 +233,50 @@ export default function AllFuelCompanies() {
                 disabled={page === totalPages}
                 className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:text-black disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </button>
             </div>
 
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
               <span>
-                Showing {(page - 1) * perPage + 1} to {Math.min(page * perPage, initialData.length)} of {initialData.length} entries
+                Showing {(page - 1) * perPage + 1} to{" "}
+                {Math.min(page * perPage, initialData.length)} of{" "}
+                {initialData.length} entries
               </span>
-              
+
               <div className="relative">
                 <button
                   onClick={() => setShowPerPage((s) => !s)}
                   className="flex items-center gap-1 px-2 py-1 rounded cursor-pointer border border-gray-200 text-gray-700 hover:bg-gray-50 text-xs font-normal"
                 >
                   Show {perPage}
-                  <svg className={`w-3 h-3 text-gray-500 transition-transform duration-200 ${showPerPage ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  <svg
+                    className={`w-3 h-3 text-gray-500 transition-transform duration-200 ${showPerPage ? "rotate-180" : ""}`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </button>
-                
+
                 {showPerPage && (
                   <div className="absolute bottom-full right-0 mb-1 bg-white border border-gray-100 rounded-lg shadow-xl overflow-hidden z-20 min-w-[85px]">
                     {[5, 10, 20, 50].map((n) => (
@@ -257,7 +288,9 @@ export default function AllFuelCompanies() {
                           setShowPerPage(false);
                         }}
                         className={`block w-full text-left px-3 py-2 text-xs hover:bg-gray-50 transition ${
-                          perPage === n ? "font-bold text-blue-600 bg-blue-50/40" : "text-gray-600"
+                          perPage === n
+                            ? "font-bold text-blue-600 bg-blue-50/40"
+                            : "text-gray-600"
                         }`}
                       >
                         {n}
@@ -267,9 +300,7 @@ export default function AllFuelCompanies() {
                 )}
               </div>
             </div>
-
           </div>
-
         </div>
       </div>
     </div>

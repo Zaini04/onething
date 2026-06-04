@@ -1,8 +1,6 @@
 @import "tailwindcss";
 
-/* 1. Saare Font Weights ko Customly Define Karein */
 
-/* Regular Font (Weight: 400) */
 @font-face {
   font-family: 'Graphik';
   src: url('./assets/fonts/Graphik-Regular.woff2') format('woff2');
@@ -10,7 +8,6 @@
   font-style: normal;
 }
 
-/* Medium Font (Weight: 500) */
 @font-face {
   font-family: 'Graphik';
   src: url('./assets/fonts/Graphik-Medium.woff2') format('woff2');
@@ -18,7 +15,6 @@
   font-style: normal;
 }
 
-/* Semibold Font (Weight: 600) */
 @font-face {
   font-family: 'Graphik';
   src: url('./assets/fonts/Graphik-Semibold.woff2') format('woff2');
@@ -26,7 +22,6 @@
   font-style: normal;
 }
 
-/* Bold Font (Weight: 700) */
 @font-face {
   font-family: 'Graphik';
   src: url('./assets/fonts/Graphik-Bold.woff2') format('woff2');
@@ -34,13 +29,11 @@
   font-style: normal;
 }
 
-/* 2. Tailwind v4 ke global theme mein default font family set karein */
 @theme {
   --font-sans: 'Graphik', system-ui, -apple-system, sans-serif;
 }
 
 
-/* Date input ke native icon ko hide karne ke liye taake hamara Lucide icon pyara lage */
 .custom-date-input::-webkit-calendar-picker-indicator {
   background: transparent;
   bottom: 0;
@@ -52,4 +45,10 @@
   right: 0;
   top: 0;
   width: auto;
+}
+
+@theme{
+  --breakpoint-xxs:20rem;
+  --breakpoint-xs :27rem;
+  
 }

@@ -27,7 +27,6 @@ function AdminSidebar({ isMobile = false, isOpen = false, onClose }) {
     navigate(item.link);
   };
 
-  // --- MOBILE SIDEBAR LAYOUT ---
   if (isMobile) {
     return (
       <>
@@ -108,13 +107,12 @@ function AdminSidebar({ isMobile = false, isOpen = false, onClose }) {
     );
   }
 
-  // --- DESKTOP SIDEBAR LAYOUT ---
   return (
     <div className="hidden z-40 w-16 sticky top-24 left-2 mt-16 ml-2 py-4 mb-6 rounded-full bg-white shadow-md md:flex flex-col items-center gap-y-3">
       {menuItems.map((item) => {
         const isActive =
           location.pathname === item.link ||
-          location.pathname.startsWith(`${item.link}/`); // For handling array links like entry-vehicle
+          location.pathname.startsWith(`${item.link}/`);
 
         return (
           <div

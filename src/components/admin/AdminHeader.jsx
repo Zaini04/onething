@@ -9,7 +9,7 @@ import LogoutModal from "../auth/LogoutModel";
 function AdminHeader({ openSidebar, setOpenSidebar }) {
   const navigate = useNavigate();
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // Modal state
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const handleLogoutConfirm = () => {
     setIsLogoutModalOpen(false);
@@ -41,7 +41,6 @@ function AdminHeader({ openSidebar, setOpenSidebar }) {
       <div className="w-[98%]">
         <div className="flex justify-between items-center h-16 px-4 md:px-6">
           <div className="flex items-center gap-2">
-            {/* Toggle Burger / Cross Menu */}
             <div className="md:hidden mr-3 z-50 cursor-pointer text-black">
               {openSidebar ? (
                 <X onClick={() => setOpenSidebar(false)} size={24} />
@@ -58,12 +57,10 @@ function AdminHeader({ openSidebar, setOpenSidebar }) {
             className="flex justify-center items-center gap-x-3 relative"
             ref={dropdownRef}
           >
-            {/* Notification Bell */}
             <div className="rounded-[50%] border-2 border-white p-3">
               <BellRing size={20} className="text-[#379756] cursor-pointer " />
             </div>
 
-            {/* --- DESKTOP PROFILE CONTROLS (Hidden on Mobile) --- */}
             <div className="hidden sm:flex items-center gap-x-3">
               <div className="flex justify-start items-center bg-white rounded-full gap-x-2 px-1 py-1">
                 <img
@@ -79,7 +76,6 @@ function AdminHeader({ openSidebar, setOpenSidebar }) {
                 </p>
               </div>
 
-              {/* Desktop Logout Button with SVG Rotation */}
               <button
                 onClick={() => setIsLogoutModalOpen(true)}
                 className="group flex justify-center text-red-500 text-xs items-center gap-2 hover:bg-red-400 hover:text-white cursor-pointer p-2 rounded-xl transition-all duration-300"
@@ -107,7 +103,6 @@ function AdminHeader({ openSidebar, setOpenSidebar }) {
               </button>
             </div>
 
-            {/* --- MOBILE PROFILE CONTROLS (Only Image & Arrow) --- */}
             <div
               onClick={() => setShowProfileDropdown(!showProfileDropdown)}
               className="flex sm:hidden items-center gap-x-1 cursor-pointer p-1 rounded-full hover:bg-gray-50 transition-colors"
@@ -123,7 +118,6 @@ function AdminHeader({ openSidebar, setOpenSidebar }) {
               />
             </div>
 
-            {/* --- MOBILE DROP-DOWN MENU --- */}
             {showProfileDropdown && (
               <div className="absolute right-0 top-14 bg-white border border-gray-100 shadow-xl rounded-2xl p-4 w-52 flex flex-col gap-y-3 sm:hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                 <div className="flex flex-col border-b border-gray-50 pb-2.5">
@@ -167,7 +161,6 @@ function AdminHeader({ openSidebar, setOpenSidebar }) {
         </div>
       </div>
 
-      {/* --- MOBILE VIEW SIDEBAR BACKDROP --- */}
       <div
         className={`fixed inset-0 top-16 bg-black/40 z-40 md:hidden transition-opacity duration-300 pointer-events-none ${
           openSidebar ? "opacity-100 pointer-events-auto" : "opacity-0"

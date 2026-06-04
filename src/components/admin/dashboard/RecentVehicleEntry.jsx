@@ -109,12 +109,10 @@ export default function RecentVehicleEntry() {
   return (
     <div className="w-full bg-white rounded-2xl py-6 px-4 md:px-6">
       <div className="w-full max-w-[1400px] mx-auto">
-        {/* Title */}
         <h2 className="text-[15px] font-medium text-black mb-4 tracking-tight">
           Recent Vehicle Entry
         </h2>
 
-        {/* Table Container Card */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[800px]">
@@ -208,9 +206,7 @@ export default function RecentVehicleEntry() {
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-4 border-t border-gray-100 bg-white">
-            {/* Pagination Controls */}
             <div className="flex items-center gap-1.5 order-2 sm:order-1">
-              {/* Prev Button */}
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
@@ -231,7 +227,6 @@ export default function RecentVehicleEntry() {
                 </svg>
               </button>
 
-              {/* Page Numbers */}
               {getPaginationNumbers().map((num, i) =>
                 num === "..." ? (
                   <span

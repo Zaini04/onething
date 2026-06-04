@@ -1,6 +1,5 @@
 import * as Yup from "yup";
 
-// --- YUP VALIDATION SCHEMA ---
 export const entryFuel = Yup.object().shape({
   vehicle: Yup.string()
     .trim()

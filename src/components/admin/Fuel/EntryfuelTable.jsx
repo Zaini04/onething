@@ -1,4 +1,5 @@
 import { useState } from "react";
+import DeleteButton from "../../global/DeleteButton";
 
 const actionStyles = {
   view: "p-2 rounded-xl bg-[#E6F7F5] text-[#00A389] hover:bg-[#D4F2EE] transition cursor-pointer",
@@ -97,14 +98,9 @@ export default function EntryFuelTable() {
     console.log("Viewing details for Fuel Entry ID:", id);
   };
 
-  const handleDelete = (id) => {
-    console.log("Deleting Fuel Entry ID:", id);
-  };
-
   return (
     <div className="w-full bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm">
       <div className="w-full mx-auto">
-        {/* --- MAIN INTERACTIVE TABLE INNER CARD --- */}
         <div className="bg-white rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[800px]">
@@ -149,7 +145,6 @@ export default function EntryFuelTable() {
                         isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
                       }`}
                     >
-                      {/* Checkbox Selector */}
                       <td className="py-3.5 px-5 text-center">
                         <input
                           type="checkbox"
@@ -159,35 +154,28 @@ export default function EntryFuelTable() {
                         />
                       </td>
 
-                      {/* Row Index Number */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-500">
                         {row.no}
                       </td>
 
-                      {/* Vehicle Name Designation */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-900 tracking-wide">
                         {row.vehicle}
                       </td>
 
-                      {/* Fuel Supply Entity */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-500">
                         {row.fuelCompany}
                       </td>
 
-                      {/* Fuel Volume Measurement */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
                         {row.fuelLitter}
                       </td>
 
-                      {/* Cumulative Pricing Breakdown */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
                         {row.totalPrice}
                       </td>
 
-                      {/* Utility Call-to-Actions */}
                       <td className="py-2.5 px-4 text-center pr-8">
                         <div className="flex items-center justify-center gap-3">
-                          {/* View Detail Action */}
                           <button
                             onClick={() => handleView(row.id)}
                             className={actionStyles.view}
@@ -213,26 +201,7 @@ export default function EntryFuelTable() {
                             </svg>
                           </button>
 
-                          {/* Delete Item Action */}
-                          <button
-                            onClick={() => handleDelete(row.id)}
-                            className={actionStyles.delete}
-                            title="Delete Record Entry"
-                          >
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                              />
-                            </svg>
-                          </button>
+                          <DeleteButton row={row} />
                         </div>
                       </td>
                     </tr>
@@ -242,7 +211,6 @@ export default function EntryFuelTable() {
             </table>
           </div>
 
-          {/* --- TABLE PAGINATION FOOTER CONTROL PANEL --- */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-4 bg-white">
             <div className="flex items-center gap-1">
               <button

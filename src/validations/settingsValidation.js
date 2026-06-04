@@ -5,7 +5,7 @@ export const settingsValidation = Yup.object().shape({
     .required("Company logo is required")
     .test("fileSize", "Max allowed size is 800K", (value) => {
       if (!value) return true;
-      if (typeof value === "string") return true; // Base64 fallback
+      if (typeof value === "string") return true;
       return value.size <= 800 * 1024;
     }),
   companyName: Yup.string()

@@ -19,19 +19,15 @@ function FuelFilters({ onSearch }) {
 
   return (
     <div className="w-full bg-white rounded-2xl border border-gray-100 p-5 shadow-sm mb-6">
-      {/* Title */}
       <h2 className="text-sm font-medium text-gray-700 mb-5 tracking-tight">
         Search Filters
       </h2>
 
-      {/* --- FILTERS FORM --- */}
       <form
         onSubmit={handleSubmit}
         className="flex flex-col lg:flex-row items-center gap-4"
       >
-        {/* 2 Columns Grid Layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full lg:flex-1">
-          {/* 1. Fuel Litter Dropdown */}
           <div className="relative w-full">
             <select
               name="fuelLitter"
@@ -50,7 +46,6 @@ function FuelFilters({ onSearch }) {
             />
           </div>
 
-          {/* 2. Fuel Company Dropdown */}
           <div className="relative w-full">
             <select
               name="fuelCompany"

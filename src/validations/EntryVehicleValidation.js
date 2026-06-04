@@ -1,8 +1,6 @@
 import * as Yup from "yup";
 
 
-// --- YUP VALIDATION SCHEMA ---
-// Strict validation mapping based on the form context
 export const entryVehicleValidation = Yup.object({
   date: Yup.string().required("Date is required"),
   client: Yup.string().required("Please select a client"),
@@ -16,6 +14,15 @@ export const entryVehicleValidation = Yup.object({
     .required("Rate is required"),
   vendor: Yup.string().optional(),
   fuel: Yup.string().optional(),
+  totalSftVehicles: Yup.number()
+    .typeError("Must be a valid number")
+    .min(0, "Cannot be negative")
+    .required("Total Sft/Vehicles is required"),
+  
+  materialCost: Yup.number()
+    .typeError("Must be a valid number")
+    .min(0, "Cannot be negative")
+    .required("Material cost is required"),
   driverExpense: Yup.number()
     .typeError("Must be a valid number")
     .min(0, "Cannot be negative")
@@ -24,12 +31,9 @@ export const entryVehicleValidation = Yup.object({
     .typeError("Must be a valid number")
     .min(0, "Cannot be negative")
     .required("Loading charges are required"),
-  miscellaneousExpenses: Yup.number()
+  otherExpenses: Yup.number()
     .typeError("Must be a valid number")
     .min(0, "Cannot be negative")
-    .required("Misc expenses are required"),
-  totalPrice: Yup.number()
-    .typeError("Must be a valid number")
-    .min(0, "Cannot be negative")
-    .required("Total price is required"),
+    .required("Other expenses are required"),
+  
 });

@@ -1,44 +1,49 @@
 import { useState } from "react";
 import profile from "../../../assets/images/profileImage.jpg";
+import DeleteButton from "../../global/DeleteButton";
+import { useNavigate } from "react-router-dom";
+import { initialData } from "../../../assets/mockData";
 
 const statusStyles = {
   Active:
     "bg-[#E6F6EC] text-[#15803D] font-medium rounded-lg text-xs px-3 py-1 text-center border border-transparent",
   InActive:
     "bg-[#EFF6FF] text-[#1D4ED8] font-medium rounded-lg text-xs px-3 py-1 text-center border border-transparent",
+  view: "p-2 rounded-xl bg-[#E6F7F5] text-[#00A389] hover:bg-[#D4F2EE] transition cursor-pointer",
+
   Block:
     "bg-[#FEE2E2] text-[#DC2626] font-semibold rounded-lg text-xs px-3 py-1 text-center border border-transparent",
 };
 
-const initialData = Array.from({ length: 50 }, (_, i) => {
-  const names = ["Isagi Yoichi", "Laeonardo Decaprio", "Kaiser Brown"];
-  const vehicles = [
-    "Standard Dump Truck",
-    "Mini Dump Trucks",
-    "Low-Side Dump Trucks",
-  ];
-  const numbers = ["TLL-4679", "MJU-5210"];
+// const initialData = Array.from({ length: 50 }, (_, i) => {
+//   const names = ["Isagi Yoichi", "Laeonardo Decaprio", "Kaiser Brown"];
+//   const vehicles = [
+//     "Standard Dump Truck",
+//     "Mini Dump Trucks",
+//     "Low-Side Dump Trucks",
+//   ];
+//   const numbers = ["TLL-4679", "MJU-5210"];
 
-  const name = names[i % 3];
-  const vehicle = vehicles[i % 3];
-  const number = numbers[i % 2];
+//   const name = names[i % 3];
+//   const vehicle = vehicles[i % 3];
+//   const number = numbers[i % 2];
 
-  const status =
-    i === 0 || i === 1 || i === 7 || i === 8 || i === 9
-      ? i === 9
-        ? "Block"
-        : "Active"
-      : "InActive";
+//   const status =
+//     i === 0 || i === 1 || i === 7 || i === 8 || i === 9
+//       ? i === 9
+//         ? "Block"
+//         : "Active"
+//       : "InActive";
 
-  return {
-    id: i + 1,
-    no: String(i + 1).padStart(2, "0"),
-    number,
-    ownerName: name,
-    typeVehicle: vehicle,
-    status,
-  };
-});
+//   return {
+//     id: i + 1,
+//     no: String(i + 1).padStart(2, "0"),
+//     number,
+//     ownerName: name,
+//     typeVehicle: vehicle,
+//     status,
+//   };
+// });
 
 function SortIcon() {
   return (
@@ -64,6 +69,8 @@ export default function AllVehicles() {
   const pageData = initialData.slice((page - 1) * perPage, page * perPage);
   const allSelected =
     pageData.length > 0 && pageData.every((r) => selected.includes(r.id));
+
+  const navigate = useNavigate();
 
   const toggleAll = () => {
     if (allSelected) {
@@ -108,14 +115,14 @@ export default function AllVehicles() {
     console.log("Edit clicked for vehicle:", row);
   };
 
-  const handleDelete = (id) => {
-    console.log("Delete clicked for vehicle ID:", id);
+  const handleView = (row) => {
+    console.log("View clicked for vehicle:", row);
+    navigate(`/app/vehicles/${row.id}`);
   };
 
   return (
     <div className="w-full  bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm">
       <div className="w-full mx-auto">
-        {/* --- MAIN DASHBOARD INTERACTIVE TABLE INNER CARD --- */}
         <div className="bg-white rounded-xl overflow-hidden w-full">
           <div className="overflow-x-auto w-full">
             <table className="w-full text-left border-collapse min-w-[950px]">
@@ -133,7 +140,7 @@ export default function AllVehicles() {
                     No
                   </th>
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Number <SortIcon />
+                    Vehicle No <SortIcon />
                   </th>
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Owner Name <SortIcon />
@@ -144,7 +151,6 @@ export default function AllVehicles() {
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center">
                     Status <SortIcon />
                   </th>
-                  {/* Action Header Column */}
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight text-center w-28">
                     Action
                   </th>
@@ -161,7 +167,6 @@ export default function AllVehicles() {
                         isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
                       }`}
                     >
-                      {/* Checkbox */}
                       <td className="py-3.5 px-5 text-center">
                         <input
                           type="checkbox"
@@ -171,17 +176,14 @@ export default function AllVehicles() {
                         />
                       </td>
 
-                      {/* Serial Number */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
                         {row.no}
                       </td>
 
-                      {/* Vehicle License Number */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-900 tracking-wide">
-                        {row.number}
+                        {row.vehicleNo}
                       </td>
 
-                      {/* Profile & Name */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2.5">
                           <img
@@ -195,12 +197,10 @@ export default function AllVehicles() {
                         </div>
                       </td>
 
-                      {/* Type of Vehicle */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
                         {row.typeVehicle}
                       </td>
 
-                      {/* Status Pills */}
                       <td className="py-3.5 px-4 text-center">
                         <span
                           className={`inline-block min-w-[80px] ${statusStyles[row.status]}`}
@@ -209,10 +209,32 @@ export default function AllVehicles() {
                         </span>
                       </td>
 
-                      {/* ACTIONS COLUMN BUTTONS */}
                       <td className="py-3.5 px-4 text-center">
                         <div className="flex items-center justify-center gap-2">
-                          {/* Edit Action Button */}
+                          <button
+                            onClick={() => handleView(row)}
+                            className={statusStyles.view}
+                            title="View Record Details"
+                          >
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                              />
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                              />
+                            </svg>
+                          </button>
                           <button
                             onClick={() => handleEdit(row)}
                             type="button"
@@ -234,27 +256,7 @@ export default function AllVehicles() {
                             </svg>
                           </button>
 
-                          {/* Delete Action Button */}
-                          <button
-                            onClick={() => handleDelete(row.id)}
-                            type="button"
-                            title="Delete Vehicle"
-                            className="w-7 h-7 flex items-center justify-center bg-[#FEE2E2] hover:bg-[#FEE2E2]/90 text-[#DC2626] rounded-lg transition-colors cursor-pointer active:scale-95"
-                          >
-                            <svg
-                              className="w-3.5 h-3.5"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2.5}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                              />
-                            </svg>
-                          </button>
+                          <DeleteButton row={row} />
                         </div>
                       </td>
                     </tr>
@@ -264,7 +266,6 @@ export default function AllVehicles() {
             </table>
           </div>
 
-          {/* --- TABLE FOOTER SECTION --- */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-4 bg-white">
             <div className="flex items-center gap-1">
               <button

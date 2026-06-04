@@ -1,9 +1,10 @@
-import { Plus, Upload, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import AllVehicles from "../../components/admin/vehicles/AllVehicles";
 import { useState } from "react";
 import AddVehicle from "../../components/admin/vehicles/AddVehicle";
 import SearchFilters from "../../components/global/SearchFilter";
 import { useLocation, useNavigate } from "react-router-dom";
+import ExportButton from "../../components/global/ExportButton";
 
 function Vehicles() {
   const location = useLocation();
@@ -20,7 +21,7 @@ function Vehicles() {
   };
 
   const vehicleConfig = [
-    { name: "number", type: "select", searchable: true, placeholder: "Number" }, // Normal text box
+    { name: "number", type: "select", searchable: true, placeholder: "Number" },
     {
       name: "ownerName",
       type: "select",
@@ -63,18 +64,9 @@ function Vehicles() {
           </h1>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          {/* Export Button */}
-          <button
-            type="button"
-            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-200 hover:border-gray-300 text-gray-700 hover:text-gray-900 font-normal sm:font-medium text-[14px] sm:text-sm rounded-xl active:scale-[0.98] transition-all cursor-pointer shadow-sm"
-          >
-            <Upload size={16} className="text-gray-500 stroke-[2]" />
-            <span>Export</span>
-          </button>
+          <ExportButton />
 
-          {/* DYNAMIC BUTTON: Switches between Add Vehicle and Cancel */}
           <button
             onClick={handleToggleSidebar}
             type="button"
@@ -108,7 +100,6 @@ function Vehicles() {
         />
       </div>
 
-      {/* --- DYNAMIC SPLIT LAYOUT --- */}
       <div
         className={`w-full flex flex-col-reverse lg:flex-row  ${addVehicleOpen ? "gap-6" : ""} items-start`}
       >
@@ -120,7 +111,6 @@ function Vehicles() {
           <AllVehicles />
         </div>
 
-        {/* RIGHT SIDE: Add Vehicle Form Container */}
         <div
           className={`transition-all duration-300 ease-in-out ${
             addVehicleOpen

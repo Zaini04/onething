@@ -1,5 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import profile from "../../../assets/images/profileImage.jpg";
+import PaymentReceivedButton from "../../global/PaymentreceivedButton";
+import GenerateBillButton from "../../global/GenerateBillButton";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import ViewButton from "../../global/ViewButton";
+import { useDispatch, useSelector } from "react-redux";
+import { setEntryVehicleById } from "../../../redux/slices/entryVehiclesSlice";
 
 function SortIcon() {
   return (
@@ -15,46 +21,94 @@ function SortIcon() {
   );
 }
 
-const initialData = Array.from({ length: 50 }, (_, i) => {
-  const names = ["Imran Khan", "Saad"];
-  const sites = ["Multan", "Overseas", "Lahore"];
-  const vehicles = [
-    "Standard Dump Truck",
-    "Mini Dump Trucks",
-    "Low-Side Dump Trucks",
-  ];
-  const materials = ["Concrete", "Sand"];
-  const rateTypes = ["50 sft", "12"];
-  const vendors = ["Mudasir", "Muaaz", "Musaz"];
-
-  return {
-    id: i + 1,
-    no: String(i + 1).padStart(2, "0"),
-    date: "24-10-2025",
-    clientName: names[i % 2],
-    site: sites[i % 3],
-    vehicle: vehicles[i % 3],
-    material: materials[i % 2],
-    rateType: rateTypes[i % 2],
-    driverExpense: "5,000",
-    loading: "5,000",
-    scholarTex: "5,000",
-    miscellaneousExpenses: "12,000",
-    vendorName: vendors[i % 3],
-    fuel: "35,000",
-  };
-});
+//  const initialData = Array.from({ length: 50 }, (_, i) => {
+//   const names = ["Imran Khan", "Saad"];
+//   const sites = ["Multan", "Overseas", "Lahore"];
+//   const vehicles = [
+//     "Standard Dump Truck",
+//     "Mini Dump Trucks",
+//     "Low-Side Dump Trucks",
+//   ];
+//   const materials = ["Concrete", "Sand"];
+//   const rateTypes = ["per sft", "per vehicle"];
+//   const rate = ["50", "70", "80"];
+//   const totalSft = ["100", "150", "200"];
+//   const totalVehicles = ["5", "10", "15"];
+//   const totalRate = Number(rateTypes[i % 2] === "per sft" ? totalSft[i % 3] * rate[i % 3] : totalVehicles[i % 3] * rate[i % 3]);
+//   const driverExpense = 300;
+//   const loading = 200;
+//   const materialCost = 500;
+//   const otherExpenses = 200;
+//   const diesal = 350;
+//   const paymentReceived = ['received', 'pending'];
+//   const billStatus = ['generated', 'pending'];
+//   return {
+//     id: i + 1,
+//     no: String(i + 1).padStart(2, "0"),
+//     date: "24-10-2025",
+//     clientName: names[i % 2],
+//     site: sites[i % 3],
+//     vehicle: vehicles[i % 3],
+//     material: materials[i % 2],
+//     rateType: rateTypes[i % 2],
+//     rate: rate[i % 3],
+//     totalSft: totalSft[i % 3],
+//     totalVehicles: totalVehicles[i % 3],
+//     totalRate: totalRate,
+//     diesal: diesal,
+//     driverExpense: driverExpense,
+//     loading: loading,
+//     materialCost: materialCost,
+//     otherExpenses: otherExpenses,
+//     remaingAmount: totalRate - driverExpense - diesal - loading - materialCost - otherExpenses,
+//     paymentReceived: paymentReceived[i % 2] ,
+//     billStatus: billStatus[i % 2] ,
+//   };
+// });
 
 export default function AllVehiclesAndCustomers() {
+  const dispatch = useDispatch();
+  const initialData = useSelector((state) => state.entryVehicles.items);
+
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [showPerPage, setShowPerPage] = useState(false);
 
+  const [activeRowMenu, setActiveRowMenu] = useState(null);
+
+  const menuRef = useRef(null);
+
   const totalPages = Math.ceil(initialData.length / perPage);
   const pageData = initialData.slice((page - 1) * perPage, page * perPage);
   const allSelected =
     pageData.length > 0 && pageData.every((r) => selected.includes(r.id));
+
+  const handleActionClick = (model, id) => {
+    dispatch(setEntryVehicleById(id));
+    const newUrl = `${window.location.pathname}?modal=${model}&id=${id}&type=entry-vehicle`;
+    window.history.pushState({}, "", newUrl);
+
+    setActiveRowMenu(null);
+  };
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("modal")) {
+        return;
+      }
+
+      if (menuRef.current && menuRef.current.contains(event.target)) {
+        return;
+      }
+
+      setActiveRowMenu(null);
+    }
+
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   const toggleAll = () => {
     if (allSelected) {
@@ -100,11 +154,9 @@ export default function AllVehiclesAndCustomers() {
       <div className="w-full mx-auto">
         <div className="bg-white rounded-xl overflow-hidden">
           <div className="overflow-x-auto max-w-full">
-            {/* Table layout fixed dynamic space maintain rakhega aur columns scrollable honge */}
             <table className="w-full text-left border-collapse min-w-[1100px] table-auto">
               <thead>
                 <tr className="bg-[#F7F7F7] border-b border-gray-100">
-                  {/* Checkbox Column */}
                   <th className="py-4 px-5 w-12 text-center">
                     <input
                       type="checkbox"
@@ -113,8 +165,6 @@ export default function AllVehiclesAndCustomers() {
                       className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
                     />
                   </th>
-
-                  {/* Table Headers */}
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
                     No
                   </th>
@@ -137,22 +187,41 @@ export default function AllVehiclesAndCustomers() {
                     Rate Type <SortIcon />
                   </th>
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Rate <SortIcon />
+                  </th>
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Total Sft/Vehicles <SortIcon />
+                  </th>
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Total Rate <SortIcon />
+                  </th>
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Material Cost <SortIcon />
+                  </th>
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Diesal <SortIcon />
+                  </th>
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Driver Expense <SortIcon />
                   </th>
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Loading <SortIcon />
                   </th>
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Scholar+tex <SortIcon />
+                    Other Expenses <SortIcon />
                   </th>
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Miscellaneous Expenses <SortIcon />
+                    Remaining Amount <SortIcon />
                   </th>
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Vendor Name <SortIcon />
+                    Payment Status <SortIcon />
                   </th>
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Fuel <SortIcon />
+                    Bill Status <SortIcon />
+                  </th>
+
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap sticky right-0 z-40 bg-[#F7F7F7]">
+                    Action <SortIcon />
                   </th>
                 </tr>
               </thead>
@@ -160,14 +229,13 @@ export default function AllVehiclesAndCustomers() {
               <tbody className="divide-y divide-gray-50/60">
                 {pageData.map((row) => {
                   const isRowSelected = selected.includes(row.id);
+                  const isMenuOpen = activeRowMenu === row.id;
+
                   return (
                     <tr
                       key={row.id}
-                      className={`transition-colors duration-150 ${
-                        isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
-                      }`}
+                      className={`transition-colors duration-150 ${isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"}`}
                     >
-                      {/* Checkbox */}
                       <td className="py-3.5 px-5 text-center">
                         <input
                           type="checkbox"
@@ -176,18 +244,12 @@ export default function AllVehiclesAndCustomers() {
                           className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
                         />
                       </td>
-
-                      {/* Serial No */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
                         {row.no}
                       </td>
-
-                      {/* Date */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide select-none">
                         {row.date}
                       </td>
-
-                      {/* Client Avatar + Name */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2.5">
                           <img
@@ -200,66 +262,110 @@ export default function AllVehiclesAndCustomers() {
                           </span>
                         </div>
                       </td>
-
-                      {/* Sites pill badge styling */}
                       <td className="py-3.5 px-4">
                         <span className="inline-block bg-[#F1F3F5] text-gray-700 text-[11px] font-medium px-2 py-1 rounded border border-gray-200/50">
                           {row.site}
                         </span>
                       </td>
-
-                      {/* Vehicle */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700 whitespace-nowrap">
                         {row.vehicle}
                       </td>
-
-                      {/* Material */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
                         {row.material}
                       </td>
-
-                      {/* Rate Type */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700 whitespace-nowrap">
                         {row.rateType}
                       </td>
-
-                      {/* Driver Expense */}
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                        {row.rate}
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                        {row.rateType === "per sft"
+                          ? `${row.totalSft} sft`
+                          : `${row.totalVehicles} vehicles`}
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                        {row.totalRate}
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                        {row.materialCost}
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                        {row.diesal}
+                      </td>
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
                         {row.driverExpense}
                       </td>
-
-                      {/* Loading */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
                         {row.loading}
                       </td>
-
-                      {/* Scholar+tex */}
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.scholarTex}
+                        {row.otherExpenses}
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                        {row.remaingAmount}
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                        {row.paymentReceived}
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                        {row.billStatus}
                       </td>
 
-                      {/* Miscellaneous Expenses */}
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.miscellaneousExpenses}
-                      </td>
-
-                      {/* Vendor Avatar + Name */}
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-2.5">
-                          <img
-                            src={profile}
-                            alt={row.vendorName}
-                            className="w-7 h-7 rounded-full object-cover shadow-sm ring-1 ring-gray-100"
+                      <td
+                        className={`py-3.5 px-4 text-[12px] font-normal sticky right-0 transition-colors duration-150 overflow-visible ${
+                          isRowSelected ? "bg-[#F3F7FE]" : "bg-white"
+                        } ${isMenuOpen ? "z-[100]" : "z-30"}`}
+                      >
+                        <div className="flex justify-center items-center w-full h-full">
+                          <BsThreeDotsVertical
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveRowMenu(isMenuOpen ? null : row.id);
+                            }}
+                            className="cursor-pointer text-gray-500 hover:text-black text-xl p-1 rounded hover:bg-gray-100"
                           />
-                          <span className="text-[12px] font-normal text-gray-800 whitespace-nowrap">
-                            {row.vendorName}
-                          </span>
                         </div>
-                      </td>
 
-                      {/* Fuel */}
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.fuel}
+                        {isMenuOpen && (
+                          <div
+                            ref={menuRef}
+                            className="absolute right-12 top-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-lg shadow-2xl py-2 px-2 w-44 z-[9999] flex flex-col gap-1.5 animation-fade-in"
+                          >
+                            {row.paymentReceived === "received" ? (
+                              ""
+                            ) : (
+                              <PaymentReceivedButton
+                                onClick={() =>
+                                  handleActionClick("payment", row.id)
+                                }
+                                row={row}
+                              />
+                            )}
+
+                            {row.billStatus === "generated" ? (
+                              ""
+                            ) : (
+                              <GenerateBillButton
+                                onClick={() =>
+                                  handleActionClick("bill", row.id)
+                                }
+                                row={row}
+                              />
+                            )}
+
+                            {/* <button 
+            className="inline-block text-left cursor-pointer px-2 py-1 text-xs font-medium  text-gray-500 hover:bg-gray-300  border-b  border-gray-300"
+      >
+        
+        View 
+      </button> */}
+                            <ViewButton
+                              onClick={() => handleActionClick("view", row.id)}
+                              row={row}
+                            />
+                          </div>
+                        )}
                       </td>
                     </tr>
                   );
@@ -268,7 +374,6 @@ export default function AllVehiclesAndCustomers() {
             </table>
           </div>
 
-          {/* --- TABLE FOOTER SECTION --- */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-4 bg-white">
             <div className="flex items-center gap-1">
               <button
