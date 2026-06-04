@@ -123,7 +123,7 @@ export default function ClientsTable() {
       <div className="w-full mx-auto">
         <div className="bg-white rounded-xl overflow-hidden w-full">
           <div className="overflow-x-auto w-full ">
-            <table className="w-full text-left border-collapse min-w-[1050px] table-fixed">
+            <table className="w-full text-left border-collapse min-w-[1050px] table-auto">
               <thead>
                 <tr className="bg-[#F7F7F7] border-b border-gray-100">
                   <th className="py-4 px-5 w-[50px] text-center">
@@ -248,7 +248,7 @@ export default function ClientsTable() {
                             title="Edit Client"
                             className="w-7 h-7 flex items-center justify-center bg-[#F4F4F5] hover:bg-[#E4E4E7] text-gray-700 rounded-lg transition-colors cursor-pointer active:scale-95"
                           >
-                            <svg
+                              <svg
                               className="w-3.5 h-3.5"
                               fill="none"
                               viewBox="0 0 24 24"
@@ -265,26 +265,7 @@ export default function ClientsTable() {
 
 
                           <DeleteButton row={row} />
-                          {/* <button
-                            onClick={() => handleDelete(row.id)}
-                            type="button"
-                            title="Delete Client"
-                            className="w-7 h-7 flex items-center justify-center bg-[#FEE2E2] hover:bg-[#FEE2E2]/90 text-[#DC2626] rounded-lg transition-colors cursor-pointer active:scale-95"
-                          >
-                            <svg
-                              className="w-3.5 h-3.5"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2.5}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                              />
-                            </svg>
-                          </button> */}
+
                         </div>
                       </td>
                     </tr>
