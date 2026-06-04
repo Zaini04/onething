@@ -1,6 +1,6 @@
 import { ArrowUpRight, Wallet, Clock } from "lucide-react";
 import StatsCards from "../../components/admin/dashboard/StatsCard";
-import SalesProfitTrend from "../../components/admin/dashboard/SalesPRofitTrend";
+import SalesProfitTrend from "../../components/admin/dashboard/SalesProfitTrend";
 import ClientsTable from "../../components/admin/clients/ClientsTable";
 
 function AdminDashboard() {

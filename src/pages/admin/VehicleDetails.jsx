@@ -2,7 +2,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import { initialData } from "../../assets/mockData";
-import VehicleCard from "../../components/admin/vehicles/vehicleCard";
+import VehicleCard from "../../components/admin/vehicles/VehicleCard";
 import VehicleTable from "../../components/admin/vehicles/VehicleTable";
 
 export default function VehicleDetails() {
