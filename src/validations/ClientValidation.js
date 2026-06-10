@@ -9,16 +9,14 @@ export const clientValidation = Yup.object().shape({
     .trim()
     .required("Father's / Husband Name is required"),
   
-  cnic: Yup.string()
+  cnicOrNicop: Yup.string()
     .matches(/^\d{5}-\d{7}-\d{1}$/, 'CNIC must follow the pattern: 36302-1234567-1')
     .required('CNIC/NICOP Number is required'),
   
   phoneNumber: Yup.string()
-    .matches(/^\+\d{2}-\d{3}-\d{7}$/, 'Phone number must follow the pattern: +92-301-1234567')
     .required('Phone Number is required'),
   
   whatsAppNumber: Yup.string()
-    .matches(/^\+\d{2}-\d{3}-\d{7}$/, 'WhatsApp number must follow the pattern: +92-301-1234567')
     .required('WhatsApp Number is required'),
   
   email: Yup.string()
@@ -38,6 +36,6 @@ export const clientValidation = Yup.object().shape({
     .required('State is required'),
   
   status: Yup.string()
-    .oneOf(['Active', 'InActive'], 'Invalid Status')
+    .oneOf(['Active', 'Inactive'], 'Invalid Status')
     .required('Status is required'),
 });

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import DeleteButton from "../../global/DeleteButton";
+import { TableSkeletonRows } from "../../global/TableSkeletonRows";
 
 const initialData = Array.from({ length: 50 }, (_, i) => {
   const companies = ["PSO", "Shell"];
@@ -12,6 +13,19 @@ const initialData = Array.from({ length: 50 }, (_, i) => {
     fuelLitter: i === 9 ? litters[1] : litters[0],
   };
 });
+
+const statusStyles = {
+  Active:
+    "bg-[#E6F6EC] text-[#15803D] font-medium rounded-lg text-xs px-3 py-1 text-center border border-transparent",
+  Inactive:
+    "bg-[#EFF6FF] text-[#1D4ED8] font-medium rounded-lg text-xs px-3 py-1 text-center border border-transparent",
+  view: "p-2 rounded-xl bg-[#E6F7F5] text-[#00A389] hover:bg-[#D4F2EE] transition cursor-pointer",
+
+  Blocked:
+    "bg-[#FEE2E2] text-[#DC2626] font-semibold rounded-lg text-xs px-3 py-1 text-center border border-transparent",
+  Deleted:
+    "bg-[#FEE2E2] text-[#DC2626] font-semibold rounded-lg text-xs px-3 py-1 text-center border border-transparent",
+};
 
 function SortIcon() {
   return (
@@ -27,26 +41,30 @@ function SortIcon() {
   );
 }
 
-export default function AllFuelCompanies() {
+export default function AllFuelCompanies({setEditedFuelCompany,
+  fuelCompaniesData = [],
+  isLoading,
+  page,
+  setPage,
+  perPage,
+  setPerPage,
+  totalPages,}) {
   const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
   const [showPerPage, setShowPerPage] = useState(false);
 
-  const totalPages = Math.ceil(initialData.length / perPage);
-  const pageData = initialData.slice((page - 1) * perPage, page * perPage);
+  const pageData = fuelCompaniesData.slice((page - 1) * perPage, page * perPage);
   const allSelected =
-    pageData.length > 0 && pageData.every((r) => selected.includes(r.id));
+    pageData.length > 0 && pageData.every((r) => selected.includes(r._id));
 
   const toggleAll = () => {
     if (allSelected) {
       setSelected((prev) =>
-        prev.filter((id) => !pageData.map((r) => r.id).includes(id)),
+        prev.filter((id) => !pageData.map((r) => r._id).includes(id)),
       );
     } else {
       setSelected((prev) => [
         ...prev,
-        ...pageData.map((r) => r.id).filter((id) => !prev.includes(id)),
+        ...pageData.map((r) => r._id).filter((id) => !prev.includes(id)),
       ]);
     }
   };
@@ -77,6 +95,12 @@ export default function AllFuelCompanies() {
     return nums;
   };
 
+
+
+  const handleEdit = (row) => {
+    setEditedFuelCompany(row)
+    console.log("Viewing details for Fuel Entry ID:", id);
+  };
   const handleView = (id) => {
     console.log("Viewing details for Fuel Entry ID:", id);
   };
@@ -113,7 +137,16 @@ export default function AllFuelCompanies() {
               </thead>
 
               <tbody className="divide-y divide-gray-50/60">
-                {pageData.map((row) => {
+                 {isLoading ? (
+                 <TableSkeletonRows rowsCount={perPage || 5} />
+                              ) : pageData.length === 0 ? (
+                                <tr>
+                                  <td colSpan="7" className="py-8 text-center text-sm text-gray-400">
+                                    No entries found.
+                                  </td>
+                                </tr>
+                              ) :(
+pageData.map((row,index) => {
                   const isRowSelected = selected.includes(row.id);
                   return (
                     <tr
@@ -132,7 +165,8 @@ export default function AllFuelCompanies() {
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-500">
-                        {row.no}
+                                                {(page - 1) * perPage + index + 1}
+
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-900 tracking-wide">
@@ -170,13 +204,34 @@ export default function AllFuelCompanies() {
                               />
                             </svg>
                           </button>
-
+<button
+                            onClick={() => handleEdit(row)}
+                            type="button"
+                            title="Edit Client"
+                            className="w-7 h-7 flex items-center justify-center bg-[#F4F4F5] hover:bg-[#E4E4E7] text-gray-700 rounded-lg transition-colors cursor-pointer active:scale-95"
+                          >
+                              <svg
+                              className="w-3.5 h-3.5"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2.5}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                              />
+                            </svg>
+                          </button>
                           <DeleteButton row={row} />
                         </div>
                       </td>
                     </tr>
                   );
-                })}
+                })
+                              )}
+                
               </tbody>
             </table>
           </div>
@@ -252,8 +307,8 @@ export default function AllFuelCompanies() {
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
               <span>
                 Showing {(page - 1) * perPage + 1} to{" "}
-                {Math.min(page * perPage, initialData.length)} of{" "}
-                {initialData.length} entries
+                {Math.min(page * perPage, fuelCompaniesData.length)} of{" "}
+                {fuelCompaniesData.length} entries
               </span>
 
               <div className="relative">

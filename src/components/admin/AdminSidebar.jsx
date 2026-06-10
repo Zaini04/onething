@@ -2,8 +2,13 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import LogoutModal from "../auth/LogoutModel";
 import { menuItems } from "../../constants/Sidebar";
+import { hasMenuAccess } from "../../hooks/MenuAccess";
+import { useSelector } from "react-redux";
 
 function AdminSidebar({ isMobile = false, isOpen = false, onClose }) {
+
+    const user = useSelector(state => state.auth.user)
+
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -18,6 +23,7 @@ function AdminSidebar({ isMobile = false, isOpen = false, onClose }) {
     setIsLogoutModalOpen(true);
   };
 
+
   const tooltipClass =
     "absolute left-16 z-[100000] scale-0 group-hover:scale-100 bg-black text-white text-xs font-semibold px-3 py-2 rounded-md shadow-lg transition-all duration-150 origin-left whitespace-nowrap pointer-events-none";
 
@@ -27,6 +33,10 @@ function AdminSidebar({ isMobile = false, isOpen = false, onClose }) {
     navigate(item.link);
   };
 
+  const filteredMenu = menuItems.filter(item =>(
+    hasMenuAccess(user,item.id)
+  ))
+console.log("filtersidebar",filteredMenu)
   if (isMobile) {
     return (
       <>
@@ -37,7 +47,7 @@ function AdminSidebar({ isMobile = false, isOpen = false, onClose }) {
         >
           <div className="flex flex-col gap-y-1.5 w-full h-full">
             <div className="flex flex-col gap-y-1.5 w-full">
-              {menuItems.map((item) => {
+              {filteredMenu.map((item) => {
                 const isActive =
                   location.pathname === item.link ||
                   location.pathname.startsWith(`${item.link}/`);
@@ -109,7 +119,7 @@ function AdminSidebar({ isMobile = false, isOpen = false, onClose }) {
 
   return (
     <div className="hidden z-40 w-16 sticky top-24 left-2 mt-16 ml-2 py-4 mb-6 rounded-full bg-white shadow-md md:flex flex-col items-center gap-y-3">
-      {menuItems.map((item) => {
+      {filteredMenu.map((item) => {
         const isActive =
           location.pathname === item.link ||
           location.pathname.startsWith(`${item.link}/`);

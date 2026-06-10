@@ -5,29 +5,64 @@ import AddVehicle from "../../components/admin/vehicles/AddVehicle";
 import SearchFilters from "../../components/global/SearchFilter";
 import { useLocation, useNavigate } from "react-router-dom";
 import ExportButton from "../../components/global/ExportButton";
+import { useQuery } from "@tanstack/react-query";
+import { fetchVehicles } from "../../redux/actions/vehicleAction";
+import { useEffect } from "react";
 
 function Vehicles() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const addVehicleOpen = location.hash === "#add";
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [status, setStatus] = useState('');
+  const [apiFilters, setApiFilters] = useState({});
+
+  const [ownerName, setOwnerName] = useState('');
+  const [vehicleNo,setVehicleNo]= useState('')
+  const [editVehicle, setEditedVehicle] = useState(null);
+
+const mode = location.hash.replace("#", "");
+const addVehicleModelOpen = mode === "add" || mode === "edit";
+
+const handleAdd = () => {
+  setEditedVehicle(null);          
+  navigate("/app/vehicles#add");   
+};
+const handleEdit = (row) => {
+  setEditedVehicle(row);          
+  navigate("/app/vehicles#edit"); 
+};
 
   const handleToggleSidebar = () => {
-    if (addVehicleOpen) {
+    if (addVehicleModelOpen) {
       navigate("/app/vehicles");
     } else {
       navigate("/app/vehicles#add");
     }
   };
+   const { data, isLoading, isFetching } = useQuery({
+    queryKey: ["vehicles", page, perPage,apiFilters],
+    queryFn:  fetchVehicles,
+    staleTime: 1000 * 30,
+    cacheTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    keepPreviousData: true,
+  });
+
+  const vehicles = data?.docs || [];
+  const totalPages = data?.pages || 1;
 
   const vehicleConfig = [
-    { name: "number", type: "select", searchable: true, placeholder: "Number" },
+    { name: "vehicleNo", type: "select", searchable: true, placeholder: "Number",      options: ["123", "22","144"],
+ },
     {
       name: "ownerName",
       type: "select",
       searchable: true,
       placeholder: "Owner Name",
-      options: ["Yoichi", "isagi"],
+      options: ["Yoichi", "isagi","zain"],
     },
     {
       name: "status",
@@ -35,14 +70,14 @@ function Vehicles() {
       searchable: false,
       placeholder: "Status",
       options: [
-        { label: "Active", value: "active" },
-        { label: "InActive", value: "inactive" },
+        { label: "Active", value: "Active" },
+        { label: "Inactive", value: "Inactive" },
       ],
     },
   ];
 
   const [filters, setFilters] = useState({
-    number: "",
+    vehicleNo: "",
     ownerName: "",
     status: "",
   });
@@ -51,10 +86,28 @@ function Vehicles() {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
+  console.log("apifil",apiFilters)
   const handleSearchSubmit = (finalFilters) => {
     console.log("Fetching Vehicles data with:", finalFilters);
+
+    setApiFilters({
+       ownerName: finalFilters.ownerName,
+       vehicleNo: finalFilters.vehicleNo,
+       status:finalFilters.status
+ 
+    })
+    setStatus(finalFilters.status)
+    setOwnerName(finalFilters.ownerName)
+    setVehicleNo(finalFilters.vehicleNo)
   };
 
+  // useEffect(()=>{
+  //   setPage(1)
+  // },{filters})
+  
+  console.log("status",status)
+  console.log("ownerName",ownerName)
+  console.log("vehicleNo",vehicleNo)
   return (
     <div className="w-full px-4 md:px-6 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
       <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
@@ -71,21 +124,21 @@ function Vehicles() {
             onClick={handleToggleSidebar}
             type="button"
             className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2.5 font-normal sm:font-medium text-[14px] sm:text-sm rounded-xl active:scale-[0.98] transition-all cursor-pointer shadow-sm ${
-              addVehicleOpen
+              addVehicleModelOpen
                 ? "bg-red-50 hover:bg-red-100 text-red-600 border border-red-200"
                 : "bg-[#1A1C1E] hover:bg-black text-white shadow-gray-200"
             }`}
           >
-            {addVehicleOpen ? (
+            {addVehicleModelOpen ? (
               <>
                 <X size={16} className="stroke-[2.5]" />
                 <span>Cancel</span>
               </>
             ) : (
-              <>
+              <button onClick={handleAdd} className="flex justify-center items-center gap-x-2">
                 <Plus size={18} className="stroke-[2.5]" />
                 <span>Add Vehicle</span>
-              </>
+              </button>
             )}
           </button>
         </div>
@@ -101,26 +154,34 @@ function Vehicles() {
       </div>
 
       <div
-        className={`w-full flex flex-col-reverse lg:flex-row  ${addVehicleOpen ? "gap-6" : ""} items-start`}
+        className={`w-full flex flex-col-reverse lg:flex-row  ${addVehicleModelOpen ? "gap-6" : ""} items-start`}
       >
         <div
           className={`transition-all duration-300 ease-in-out ${
-            addVehicleOpen ? "w-full lg:w-[65%] shrink-0" : "w-full"
+            addVehicleModelOpen ? "w-full lg:w-[65%] shrink-0" : "w-full"
           }`}
         >
-          <AllVehicles />
+          <AllVehicles     setEditedVehicle={handleEdit}
+            addModelOpen={handleToggleSidebar}
+            vehiclesData={vehicles}
+            isLoading={isLoading || isFetching}
+            page={page}
+            setPage={setPage}
+            perPage={perPage}
+            setPerPage={setPerPage}
+            totalPages={totalPages}/>
         </div>
 
         <div
           className={`transition-all duration-300 ease-in-out ${
-            addVehicleOpen
+            addVehicleModelOpen
               ? "w-full lg:w-[35%] opacity-100 scale-100 visible"
               : "w-0 h-0 opacity-0 scale-95 overflow-hidden invisible"
           }`}
         >
-          {addVehicleOpen && (
+          {addVehicleModelOpen && (
             <div className="w-full ">
-              <AddVehicle onSubmitSuccess={() => navigate("/app/vehicles")} />
+              <AddVehicle setEditedVehicle={setEditedVehicle} editVehicle={editVehicle} />
             </div>
           )}
         </div>

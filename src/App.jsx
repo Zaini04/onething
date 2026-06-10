@@ -18,10 +18,23 @@ import AddVendor from "./components/admin/vendors/AddVendor";
 import AddSite from "./components/admin/sites/AddSite";
 import VehicleDetails from "./pages/admin/VehicleDetails";
 import ClientDetails from "./pages/admin/ClientDetails";
-
+import {ToastContainer} from "react-toastify";
+import Users from "./pages/admin/Users";
 function App() {
   return (
     <>
+          <ToastContainer 
+          position="top-center"
+autoClose={2000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick={false}
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="light"
+/>
     <ScrollToTop />
       <Routes>
         <Route path="/auth/login" element={<Login />} />
@@ -35,13 +48,16 @@ function App() {
           <Route path="entry-vehicles/entry" element={<EntryVehicle />} />
           <Route path="clients" element={<Clients />} />
           <Route path="clients/add" element={<AddClient />} />
+          <Route path="clients/edit" element={<AddClient />} />
           <Route path="vendors" element={<Vendors />} />
           <Route path='vendors/add' element={<AddVendor />} />
           <Route path="sites" element={<AllSites />} />
           <Route path="sites/add" element={<AddSite />} />
+          <Route path="sites/edit" element={<AddSite />} />
           <Route path ='fuel-company' element={<FuelCompany />} />
           <Route path ='entry-fuel' element={<EntryFuels />} />
           <Route path ='income-expense' element={<IncomeTax />} />
+          <Route path ='users' element={<Users />} />
           <Route path ='settings' element={<Settings />} />
           <Route path="vehicles/:id" element={<VehicleDetails />} />
           <Route path="clients/:id" element={<ClientDetails />} />

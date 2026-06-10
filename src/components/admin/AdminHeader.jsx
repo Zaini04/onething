@@ -5,15 +5,22 @@ import { useEffect, useState, useRef } from "react";
 import AdminSidebar from "./AdminSidebar";
 import { useNavigate } from "react-router-dom";
 import LogoutModal from "../auth/LogoutModel";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "../../redux/actions/authAction";
 
 function AdminHeader({ openSidebar, setOpenSidebar }) {
   const navigate = useNavigate();
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const user = useSelector(state => state.auth.user)
 
+  console.log("userloged",user)
+
+  
+const dispatch = useDispatch()
   const handleLogoutConfirm = () => {
     setIsLogoutModalOpen(false);
-    navigate("/auth/login");
+    dispatch(logoutUser(navigate))
   };
   const dropdownRef = useRef(null);
 
@@ -69,9 +76,9 @@ function AdminHeader({ openSidebar, setOpenSidebar }) {
                   className="rounded-[50%] w-10 h-10"
                 />
                 <p className="flex flex-col">
-                  <span className="font-semibold text-sm">Imran Khan</span>
+                  <span className="font-semibold text-sm">{user?.username}</span>
                   <span className="text-xs font-normal text-[#1A1C1E99] pr-3">
-                    imranKhan@gmail.com
+                    {user?.email}
                   </span>
                 </p>
               </div>

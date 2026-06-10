@@ -279,6 +279,7 @@ export default function EntryVehicle() {
 
             <p className="text-xs text-gray-400">payment already received</p>
           </div>
+          <div className="flex gap-2 justify-center items-center">
           <button
             type="button"
             onClick={formik.handleReset}
@@ -293,6 +294,7 @@ export default function EntryVehicle() {
           >
             Confirm
           </button>
+          </div>
         </div>
       </form>
 

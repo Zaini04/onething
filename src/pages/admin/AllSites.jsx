@@ -4,14 +4,34 @@ import { useState } from "react";
 import SearchFilters from "../../components/global/SearchFilter";
 import ExportButton from "../../components/global/ExportButton";
 import AllSitesTable from "../../components/admin/sites/AllSitesTable";
+import { fetchSites } from "../../redux/actions/siteAction";
+import { useQuery } from "@tanstack/react-query";
 
 function AllSites() {
   const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [status, setStatus] = useState('');
+  const [apiFilters, setApiFilters] = useState({});
+
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey: ["clients", page, perPage, apiFilters],
+    queryFn: fetchSites,
+    staleTime: 1000 * 30,
+    cacheTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    keepPreviousData: true,
+  });
+
+  const sites = data?.docs || [];
+  const totalPages = data?.pages || 1;
+
   const clientVendorConfig = [
     {
-      name: "Phone/Name",
+      name: "name",
       type: "select",
-      placeholder: "Phone/Name",
+      placeholder: "Name",
       searchable: true,
       options: [
         { label: "Salman", value: "salman" },
@@ -35,13 +55,13 @@ function AllSites() {
       type: "select",
       placeholder: "Status",
       options: [
-        { label: "Active", value: "active" },
-        { label: "Inactive", value: "inactive" },
+        { label: "Active", value: "Active" },
+        { label: "Inactive", value: "Inactive" },
       ],
     },
   ];
 
-  const [filters, setFilters] = useState({ phone: "", date: "", status: "" });
+  const [filters, setFilters] = useState({ name: "", date: "", status: "" });
 
   const handleFilterChange = (name, value) => {
     setFilters((prev) => ({ ...prev, [name]: value }));
@@ -49,8 +69,13 @@ function AllSites() {
 
   const handleSearchSubmit = (finalFilters) => {
     console.log("Fetching Entry Vehicles data with fields:", finalFilters);
+     setApiFilters(finalFilters);
+    setPage(1);
   };
 
+   const handleEdit = (row)=>{
+    navigate(`/app/sites/edit`, { state: { siteData: row } });
+  }
   return (
     <div className="w-full px-4 md:px-6 py-6 min-h-screen bg-[#F7F7F7] overflow-hidden">
       <div className="w-full flex flex-col  animate-in fade-in duration-200">
@@ -85,7 +110,17 @@ function AllSites() {
         </div>
 
         <div className="w-full ">
-          <AllSitesTable />
+          <AllSitesTable 
+          setEditedSite={handleEdit}
+            sitesData={sites} 
+            isLoading={isLoading || isFetching} 
+            page={page} 
+            perPage={perPage}
+            setPage={setPage} 
+            setPerPage={setPerPage}
+            totalPages={totalPages}
+          
+          />
         </div>
       </div>
     </div>

@@ -25,6 +25,8 @@ const FormInput = ({
     value !== undefined ? value : formik ? formik.values[id] : "";
   const hasValue = !!currentVal && currentVal !== "";
 
+  const formikProps = formik ? formik.getFieldProps(id) : {};
+
   return (
     <div className="relative w-full group flex flex-col gap-1.5">
       <div className="relative w-full">
@@ -38,11 +40,12 @@ const FormInput = ({
         {type === "select" ? (
           <div className="relative">
             <select
-              id={id}
-              value={value}
-              onChange={onChange}
-              onBlur={onBlur}
-              {...(formik && !onChange ? formik.getFieldProps(id) : {})}
+  id={id}
+  {...formikProps}
+  value={value !== undefined ? value : formikProps.value}
+  onChange={onChange || formikProps.onChange}
+  onBlur={onBlur || formikProps.onBlur}
+
               className={`w-full px-4 py-2.5 border rounded-xl text-xs font-normal appearance-none bg-white focus:outline-none transition-all ${
                 isError
                   ? "border-red-500 focus:border-red-500"
@@ -60,7 +63,7 @@ const FormInput = ({
                 const optionLabel = isObject ? opt.label : opt;
 
                 const isAlreadyAdded = materialsList.some(
-                  (item) => item.name === optionValue,
+                  (item) => (item.name || item.materialType) === optionValue,
                 );
 
                 return (
@@ -116,7 +119,7 @@ const FormInput = ({
               key={index}
               className="flex items-center gap-1.5 bg-gray-100 border border-gray-200/60 text-gray-800 text-[11px] font-medium pl-1.5 pr-1 py-1 rounded-lg transition-all"
             >
-              <span>{item.name}</span>
+              <span>{item.name || item.menu || item.materialType}</span>
               {onRemoveMaterial && (
                 <button
                   type="button"

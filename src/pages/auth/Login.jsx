@@ -6,20 +6,23 @@ import { Eye, EyeOff } from "lucide-react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { loginValidation } from "../../validations/loginValidation";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../redux/actions/authAction";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
-
+  const dispatch = useDispatch()
   const initialLoginValue = {
-    email: "",
+    identifier: "",
     password: "",
   };
 
+  
+
   const navigate = useNavigate();
 
-  const handleLogin = (values) => {
-    console.log(values);
-    navigate("/app/dashboard");
+  const handleLogin =  (values,{resetForm}) => {
+    dispatch(loginUser(values,navigate, resetForm))
   };
 
   return (
@@ -119,13 +122,13 @@ function Login() {
 
                 <Field
                   type="email"
-                  name="email"
+                  name="identifier"
                   placeholder="yourname@gmail.com"
                   className="w-full  px-4 py-3 border text-[12px] text-black font-normal border-[#DCE4E8] rounded-xl outline-none placeholder:text-gray-400"
                 />
 
                 <ErrorMessage
-                  name="email"
+                  name="identifier"
                   component="p"
                   className="text-red-500 text-sm mt-1"
                 />

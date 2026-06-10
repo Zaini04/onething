@@ -5,62 +5,118 @@ import { FaArrowLeft } from "react-icons/fa";
 import { addSiteValidation } from "../../../validations/AddSiteValidation";
 import SearchSelect from "../../global/SearchSelect";
 import FormInput from "../../global/FormInput";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useLocation, useNavigate } from "react-router-dom";
+import Axios from "../../../configs/api";
+import { toast } from "react-toastify";
+import { toastError } from "../../../hooks/toastError";
+import { useClientDropdown } from "../../../redux/actions/clientAction";
 
 const AddSite = () => {
-  const [siteImage, setSiteImage] = useState(null);
   const availableMaterials = ["Soil", "Sand", "Crush", "Gravel", "Concrete"];
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  const editData = location.state?.siteData; 
+  const isEditMode = !!editData; 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Syncing image states with updated schema property
+  const [siteImage, setSiteImage] = useState(editData?.image || null);
+
+  const clientMutation = useMutation({
+    mutationFn: async (payload) => {
+      setIsSubmitting(true);
+      if (isEditMode) {
+        return Axios.put(`/site/${editData._id}`, payload);
+      }
+      return Axios.post('/site/add_site', payload);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sites"] });
+      setIsSubmitting(false);
+      formik.resetForm();
+      setSiteImage(null);
+      toast.success(isEditMode ? "Site updated successfully!" : "Site created successfully!");
+      navigate("/app/sites");
+    },
+    onError: (err) => {
+      console.error("Mutation Error:", err);
+      setIsSubmitting(false);
+      toastError(err);
+    }
+  });
 
   const formik = useFormik({
     initialValues: {
-      client: "",
-      siteName: "",
-      address: "",
-      materials: [],
+      client: editData?.client._id || "",
+      siteName: editData?.siteName || "",
+      address: editData?.address || "",
+      // Map incoming materialsRates from DB schema array keys to form field array keys
+      materialsRates: editData?.materialsRates?.map(item => ({
+        materialType: item.materialType,
+        rateType: item.rateType === "per sft" ? "per sft" : item.rateType, // ensuring alignment with "per sft"
+        rate: item.rate.toString(),
+      })) || [],
     },
     validationSchema: addSiteValidation,
     onSubmit: (values) => {
-      console.log("Site Submitted Data:", { ...values, siteImage });
+      // Append base64 image or URL back to the exact 'image' key expected by Mongoose
+      const finalPayload = {
+        ...values,
+        image: siteImage,
+      };
+      
+      clientMutation.mutate(finalPayload);
     },
   });
+
+const { data: clientDropdownData, isLoading } = useClientDropdown();
+
+const clientOptions =
+  clientDropdownData?.map((c) => ({
+    id: c._id,
+    name: c.name,
+  })) || [];
 
   const handleMaterialSelect = (e) => {
     const selected = e.target.value;
     if (
       selected &&
-      !formik.values.materials.some((item) => item.name === selected)
+      !formik.values.materialsRates.some((item) => item.materialType === selected)
     ) {
       const updatedMaterials = [
-        ...formik.values.materials,
-        { name: selected, rateType: "", rate: "" },
+        ...formik.values.materialsRates,
+        { materialType: selected, rateType: "", rate: "" },
       ];
-      formik.setFieldValue("materials", updatedMaterials);
+      formik.setFieldValue("materialsRates", updatedMaterials);
     }
-
     e.target.value = "";
   };
 
   const handleRemoveMaterial = (indexToRemove) => {
-    const updatedMaterials = formik.values.materials.filter(
+    const updatedMaterials = formik.values.materialsRates.filter(
       (_, index) => index !== indexToRemove,
     );
-    formik.setFieldValue("materials", updatedMaterials);
+    formik.setFieldValue("materialsRates", updatedMaterials);
   };
 
   const handleMaterialDataChange = (index, field, value) => {
     if (field === "rate") {
       if (/[^0-9]/.test(value)) {
         formik.setFieldError(
-          `materials[${index}].rate`,
+          `materialsRates[${index}].rate`,
           "Please write numbers only",
         );
-        formik.setFieldTouched(`materials[${index}].rate`, true, false);
+        formik.setFieldTouched(`materialsRates[${index}].rate`, true, false);
         return;
       }
     }
 
-    const updatedMaterials = [...formik.values.materials];
+    const updatedMaterials = [...formik.values.materialsRates];
     updatedMaterials[index][field] = value;
-    formik.setFieldValue("materials", updatedMaterials);
+    formik.setFieldValue("materialsRates", updatedMaterials);
   };
 
   const handleImageUpload = (e) => {
@@ -74,15 +130,18 @@ const AddSite = () => {
     }
   };
 
-  const handleClear = () => {
+ const handleClear = () => {
     formik.resetForm();
     setSiteImage(null);
+    if (isEditMode) {
+      navigate("/app/sites");
+    }
   };
 
   return (
     <div className="w-full mx-auto p-4 md:p-6 bg-[#F9FAFB] rounded-2xl">
       <div className="flex justify-between items-center text-gray-900 mb-6 tracking-tight">
-        <h2 className="text-lg font-medium">Add Site</h2>
+        <h2 className="text-lg font-medium">{isEditMode ? "Edit Site" : "Add Site"}</h2>
         <button
           type="button"
           onClick={() => window.history.back()}
@@ -99,6 +158,7 @@ const AddSite = () => {
         onSubmit={formik.handleSubmit}
         className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100/80"
       >
+        {/* Profile/Site Image Section */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
           <div className="w-20 h-20 rounded-2xl bg-purple-50 overflow-hidden flex items-center justify-center border border-gray-100">
             {siteImage ? (
@@ -146,7 +206,7 @@ const AddSite = () => {
           <SearchSelect
             label="Client"
             placeholder="Choose a client"
-            options={["Salman", "Imran Khan", "Saad"]}
+            options={clientOptions}
             value={formik.values.client}
             onChange={(val) => formik.setFieldValue("client", val, true)}
             onBlur={() => formik.setFieldTouched("client", true, true)}
@@ -181,39 +241,39 @@ const AddSite = () => {
               options={availableMaterials}
               formik={formik}
               onChange={handleMaterialSelect}
-              materialsList={formik.values.materials}
+              materialsList={formik.values.materialsRates}
               onRemoveMaterial={handleRemoveMaterial}
             />
-            {formik.touched.materials &&
-              typeof formik.errors.materials === "string" && (
+            {formik.touched.materialsRates &&
+              typeof formik.errors.materialsRates === "string" && (
                 <p className="text-[11px] text-red-500 mt-1 ml-1">
-                  {formik.errors.materials}
+                  {formik.errors.materialsRates}
                 </p>
               )}
           </div>
 
-          {formik.values.materials.length > 0 && (
-            <div className="col-span-1  md:col-span-2 flex flex-col gap-5 mt-2">
-              {formik.values.materials.map((material, index) => {
-                const itemErrors = formik.errors.materials?.[index] || {};
-                const itemTouched = formik.touched.materials?.[index] || {};
+          {formik.values.materialsRates.length > 0 && (
+            <div className="col-span-1 md:col-span-2 flex flex-col gap-5 mt-2">
+              {formik.values.materialsRates.map((material, index) => {
+                const itemErrors = formik.errors.materialsRates?.[index] || {};
+                const itemTouched = formik.touched.materialsRates?.[index] || {};
 
                 return (
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full lg:flex-1">
+                  <div key={index} className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full lg:flex-1">
                     <FormInput
                       label="Material Type"
-                      id={`materialName-${index}`}
-                      value={material.name}
+                      id={`materialsRates[${index}].materialType`}
+                      value={material.materialType}
                       readOnly={true}
                     />
 
                     <div>
                       <FormInput
                         label="Rate Type"
-                        id={`rateType-${index}`}
+                        id={`materialsRates[${index}].rateType`}
                         type="select"
                         defaultOption="Select Type"
-                        options={["per sqft", "per vehicle"]}
+                        options={["per sft", "per vehicle"]} // Swapped out "per sqft" to precisely match your Mongoose enum values
                         value={material.rateType}
                         isCustomError={
                           itemTouched.rateType && !!itemErrors.rateType
@@ -227,7 +287,7 @@ const AddSite = () => {
                         }
                         onBlur={() =>
                           formik.setFieldTouched(
-                            `materials[${index}].rateType`,
+                            `materialsRates[${index}].rateType`,
                             true,
                           )
                         }
@@ -242,7 +302,7 @@ const AddSite = () => {
                     <div>
                       <FormInput
                         label="Rate"
-                        id={`rate-${index}`}
+                        id={`materialsRates[${index}].rate`}
                         placeholder="e.g. 1500"
                         type="text"
                         value={material.rate}
@@ -256,7 +316,7 @@ const AddSite = () => {
                         }
                         onBlur={() =>
                           formik.setFieldTouched(
-                            `materials[${index}].rate`,
+                            `materialsRates[${index}].rate`,
                             true,
                           )
                         }
@@ -271,7 +331,7 @@ const AddSite = () => {
                     <button
                       type="button"
                       onClick={() => handleRemoveMaterial(index)}
-                      className="p-3 bg-red-50 hover:bg-red-100  text-red-500 rounded-xl transition-all cursor-pointer self-start sm:self-auto sm:h-[38px] flex items-center justify-center border border-red-100 shadow-2xs"
+                      className="p-3 bg-red-50 hover:bg-red-100 text-red-500 rounded-xl transition-all cursor-pointer self-start sm:self-auto sm:h-[38px] flex items-center justify-center border border-red-100 shadow-2xl"
                       title="Delete Row"
                     >
                       <FiTrash2 size={16} />
@@ -293,9 +353,10 @@ const AddSite = () => {
           </button>
           <button
             type="submit"
-            className="px-5 sm:px-8 py-2.5 bg-[#1A1C1E] text-white font-medium text-sm rounded-xl transition-all cursor-pointer shadow-sm active:scale-[0.99]"
+            disabled={isSubmitting}
+            className="px-5 sm:px-8 py-2.5 bg-[#1A1C1E] disabled:bg-gray-400 text-white font-medium text-sm rounded-xl transition-all cursor-pointer shadow-sm active:scale-[0.99]"
           >
-            Confirm
+            {isSubmitting ? "Submitting..." : "Confirm"}
           </button>
         </div>
       </form>

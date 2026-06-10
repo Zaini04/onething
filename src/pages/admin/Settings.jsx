@@ -1,11 +1,25 @@
 import { useState, useRef } from "react";
 import { useFormik } from "formik";
 import { settingsValidation } from "../../validations/settingsValidation";
+import RoleForm from "../../components/admin/settings/RoleForm";
+// import { useDispatch, useSelector } from "react-redux";
+// import Axios from "../../configs/api";
+// import { setLoading, setRole } from "../../redux/slices/roleSlice";
+// import { toast } from "react-toastify";
+// import { toastError } from "../../hooks/toastError";
+// import { useEffect } from "react";
+import {  useUsers } from "../../redux/actions/superAdminActions";
+import AllUserTable from "../../components/admin/users/AllUserTable";
 
 export default function Settings() {
   const fileInputRef = useRef(null);
   const [logoPreview, setLogoPreview] = useState(null);
+  const [companySettings,setCompanySettings]=useState(true)
+  const [companyRoles,setCompanyRoles] = useState(false)
 
+  const [page, setPage] = useState(1);
+const [perPage, setPerPage] = useState(10);
+  // const dispatch= useDispatch()
   const formik = useFormik({
     initialValues: {
       companyName: "",
@@ -19,6 +33,9 @@ export default function Settings() {
       console.log("Formik Submitted Data:", values);
     },
   });
+
+  // const role = useSelector(state => state.role.role)
+  // console.log("role",role)
 
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
@@ -38,6 +55,37 @@ export default function Settings() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  const {data,isLoading,isFetching} = useUsers(page,perPage)
+const users = data?.docs || [];
+const totalPages = data?.pages || 1;
+
+
+
+
+  const settingModel = ()=>{
+    setCompanySettings(true)
+    setCompanyRoles(false)
+  }
+  const rolesModel = ()=>{
+  setCompanySettings(false)
+  setCompanyRoles(true)
+}
+  // const userRoles = async()=>{
+  //   setLoading(true)
+  //   try {
+  //    const {data:{data:{doc,message}}}= await Axios.get('/user/get-user-roles')
+  //     dispatch(setRole(doc.roles))
+  //     console.log(doc)
+  //     setLoading(false)
+  //   } catch (error) {
+  //     toastError(error)
+  //   }
+  // }
+
+  // useEffect(()=>{
+  //   userRoles()
+  // },[])
+
   return (
     <div className="w-full px-4 md:px-6 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
       <div className="w-full pb-4">
@@ -45,8 +93,25 @@ export default function Settings() {
           Settings
         </h1>
       </div>
-
-      <div className="w-full mt-4 bg-white rounded-3xl border border-gray-100 shadow-sm p-8">
+      <div className=" mt-4  ">
+              <div className="flex text-xs items-center gap-x-6 gap-y-4 mb-4 bg-gray-200 py-0.5  px-4 rounded-xl">
+                <button onClick={settingModel}
+                  className={`text-gray-700 hover:border-b-2 h-10 hover:border-black  hover:text-gray-900 cursor-pointer  ${companySettings ? "font-semibold border-b-2 border-black text-black" : ""} `}
+                >
+                  Company Settings
+                </button>
+                <button onClick={rolesModel}
+                  className={`text-gray-700 hover:border-b-2 h-10 hover:border-black  hover:text-gray-900 cursor-pointer ${companyRoles ? "font-semibold border-b-2 border-black text-black" : ""} `}
+                >
+                  Company Roles
+                </button>
+              
+              </div>
+              
+            </div>
+            {
+              companySettings === true ? 
+              <div className="w-full mt-4 bg-white rounded-3xl border border-gray-100 shadow-sm p-8">
         <form onSubmit={formik.handleSubmit} className="space-y-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
             <div className="w-20 h-20 bg-[#F4F4F6] rounded-xl flex items-center justify-center border border-gray-100 overflow-hidden">
@@ -222,6 +287,26 @@ export default function Settings() {
           </div>
         </form>
       </div>
+      :
+      <>
+      <div className="w-full mt-4 mb-4 bg-white rounded-3xl border border-gray-100 shadow-sm p-8">
+    <RoleForm  />
+</div>
+    <AllUserTable  usersData={users} isLoading={isLoading || isFetching}  page={page}
+  setPage={setPage}
+  perPage={perPage}
+  setPerPage={setPerPage}
+  totalPages={totalPages}
+    
+    
+    />
+    </>
+            }
+
+
+    
+
+      
     </div>
   );
 }

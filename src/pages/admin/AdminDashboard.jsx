@@ -2,8 +2,17 @@ import { ArrowUpRight, Wallet, Clock } from "lucide-react";
 import StatsCards from "../../components/admin/dashboard/StatsCard";
 import SalesProfitTrend from "../../components/admin/dashboard/SalesProfitTrend";
 import ClientsTable from "../../components/admin/clients/ClientsTable";
+import { useClients } from "../../redux/actions/clientAction";
+import { useState } from "react";
 
 function AdminDashboard() {
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const {data,isLoading,isFetching} = useClients(page,perPage)
+  console.log("clients",data)
+
+  const clients = data?.docs || [];
+  const totalPages = data?.pages || 1;
   return (
     <div className="w-full px-4 md:px-6 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden flex flex-col gap-y-6">
       <div className="w-full">
@@ -108,7 +117,15 @@ function AdminDashboard() {
         <h2 className="font-medium mb-3 text-xl text-black tracking-tight">
           Recent Clients
         </h2>
-        <ClientsTable />
+        <ClientsTable clientsData={clients}
+        isLoading={isLoading || isFetching}
+        totalPages={totalPages}
+        page={page}
+        setPage={setPage}
+        perPage={perPage}
+        setPerPage={setPerPage}
+        
+        />
       </div>
     </div>
   );

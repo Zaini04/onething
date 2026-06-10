@@ -2,12 +2,13 @@ import { useState } from "react";
 import profile from "../../../assets/images/profileImage.jpg";
 import DeleteButton from "../../global/DeleteButton";
 import { useNavigate } from "react-router-dom";
-import { clientInitialData } from "../../../assets/mockData";
+import { TableSkeletonRows } from "../../global/TableSkeletonRows";
+import Axios from "../../../configs/api";
 
 const statusStyles = {
   Active:
     "bg-[#E6F6EC] text-[#15803D] font-medium rounded-lg text-xs px-3 py-1.5 text-center border border-transparent",
-  InActive:
+  Inactive:
     "bg-[#EFF6FF] text-[#1D4ED8] font-medium rounded-lg text-xs px-3 py-1.5 text-center border border-transparent",
   Block:
     "bg-[#FEE2E2] text-[#DC2626] font-semibold rounded-lg text-xs px-3 py-1.5 text-center border border-transparent",
@@ -54,31 +55,33 @@ function SortIcon() {
   );
 }
 
-export default function ClientsTable() {
+export default function ClientsTable({  setEditedClient,
+            clientsData = [],
+            isLoading,
+            page,
+            perPage,setPerPage,
+            setPage,
+            totalPages}) {
   const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
   const [showPerPage, setShowPerPage] = useState(false);
 
   const navigate = useNavigate();
-
-  const totalPages = Math.ceil(clientInitialData.length / perPage);
-  const pageData = clientInitialData.slice(
+  const pageData = clientsData.slice(
     (page - 1) * perPage,
     page * perPage,
-  );
+  ) || [];
   const allSelected =
-    pageData.length > 0 && pageData.every((r) => selected.includes(r.id));
+    pageData.length > 0 && pageData.every((r) => selected.includes(r._id));
 
   const toggleAll = () => {
     if (allSelected) {
       setSelected((prev) =>
-        prev.filter((id) => !pageData.map((r) => r.id).includes(id)),
+        prev.filter((id) => !pageData.map((r) => r._id).includes(id)),
       );
     } else {
       setSelected((prev) => [
         ...prev,
-        ...pageData.map((r) => r.id).filter((id) => !prev.includes(id)),
+        ...pageData.map((r) => r._id).filter((id) => !prev.includes(id)),
       ]);
     }
   };
@@ -110,8 +113,11 @@ export default function ClientsTable() {
   };
 
   const handleEdit = (row) => {
+    setEditedClient(row)
     console.log("Edit clicked for client:", row);
   };
+
+  
 
   const handleView = (id) => {
     console.log("View details for client ID:", id);
@@ -159,7 +165,16 @@ export default function ClientsTable() {
               </thead>
 
               <tbody className="divide-y divide-gray-50/60">
-                {pageData.map((row) => {
+              {isLoading ? (
+   <TableSkeletonRows rowsCount={perPage || 5} />
+                ) : pageData.length === 0 ? (
+                  <tr>
+                    <td colSpan="7" className="py-8 text-center text-sm text-gray-400">
+                      No entries found.
+                    </td>
+                  </tr>
+                ) :(
+ pageData.map((row,index) => {
                   const isRowSelected = selected.includes(row.id);
                   return (
                     <tr
@@ -178,18 +193,19 @@ export default function ClientsTable() {
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 truncate">
-                        {row.no}
+                        {(page - 1) * perPage + index + 1}
+
                       </td>
 
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2.5 max-w-full">
                           <img
                             src={profile}
-                            alt={row.clientName}
+                            alt={row.name}
                             className="w-7 h-7 rounded-full object-cover shadow-sm flex-shrink-0 ring-1 ring-gray-100"
                           />
                           <span className="text-[12px] font-normal text-gray-800 truncate">
-                            {row.clientName}
+                            {row.name}
                           </span>
                         </div>
                       </td>
@@ -199,12 +215,12 @@ export default function ClientsTable() {
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700 truncate">
-                        {row.createdDate}
+{new Date(row.createdAt).toLocaleDateString()}
                       </td>
 
                       <td className="py-3.5 px-4">
                         <span className="inline-block bg-[#F1F3F5] text-gray-700 text-[11px] font-medium px-2 py-1 rounded border border-gray-200/50 truncate max-w-full">
-                          {row.location}
+                          {row.city}
                         </span>
                       </td>
 
@@ -264,13 +280,17 @@ export default function ClientsTable() {
                           </button>
 
 
-                          <DeleteButton row={row} />
+                          <DeleteButton row={row} deleteFn={(id) => Axios.delete(`/client/${id}`)} 
+  queryKey="vehicles" 
+  title="Delete Vehicle" />
 
                         </div>
                       </td>
                     </tr>
                   );
-                })}
+                })
+              )}
+               
               </tbody>
             </table>
           </div>
@@ -346,8 +366,8 @@ export default function ClientsTable() {
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
               <span>
                 Showing {(page - 1) * perPage + 1} to{" "}
-                {Math.min(page * perPage, clientInitialData.length)} of{" "}
-                {clientInitialData.length} entries
+                {Math.min(page * perPage, clientsData.length)} of{" "}
+                {clientsData.length} entries
               </span>
 
               <div className="relative">

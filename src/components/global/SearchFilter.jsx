@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import SearchSelect from "./SearchSelect";
 import FormInput from "./FormInput";
 
@@ -37,6 +37,7 @@ function SearchFilters({ config, filters, onFilterChange, onSubmit }) {
 
             if (field.type === "select" && field.searchable) {
               return (
+                <div className="relative">
                 <SearchSelect
                   key={field.name}
                   label={field.label || ""}
@@ -45,6 +46,16 @@ function SearchFilters({ config, filters, onFilterChange, onSubmit }) {
                   value={filters[field.name] || ""}
                   onChange={(val) => onFilterChange(field.name, val)}
                 />
+                {filters[field.name] && (
+  <button
+    type="button"
+    className="absolute right-12 top-3 cursor-pointer z-50"
+    onClick={() => onFilterChange(field.name, "")}
+  >
+    <X size={16}/>
+  </button>
+)}
+                </div>
               );
             }
 

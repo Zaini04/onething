@@ -1,29 +1,75 @@
 import { useState } from "react";
 import { useFormik } from "formik";
+import { useLocation, useNavigate } from "react-router-dom"; 
 import { clientValidation } from "./../../../validations/ClientValidation";
 import { FaArrowLeft } from "react-icons/fa";
 import SearchSelect from "../../global/SearchSelect";
 import FormInput from "../../global/FormInput";
+import Axios from "../../../configs/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { toastError } from "../../../hooks/toastError";
 
 const AddClient = () => {
-  const [profileImage, setProfileImage] = useState(null);
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  const editData = location.state?.clientData; 
+
+  const isEditMode = !!editData; 
+      const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [profileImage, setProfileImage] = useState(editData?.image || null);
+
+  // Dynamic mutation configuration matching your vehicle implementation workflow
+  const clientMutation = useMutation({
+    mutationFn: async (payload) => {
+      setIsSubmitting(true)
+      if (isEditMode) {
+        return Axios.put(`/client/${editData._id}`, payload);
+      }
+      return Axios.post('/client/add_client', payload);
+    },
+    onSuccess: () => {
+      // Invalidates cache layer telling clients view to re-fetch on mount
+      queryClient.invalidateQueries({ queryKey: ["clients"] });
+      setIsSubmitting(false)
+      formik.resetForm();
+
+      setProfileImage(null);
+
+      
+      toast.success(isEditMode ? "Client updated successfully!" : "Client created successfully!");
+      navigate("/app/clients");
+    },
+    onError: (err) => {
+      console.error("Mutation Error:", err);
+      setIsSubmitting(false)
+      // const errorMsg = err.response?.data?.message || err.response?.data?.error?.message2 || "An unexpected error occurred.";
+      toastError(err);
+    }
+  });
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      fatherOrHusbandName: "",
-      cnic: "",
-      phoneNumber: "",
-      whatsAppNumber: "",
-      email: "",
-      address: "",
-      city: "",
-      state: "",
-      status: "",
+      name: editData?.name || "",
+      fatherOrHusbandName: editData?.fatherOrHusbandName || "",
+      cnicOrNicop: editData?.cnicOrNicop || "",
+      phoneNumber: editData?.phoneNumber || "",
+      whatsAppNumber: editData?.whatsAppNumber || "",
+      email: editData?.email || "",
+      address: editData?.address || "",
+      city: editData?.city || "",
+      state: editData?.state || "",
+      status: editData?.status || "",
     },
+    enableReinitialize: true, 
     validationSchema: clientValidation,
-    onSubmit: (values) => {
-      console.log("Form Submitted Data:", { ...values, profileImage });
+    onSubmit: async (values) => {
+      const submissionPayload = { ...values, image: profileImage || "" };
+      clientMutation.mutate(submissionPayload);
+      
     },
   });
 
@@ -34,23 +80,27 @@ const AddClient = () => {
       reader.onloadend = () => setProfileImage(reader.result);
       reader.readAsDataURL(file);
     } else {
-      alert("File size should be less than 800KB");
+      toast.error("File size should be less than 800KB");
     }
   };
 
   const handleClear = () => {
     formik.resetForm();
     setProfileImage(null);
+    if (isEditMode) {
+      navigate("/app/clients");
+    }
   };
 
   return (
     <div className="w-full mx-auto p-4 md:p-6 bg-[#F9FAFB] rounded-2xl">
       <div className="flex justify-between items-center text-gray-900 mb-6 tracking-tight">
-        <h2 className="text-lg font-medium">Add Client</h2>
+        <h2 className="text-lg font-medium">{isEditMode ? "Edit Client" : "Add Client"}</h2>
         <button
           type="button"
-          onClick={() => window.history.back()}
-          className="text-gray-500 hover:text-gray-700 transition-colors"
+          disabled={clientMutation.isLoading}
+          onClick={() => navigate("/app/clients")}
+          className="text-gray-500 hover:text-gray-700 transition-colors disabled:opacity-50"
         >
           <FaArrowLeft
             className="cursor-pointer bg-white p-2 rounded-xl w-12 h-9 border border-gray-100 shadow-sm"
@@ -83,19 +133,21 @@ const AddClient = () => {
           </div>
           <div>
             <div className="flex gap-3 mb-1">
-              <label className="cursor-pointer bg-black text-white px-4 py-2 rounded-xl text-xs font-medium hover:bg-gray-800 transition shadow-sm">
+              <label className={`cursor-pointer bg-black text-white px-4 py-2 rounded-xl text-xs font-medium hover:bg-gray-800 transition shadow-sm ${clientMutation.isLoading ? "opacity-50 pointer-events-none" : ""}`}>
                 Upload new
                 <input
                   type="file"
                   accept="image/*"
                   className="hidden"
                   onChange={handleImageUpload}
+                  disabled={clientMutation.isLoading}
                 />
               </label>
               <button
                 type="button"
+                disabled={clientMutation.isLoading}
                 onClick={() => setProfileImage(null)}
-                className="px-4 py-2 border border-gray-200 rounded-xl text-xs font-medium text-gray-700 hover:bg-gray-50 transition shadow-sm"
+                className="px-4 py-2 border border-gray-200 rounded-xl text-xs font-medium text-gray-700 hover:bg-gray-50 transition shadow-sm disabled:opacity-50"
               >
                 Delete
               </button>
@@ -122,8 +174,8 @@ const AddClient = () => {
 
           <FormInput
             label="CNIC / NICOP Number"
-            id="cnic"
-            placeholder="Enter client CNIC "
+            id="cnicOrNicop"
+            placeholder="Enter client CNIC"
             formik={formik}
           />
           <FormInput
@@ -182,7 +234,7 @@ const AddClient = () => {
             type="select"
             id="status"
             defaultOption="Select Status"
-            options={["Active", "InActive"]}
+            options={["Active", "Inactive"]}
             formik={formik}
           />
         </div>
@@ -190,16 +242,25 @@ const AddClient = () => {
         <div className="flex justify-end gap-4 mt-8 pt-2">
           <button
             type="button"
+            disabled={clientMutation.isLoading}
             onClick={handleClear}
-            className="px-5 sm:px-8 py-2.5 border border-gray-200 hover:bg-gray-50 text-gray-900 font-medium text-sm rounded-xl transition-all cursor-pointer shadow-sm active:scale-[0.99]"
+            className="px-5 sm:px-8 py-2.5 border border-gray-200 hover:bg-gray-50 text-gray-900 font-medium text-sm rounded-xl transition-all cursor-pointer shadow-sm active:scale-[0.99] disabled:opacity-50"
           >
             Clear
           </button>
           <button
             type="submit"
-            className="px-5 sm:px-8 py-2.5 bg-[#1A1C1E] hover:bg-black text-white font-medium text-sm rounded-xl transition-all cursor-pointer shadow-sm active:scale-[0.99]"
+            disabled={isSubmitting}
+            className="px-5 sm:px-8 py-2.5 bg-[#1A1C1E] hover:bg-black text-white font-medium text-sm rounded-xl transition-all cursor-pointer shadow-sm active:scale-[0.99] disabled:opacity-70 flex items-center justify-center gap-2"
           >
-            Confirm
+            {isSubmitting ? (
+              <>
+                <span className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></span>
+                <span>Processing...</span>
+              </>
+            ) : (
+              <span>Confirm</span>
+            )}
           </button>
         </div>
       </form>

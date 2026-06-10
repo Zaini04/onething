@@ -3,15 +3,19 @@ import profile from "../../../assets/images/profileImage.jpg";
 import DeleteButton from "../../global/DeleteButton";
 import { useNavigate } from "react-router-dom";
 import { initialData } from "../../../assets/mockData";
+import { TableSkeletonRows } from "../../global/TableSkeletonRows";
+import Axios from "../../../configs/api";
 
 const statusStyles = {
   Active:
     "bg-[#E6F6EC] text-[#15803D] font-medium rounded-lg text-xs px-3 py-1 text-center border border-transparent",
-  InActive:
+  Inactive:
     "bg-[#EFF6FF] text-[#1D4ED8] font-medium rounded-lg text-xs px-3 py-1 text-center border border-transparent",
   view: "p-2 rounded-xl bg-[#E6F7F5] text-[#00A389] hover:bg-[#D4F2EE] transition cursor-pointer",
 
-  Block:
+  Blocked:
+    "bg-[#FEE2E2] text-[#DC2626] font-semibold rounded-lg text-xs px-3 py-1 text-center border border-transparent",
+  Deleted:
     "bg-[#FEE2E2] text-[#DC2626] font-semibold rounded-lg text-xs px-3 py-1 text-center border border-transparent",
 };
 
@@ -59,14 +63,20 @@ function SortIcon() {
   );
 }
 
-export default function AllVehicles() {
+export default function AllVehicles({
+  setEditedVehicle,
+  vehiclesData = [],
+  isLoading,
+  page,
+  setPage,
+  perPage,
+  setPerPage,
+  totalPages,
+}) {
   const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
   const [showPerPage, setShowPerPage] = useState(false);
 
-  const totalPages = Math.ceil(initialData.length / perPage);
-  const pageData = initialData.slice((page - 1) * perPage, page * perPage);
+  const pageData = vehiclesData
   const allSelected =
     pageData.length > 0 && pageData.every((r) => selected.includes(r.id));
 
@@ -75,12 +85,12 @@ export default function AllVehicles() {
   const toggleAll = () => {
     if (allSelected) {
       setSelected((prev) =>
-        prev.filter((id) => !pageData.map((r) => r.id).includes(id)),
+        prev.filter((id) => !pageData.map((r) => r._id).includes(id)),
       );
     } else {
       setSelected((prev) => [
         ...prev,
-        ...pageData.map((r) => r.id).filter((id) => !prev.includes(id)),
+        ...pageData.map((r) => r._id).filter((id) => !prev.includes(id)),
       ]);
     }
   };
@@ -112,12 +122,11 @@ export default function AllVehicles() {
   };
 
   const handleEdit = (row) => {
-    console.log("Edit clicked for vehicle:", row);
+    setEditedVehicle(row)
   };
 
   const handleView = (row) => {
-    console.log("View clicked for vehicle:", row);
-    navigate(`/app/vehicles/${row.id}`);
+    navigate(`/app/vehicles/${row._id}`);
   };
 
   return (
@@ -158,7 +167,17 @@ export default function AllVehicles() {
               </thead>
 
               <tbody className="divide-y divide-gray-50/60">
-                {pageData.map((row) => {
+
+              {isLoading ? (
+                  <TableSkeletonRows rowsCount={perPage || 5} />
+                ) : pageData.length === 0 ? (
+                  <tr>
+                    <td colSpan="7" className="py-8 text-center text-sm text-gray-400">
+                      No entries found.
+                    </td>
+                  </tr>
+                ) :(
+                pageData.map((row,index) => {
                   const isRowSelected = selected.includes(row.id);
                   return (
                     <tr
@@ -171,13 +190,13 @@ export default function AllVehicles() {
                         <input
                           type="checkbox"
                           checked={isRowSelected}
-                          onChange={() => toggleRow(row.id)}
+                          onChange={() => toggleRow(row._id)}
                           className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
                         />
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
-                        {row.no}
+                          {(page - 1) * perPage + index + 1}
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-900 tracking-wide">
@@ -187,7 +206,7 @@ export default function AllVehicles() {
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2.5">
                           <img
-                            src={profile}
+                            src={row.image || profile}
                             alt={row.ownerName}
                             className="w-7 h-7 rounded-full object-cover shadow-sm ring-1 ring-gray-100"
                           />
@@ -256,12 +275,16 @@ export default function AllVehicles() {
                             </svg>
                           </button>
 
-                          <DeleteButton row={row} />
+                          <DeleteButton row={row} deleteFn={(id) => Axios.delete(`/vehicle/${id}`)} 
+  queryKey="vehicles" 
+  title="Delete Vehicle"/>
                         </div>
                       </td>
                     </tr>
-                  );
-                })}
+                   );
+                  })
+                
+                )}
               </tbody>
             </table>
           </div>
@@ -337,8 +360,8 @@ export default function AllVehicles() {
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
               <span>
                 Showing {(page - 1) * perPage + 1} to{" "}
-                {Math.min(page * perPage, initialData.length)} of{" "}
-                {initialData.length} entries
+                {Math.min(page * perPage, vehiclesData.length)} of{" "}
+                {vehiclesData.length} entries
               </span>
 
               <div className="relative">

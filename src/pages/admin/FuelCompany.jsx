@@ -5,12 +5,44 @@ import SearchFilters from "../../components/global/SearchFilter";
 import AllFuelCompanies from "../../components/admin/Fuel/AllFuelCompanies";
 import { useNavigate, useLocation } from "react-router-dom";
 import ExportButton from "../../components/global/ExportButton";
+import { useQuery } from "@tanstack/react-query";
+import { fetchFuelCompanies } from "../../redux/actions/fuelAction";
 
 function FuelCompany() {
   const location = useLocation();
   const navigate = useNavigate();
+ const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [status, setStatus] = useState('');
+  const [apiFilters, setApiFilters] = useState({});
 
-  const addFuelOpen = location.hash === "#add";
+    const [editFuelCompany, setEditedFuelCompany] = useState(null);
+
+
+  const mode = location.hash.replace("#", "");
+const addFuelOpen = mode === "add" || mode === "edit";
+
+const handleAdd = () => {
+  setEditedFuelCompany(null);          
+  navigate("/app/fuel-company#add");   
+};
+const handleEdit = (row) => {
+  setEditedFuelCompany(row);          
+  navigate("/app/fuel-company#edit"); 
+};
+
+   const { data, isLoading, isFetching } = useQuery({
+    queryKey: ["fuel-companies", page, perPage,apiFilters],
+    queryFn:  fetchFuelCompanies,
+    staleTime: 1000 * 30,
+    cacheTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    keepPreviousData: true,
+  });
+
+  const fuelCompanies = data?.docs || [];
+  const totalPages = data?.pages || 1;
 
   const handleToggleSidebar = () => {
     if (addFuelOpen) {
@@ -82,10 +114,10 @@ function FuelCompany() {
                 <span>Cancel</span>
               </>
             ) : (
-              <>
+                <button onClick={handleAdd} className="flex justify-center items-center gap-x-2">
                 <Plus size={18} className="stroke-[2.5]" />
                 <span>Add Fuel Company</span>
-              </>
+              </button>
             )}
           </button>
         </div>
@@ -108,7 +140,15 @@ function FuelCompany() {
             addFuelOpen ? "w-full lg:w-[65%] shrink-0" : "w-full"
           }`}
         >
-          <AllFuelCompanies />
+          <AllFuelCompanies   setEditedFuelCompany={handleEdit}
+            addFuelOpen={handleToggleSidebar}
+            fuelCompaniesData={fuelCompanies}
+            isLoading={isLoading || isFetching}
+            page={page}
+            setPage={setPage}
+            perPage={perPage}
+            setPerPage={setPerPage}
+            totalPages={totalPages}/>
         </div>
 
         <div
@@ -121,8 +161,7 @@ function FuelCompany() {
           {addFuelOpen && (
             <div className="w-full ">
               <AddFuelCompany
-                onSubmitSuccess={() => navigate("/app/fuel-company")}
-              />
+editFuelCompany={editFuelCompany} setEditedFuelCompany={setEditedFuelCompany}              />
             </div>
           )}
         </div>
