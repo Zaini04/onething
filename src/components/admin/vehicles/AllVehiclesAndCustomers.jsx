@@ -6,6 +6,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import ViewButton from "../../global/ViewButton";
 import { useDispatch, useSelector } from "react-redux";
 import { setEntryVehicleById } from "../../../redux/slices/entryVehiclesSlice";
+import { useSearchParams } from "react-router-dom";
 
 function SortIcon() {
   return (
@@ -66,29 +67,121 @@ function SortIcon() {
 //   };
 // });
 
-export default function AllVehiclesAndCustomers() {
+
+function TableSkeletonRows({ rowsCount = 5 }) {
+  return Array.from({ length: rowsCount }).map((_, idx) => (
+    <tr key={`skeleton-${idx}`} className="animate-pulse border-b border-gray-50">
+      {/* Checkbox Column */}
+      <td className="py-4 px-5 text-center">
+        <div className="w-4 h-4 bg-gray-200 rounded mx-auto"></div>
+      </td>
+      {/* No Column */}
+      <td className="py-4 px-4">
+        <div className="h-3 w-6 bg-gray-200 rounded"></div>
+      </td>
+      {/* User Name + Image Column */}
+      <td className="py-4 px-4">
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 bg-gray-200 rounded-full"></div>
+          <div className="h-3 w-24 bg-gray-200 rounded"></div>
+        </div>
+      </td>
+      {/* Email Column */}
+      <td className="py-4 px-4">
+        <div className="h-3 w-40 bg-gray-200 rounded"></div>
+      </td>
+      {/* Role Column */}
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      {/* Status Column */}
+      <td className="py-4 px-4 text-center">
+        <div className="h-5 w-16 bg-gray-200 rounded-lg mx-auto"></div>
+      </td>
+      {/* Action Column */}
+      <td className="py-4 px-4 text-center">
+        <div className="flex items-center justify-center gap-2">
+          <div className="w-7 h-7 bg-gray-200 rounded-xl"></div>
+          <div className="w-7 h-7 bg-gray-200 rounded-lg"></div>
+          <div className="w-7 h-7 bg-gray-200 rounded-lg"></div>
+        </div>
+      </td>
+    </tr>
+  ));
+}
+
+
+export default function AllVehiclesAndCustomers({
+  setEditedEntryVehicle,
+  entryVehicleData,
+  isLoading,
+  page,
+  perPage,
+  setPage,
+  setPerPage,
+  totalPages,
+}) {
   const dispatch = useDispatch();
-  const initialData = useSelector((state) => state.entryVehicles.items);
+  // const initialData = useSelector((state) => state.entryVehicles.items);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
   const [showPerPage, setShowPerPage] = useState(false);
 
   const [activeRowMenu, setActiveRowMenu] = useState(null);
 
   const menuRef = useRef(null);
 
-  const totalPages = Math.ceil(initialData.length / perPage);
-  const pageData = initialData.slice((page - 1) * perPage, page * perPage);
+  const pageData = entryVehicleData.slice((page - 1) * perPage, page * perPage);
   const allSelected =
-    pageData.length > 0 && pageData.every((r) => selected.includes(r.id));
+    pageData.length > 0 && pageData.every((r) => selected.includes(r._id));
 
   const handleActionClick = (model, id) => {
+if (dispatch) {
     dispatch(setEntryVehicleById(id));
-    const newUrl = `${window.location.pathname}?modal=${model}&id=${id}&type=entry-vehicle`;
-    window.history.pushState({}, "", newUrl);
-
+  }    // const newUrl = `${window.location.pathname}?modal=${model}&id=${id}&type=entry-vehicle`;
+    // window.history.pushState({}, "", newUrl);
+ setSearchParams({
+    modal: model,
+    id: String(id),
+    type: "entry-vehicle"
+  });
     setActiveRowMenu(null);
   };
 
@@ -113,12 +206,12 @@ export default function AllVehiclesAndCustomers() {
   const toggleAll = () => {
     if (allSelected) {
       setSelected((prev) =>
-        prev.filter((id) => !pageData.map((r) => r.id).includes(id)),
+        prev.filter((id) => !pageData.map((r) => r._id).includes(id)),
       );
     } else {
       setSelected((prev) => [
         ...prev,
-        ...pageData.map((r) => r.id).filter((id) => !prev.includes(id)),
+        ...pageData.map((r) => r._id).filter((id) => !prev.includes(id)),
       ]);
     }
   };
@@ -147,6 +240,13 @@ export default function AllVehiclesAndCustomers() {
       nums.push(totalPages);
     }
     return nums;
+  };
+
+  
+
+  const handleEdit = (row) => {
+    setEditedEntryVehicle(row);
+    console.log("Edit clicked for client:", row);
   };
 
   return (
@@ -199,13 +299,19 @@ export default function AllVehiclesAndCustomers() {
                     Material Cost <SortIcon />
                   </th>
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Diesal <SortIcon />
+                    Fuel Company <SortIcon />
+                  </th>
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Diesal Liters <SortIcon />
+                  </th>
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Diesal Cost <SortIcon />
                   </th>
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Driver Expense <SortIcon />
                   </th>
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Loading <SortIcon />
+                    Loading Cost<SortIcon />
                   </th>
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Other Expenses <SortIcon />
@@ -219,6 +325,12 @@ export default function AllVehiclesAndCustomers() {
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Bill Status <SortIcon />
                   </th>
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Received <SortIcon />
+                  </th>
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                     Due<SortIcon />
+                  </th>
 
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap sticky right-0 z-40 bg-[#F7F7F7]">
                     Action <SortIcon />
@@ -227,149 +339,176 @@ export default function AllVehiclesAndCustomers() {
               </thead>
 
               <tbody className="divide-y divide-gray-50/60">
-                {pageData.map((row) => {
-                  const isRowSelected = selected.includes(row.id);
-                  const isMenuOpen = activeRowMenu === row.id;
-
-                  return (
-                    <tr
-                      key={row.id}
-                      className={`transition-colors duration-150 ${isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"}`}
+                {isLoading ? (
+                  <TableSkeletonRows rowsCount={perPage || 5} />
+                ) : pageData.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan="7"
+                      className="py-8 text-center text-sm text-gray-400"
                     >
-                      <td className="py-3.5 px-5 text-center">
-                        <input
-                          type="checkbox"
-                          checked={isRowSelected}
-                          onChange={() => toggleRow(row.id)}
-                          className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
-                        />
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
-                        {row.no}
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide select-none">
-                        {row.date}
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-2.5">
-                          <img
-                            src={profile}
-                            alt={row.clientName}
-                            className="w-7 h-7 rounded-full object-cover shadow-sm ring-1 ring-gray-100"
-                          />
-                          <span className="text-[12px] font-normal text-gray-800 whitespace-nowrap">
-                            {row.clientName}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <span className="inline-block bg-[#F1F3F5] text-gray-700 text-[11px] font-medium px-2 py-1 rounded border border-gray-200/50">
-                          {row.site}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700 whitespace-nowrap">
-                        {row.vehicle}
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.material}
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700 whitespace-nowrap">
-                        {row.rateType}
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.rate}
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.rateType === "per sft"
-                          ? `${row.totalSft} sft`
-                          : `${row.totalVehicles} vehicles`}
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.totalRate}
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.materialCost}
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.diesal}
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.driverExpense}
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.loading}
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.otherExpenses}
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.remaingAmount}
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.paymentReceived}
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.billStatus}
-                      </td>
+                      No entries found.
+                    </td>
+                  </tr>
+                ) : (
+                  pageData.map((row, index) => {
+                    const isRowSelected = selected.includes(row._id);
+                    const isMenuOpen = activeRowMenu === row._id;
 
-                      <td
-                        className={`py-3.5 px-4 text-[12px] font-normal sticky right-0 transition-colors duration-150 overflow-visible ${
-                          isRowSelected ? "bg-[#F3F7FE]" : "bg-white"
-                        } ${isMenuOpen ? "z-[100]" : "z-30"}`}
+                    return (
+                      <tr
+                        key={row._id}
+                        className={`transition-colors duration-150 ${isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"}`}
                       >
-                        <div className="flex justify-center items-center w-full h-full">
-                          <BsThreeDotsVertical
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setActiveRowMenu(isMenuOpen ? null : row.id);
-                            }}
-                            className="cursor-pointer text-gray-500 hover:text-black text-xl p-1 rounded hover:bg-gray-100"
+                        <td className="py-3.5 px-5 text-center">
+                          <input
+                            type="checkbox"
+                            checked={isRowSelected}
+                            onChange={() => toggleRow(row._id)}
+                            className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
                           />
-                        </div>
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
+                          {(page - 1) * perPage + index + 1}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide select-none">
+{new Date(row.date).toLocaleDateString()}
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <div className="flex items-center gap-2.5">
+                            <img
+                              src={profile}
+                              alt={row.client?.name}
+                              className="w-7 h-7 rounded-full object-cover shadow-sm ring-1 ring-gray-100"
+                            />
+                            <span className="text-[12px] font-normal text-gray-800 whitespace-nowrap">
+                              {row.client?.name}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <span className="inline-block bg-[#F1F3F5] text-gray-700 text-[11px] font-medium px-2 py-1 rounded border border-gray-200/50">
+                            {row.site?.siteName}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700 whitespace-nowrap">
+                          {row.vehicle?.vehicleNo}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.materialType}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700 whitespace-nowrap">
+                          {row.rateType}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.rate}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.rateType === "per sft"
+                            ? `${row.totalSftVehicles} sft`
+                            : `${row.totalSftVehicles} vehicles`}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.totalRate}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.materialCost}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.fuelCompany?.fuelCompany}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.dieselInLitters}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.dieselCost}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.driverExpense}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.loading}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.otherExpenses}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.remainingAmount}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.paymentStatus}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.billStatus}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.payment.amountReceived}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.clientDue}
+                        </td>
 
-                        {isMenuOpen && (
-                          <div
-                            ref={menuRef}
-                            className="absolute right-12 top-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-lg shadow-2xl py-2 px-2 w-44 z-[9999] flex flex-col gap-1.5 animation-fade-in"
-                          >
-                            {row.paymentReceived === "received" ? (
-                              ""
-                            ) : (
-                              <PaymentReceivedButton
-                                onClick={() =>
-                                  handleActionClick("payment", row.id)
-                                }
-                                row={row}
-                              />
-                            )}
+                        <td
+                          className={`py-3.5 px-4 text-[12px] font-normal sticky right-0 transition-colors duration-150 overflow-visible ${
+                            isRowSelected ? "bg-[#F3F7FE]" : "bg-white"
+                          } ${isMenuOpen ? "z-[100]" : "z-30"}`}
+                        >
+                          <div className="flex justify-center items-center w-full h-full">
+                            <BsThreeDotsVertical
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveRowMenu(isMenuOpen ? null : row._id);
+                              }}
+                              className="cursor-pointer text-gray-500 hover:text-black text-xl p-1 rounded hover:bg-gray-100"
+                            />
+                          </div>
 
-                            {row.billStatus === "generated" ? (
-                              ""
-                            ) : (
-                              <GenerateBillButton
-                                onClick={() =>
-                                  handleActionClick("bill", row.id)
-                                }
-                                row={row}
-                              />
-                            )}
+                          {isMenuOpen && (
+                            <div
+                              ref={menuRef}
+                              className="absolute right-12 top-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-lg shadow-2xl py-2 px-2 w-44 z-[9999] flex flex-col gap-1.5 animation-fade-in"
+                            >
+                              {row.paymentReceived === "received" ? (
+                                ""
+                              ) : (
+                                <PaymentReceivedButton
+                                  onClick={() =>
+                                    handleActionClick("payment", row._id)
+                                  }
+                                  row={row}
+                                />
+                              )}
 
-                            {/* <button 
+                              {row.billStatus === "generated" ? (
+                                ""
+                              ) : (
+                                <GenerateBillButton
+                                  onClick={() =>
+                                    handleActionClick("bill", row._id)
+                                  }
+                                  row={row}
+                                />
+                              )}
+
+                              {/* <button 
             className="inline-block text-left cursor-pointer px-2 py-1 text-xs font-medium  text-gray-500 hover:bg-gray-300  border-b  border-gray-300"
       >
         
         View 
       </button> */}
-                            <ViewButton
-                              onClick={() => handleActionClick("view", row.id)}
-                              row={row}
-                            />
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
+                              <ViewButton
+                                onClick={() =>
+                                  handleActionClick("view", row._id)
+                                }
+                                row={row}
+                              />
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
               </tbody>
             </table>
           </div>
@@ -445,8 +584,8 @@ export default function AllVehiclesAndCustomers() {
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
               <span>
                 Showing {(page - 1) * perPage + 1} to{" "}
-                {Math.min(page * perPage, initialData.length)} of{" "}
-                {initialData.length} entries
+                {Math.min(page * perPage, entryVehicleData.length)} of{" "}
+                {entryVehicleData.length} entries
               </span>
 
               <div className="relative">

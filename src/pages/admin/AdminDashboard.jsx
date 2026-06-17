@@ -14,7 +14,7 @@ function AdminDashboard() {
   const clients = data?.docs || [];
   const totalPages = data?.pages || 1;
   return (
-    <div className="w-full px-4 md:px-6 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden flex flex-col gap-y-6">
+    <div className="w-full md:w-[93%] lg:w-[94%] xl:w-[95%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden flex flex-col gap-y-6">
       <div className="w-full">
         <div className="flex flex-col sm:flex-row w-full justify-between items-start sm:items-center gap-y-3 sm:gap-y-0">
           <div className="flex flex-col">

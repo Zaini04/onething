@@ -15,6 +15,7 @@ function RoleForm() {
   "vendors",
   "sites",
   "fuel-company",
+  "fuel-stock",
   "entry-fuel",
   "income-expense",
   "settings"

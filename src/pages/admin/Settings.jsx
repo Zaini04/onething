@@ -87,7 +87,7 @@ const totalPages = data?.pages || 1;
   // },[])
 
   return (
-    <div className="w-full px-4 md:px-6 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
+    <div className="w-full md:w-[93%] lg:w-[94%] xl:w-[95%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
       <div className="w-full pb-4">
         <h1 className="text-xl font-medium text-black tracking-tight">
           Settings

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import LedgerSummaryCards from "./LedgerSummaryCards";
+import { TableSkeletonRows } from "../../global/TableSkeletonRows";
 
 function SortIcon() {
   return (
@@ -15,57 +16,62 @@ function SortIcon() {
   );
 }
 
-const initialData = Array.from({ length: 50 }, (_, i) => {
-  const sites = ["Multan", "Overseas", "Lahore"];
-  const vehicles = [
-    "Standard Dump Truck",
-    "Mini Dump Trucks",
-    "Low-Side Dump Trucks",
-  ];
-  const vehicleNo = ["TLL-4679", "MJU-5210", "ABC-1234"];
-  const materials = ["Concrete", "Sand"];
-  const rateTypes = ["per sft", "per vehicle"];
-  const rate = ["50", "70", "80"];
-  const totalSft = ["100", "150", "200"];
-  const totalVehicles = ["12", "17", "22"];
-  const totalRate = Number(
-    rateTypes[i % 2] === "per sft"
-      ? totalSft[i % 3] * rate[i % 3]
-      : totalVehicles[i % 3] * rate[i % 3],
-  );
+// const initialData = Array.from({ length: 50 }, (_, i) => {
+//   const sites = ["Multan", "Overseas", "Lahore"];
+//   const vehicles = [
+//     "Standard Dump Truck",
+//     "Mini Dump Trucks",
+//     "Low-Side Dump Trucks",
+//   ];
+//   const vehicleNo = ["TLL-4679", "MJU-5210", "ABC-1234"];
+//   const materials = ["Concrete", "Sand"];
+//   const rateTypes = ["per sft", "per vehicle"];
+//   const rate = ["50", "70", "80"];
+//   const totalSft = ["100", "150", "200"];
+//   const totalVehicles = ["12", "17", "22"];
+//   const totalRate = Number(
+//     rateTypes[i % 2] === "per sft"
+//       ? totalSft[i % 3] * rate[i % 3]
+//       : totalVehicles[i % 3] * rate[i % 3],
+//   );
 
-  const received = ["1000", "2000", "5000", "7500"];
-  const dew = ["0", "0", "2500", "1000"];
-  const remiaining = ["0", "810", "2500", "6500"];
+//   const received = ["1000", "2000", "5000", "7500"];
+//   const dew = ["0", "0", "2500", "1000"];
+//   const remiaining = ["0", "810", "2500", "6500"];
 
-  return {
-    id: i + 1,
-    no: String(i + 1).padStart(2, "0"),
-    date: "24-10-2025",
-    vehicleNo: vehicleNo[i % 3],
-    vehicle: vehicles[i % 3],
-    material: materials[i % 2],
-    rateType: rateTypes[i % 2],
-    rate: rate[i % 3],
-    totalSft: totalSft[i % 3],
-    site: sites[i % 3],
-    totalRate: totalRate,
-    received: received[i % 4],
-    dew: dew[i % 4],
-    remaining: remiaining[i % 4],
-  };
-});
+//   return {
+//     id: i + 1,
+//     no: String(i + 1).padStart(2, "0"),
+//     date: "24-10-2025",
+//     vehicleNo: vehicleNo[i % 3],
+//     vehicle: vehicles[i % 3],
+//     material: materials[i % 2],
+//     rateType: rateTypes[i % 2],
+//     rate: rate[i % 3],
+//     totalSft: totalSft[i % 3],
+//     site: sites[i % 3],
+//     totalRate: totalRate,
+//     received: received[i % 4],
+//     dew: dew[i % 4],
+//     remaining: remiaining[i % 4],
+//   };
+// });
 
-export default function Ledger() {
+export default function Ledger({
+  clientLedgerData,
+  isLoading,
+  page,
+  setPage,
+  perPage,
+  setPerPage,
+  totalPages,
+}) {
   const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
   const [showPerPage, setShowPerPage] = useState(false);
 
-  const totalPages = Math.ceil(initialData.length / perPage);
-  const pageData = initialData.slice((page - 1) * perPage, page * perPage);
+  const pageData = clientLedgerData.slice((page - 1) * perPage, page * perPage);
   const allSelected =
-    pageData.length > 0 && pageData.every((r) => selected.includes(r.id));
+    pageData.length > 0 && pageData.every((r) => selected.includes(r._id));
 
   const toggleAll = () => {
     if (allSelected) {
@@ -153,20 +159,29 @@ export default function Ledger() {
                       Received <SortIcon />
                     </th>
                     <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                      Due <SortIcon />
+                      Client Due <SortIcon />
                     </th>
                     <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                      Remaining <SortIcon />
+                      Client Balance <SortIcon />
                     </th>
                   </tr>
                 </thead>
 
                 <tbody className="divide-y divide-gray-50/60">
-                  {pageData.map((row) => {
-                    const isRowSelected = selected.includes(row.id);
+                   {isLoading ? (
+                 <TableSkeletonRows rowsCount={perPage || 5} />
+                              ) : pageData.length === 0 ? (
+                                <tr>
+                                  <td colSpan="7" className="py-8 text-center text-sm text-gray-400">
+                                    No entries found.
+                                  </td>
+                                </tr>
+                              ) :(
+pageData.map((row,index) => {
+                    const isRowSelected = selected.includes(row._id);
                     return (
                       <tr
-                        key={row.id}
+                        key={row._id}
                         className={`transition-colors duration-150 ${
                           isRowSelected
                             ? "bg-blue-50/20"
@@ -183,29 +198,29 @@ export default function Ledger() {
                         </td>
 
                         <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
-                          {row.no}
+                          {(page - 1) * perPage + index + 1}
                         </td>
 
                         <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide select-none">
-                          {row.date}
+                          {new Date(row.date).toLocaleDateString()}
                         </td>
 
                         <td className="py-3.5 px-4">
                           <span className="inline-block bg-[#F1F3F5] text-gray-700 text-[11px] font-medium px-2 py-1 rounded border border-gray-200/50">
-                            {row.site}
+                            {row.site?.siteName}
                           </span>
                         </td>
 
                         <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700 whitespace-nowrap">
-                          {row.vehicleNo}
+                          {row.vehicle?.vehicleNo}
                         </td>
 
                         <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700 whitespace-nowrap">
-                          {row.vehicle}
+                          {row.vehicle?.typeVehicle}
                         </td>
 
                         <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                          {row.material}
+                          {row.materialType}
                         </td>
 
                         <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
@@ -213,13 +228,13 @@ export default function Ledger() {
                         </td>
 
                         <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                          {row.received}
+                          {row.payment?.amountReceived}
                         </td>
                         <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                          {row.dew}
+                          {row.clientDue}
                         </td>
                         <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                          {row.remaining}
+                          {row.clientAdvance}
                         </td>
                         {/* <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2.5">
@@ -239,7 +254,11 @@ export default function Ledger() {
                       </td> */}
                       </tr>
                     );
-                  })}
+                  })
+
+                              )
+                            }
+                  
                 </tbody>
               </table>
             </div>
@@ -315,8 +334,8 @@ export default function Ledger() {
               <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
                 <span>
                   Showing {(page - 1) * perPage + 1} to{" "}
-                  {Math.min(page * perPage, initialData.length)} of{" "}
-                  {initialData.length} entries
+                  {Math.min(page * perPage, clientLedgerData.length)} of{" "}
+                  {clientLedgerData.length} entries
                 </span>
 
                 <div className="relative">

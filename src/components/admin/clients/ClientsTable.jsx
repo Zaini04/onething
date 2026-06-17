@@ -175,10 +175,10 @@ export default function ClientsTable({  setEditedClient,
                   </tr>
                 ) :(
  pageData.map((row,index) => {
-                  const isRowSelected = selected.includes(row.id);
+                  const isRowSelected = selected.includes(row._id);
                   return (
                     <tr
-                      key={row.id}
+                      key={row._id}
                       className={`transition-colors duration-150 ${
                         isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
                       }`}
@@ -187,7 +187,7 @@ export default function ClientsTable({  setEditedClient,
                         <input
                           type="checkbox"
                           checked={isRowSelected}
-                          onChange={() => toggleRow(row.id)}
+                          onChange={() => toggleRow(row._id)}
                           className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
                         />
                       </td>
@@ -235,7 +235,7 @@ export default function ClientsTable({  setEditedClient,
                       <td className="py-3.5 px-4 text-center">
                         <div className="flex items-center justify-center gap-2">
                           <button
-                            onClick={() => handleView(row.id)}
+                            onClick={() => handleView(row._id)}
                             className="p-2 rounded-xl bg-[#E6F7F5] text-[#00A389] hover:bg-[#D4F2EE] transition cursor-pointer"
                             title="View Record Details"
                           >

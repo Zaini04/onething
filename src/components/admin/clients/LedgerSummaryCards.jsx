@@ -1,28 +1,51 @@
+import { useQuery } from "@tanstack/react-query";
 import { MdOutlineAccountBalanceWallet, MdCallReceived, MdPriorityHigh, MdHourglassEmpty } from "react-icons/md";
+import { useParams } from "react-router-dom";
+import { fetchClientSummary } from "../../../redux/actions/clientAction";
 
 export default function LedgerSummaryCards() {
+
+  const {id} = useParams()
+
+  console.log("cldid",id)
+
+  const { data   } = useQuery({
+    queryKey: ["client-summary",id],
+    queryFn:  fetchClientSummary,
+    staleTime: 1000 * 30,
+    cacheTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    keepPreviousData: true,
+  });
+
+  console.log("cldd",data)
+
+  const clientSummary = data
+
+
   const stats = [
     {
       title: "Total Vehicles Cost",
-      amount: "Rs. 4500",
+      amount: clientSummary?.totalRate,
       icon: <MdOutlineAccountBalanceWallet size={24} />,
       bgColor: "bg-blue-50 text-blue-600 border-blue-100",
     },
     {
       title: "Total Received",
-      amount: "Rs. 3100",
+      amount: clientSummary?.totalReceived,
       icon: <MdCallReceived size={24} />,
       bgColor: "bg-emerald-50 text-emerald-600 border-emerald-100",
     },
     {
       title: "Total Due",
-      amount: "Rs. 1400",
+      amount: clientSummary?.totalDue,
       icon: <MdPriorityHigh size={24} />,
       bgColor: "bg-amber-50 text-amber-600 border-amber-100",
     },
     {
       title: "Client Balance",
-      amount: "Rs. 1400",
+      amount: clientSummary?.totalAdvance,
       icon: <MdHourglassEmpty size={24} />,
       bgColor: "bg-rose-50 text-rose-600 border-rose-100",
     },

@@ -72,7 +72,7 @@ const AddSite = () => {
     },
   });
 
-const { data: clientDropdownData, isLoading } = useClientDropdown();
+const { data: clientDropdownData, } = useClientDropdown();
 
 const clientOptions =
   clientDropdownData?.map((c) => ({
@@ -139,7 +139,7 @@ const clientOptions =
   };
 
   return (
-    <div className="w-full mx-auto p-4 md:p-6 bg-[#F9FAFB] rounded-2xl">
+    <div className="w-full md:w-[85%] lg:w-[88%] xl:w-[90%]  p-4 md:pl-8 mx-auto bg-[#F9FAFB]  rounded-2xl">
       <div className="flex justify-between items-center text-gray-900 mb-6 tracking-tight">
         <h2 className="text-lg font-medium">{isEditMode ? "Edit Site" : "Add Site"}</h2>
         <button
@@ -214,21 +214,18 @@ const clientOptions =
             errorMessage={formik.errors.client}
           />
 
-          <SearchSelect
+          <FormInput
             label="Site Name"
-            placeholder="Choose a site name"
-            options={["Multan", "Lahore", "Karachi", "Islamabad"]}
-            value={formik.values.siteName}
-            onChange={(val) => formik.setFieldValue("siteName", val, true)}
-            onBlur={() => formik.setFieldTouched("siteName", true, true)}
-            isError={formik.touched.siteName && !!formik.errors.siteName}
-            errorMessage={formik.errors.siteName}
+            id='siteName'
+            placeholder="Enter a site name"
+            formik={formik}
+            
           />
 
           <FormInput
             label="Address"
             id="address"
-            placeholder="Plot 41 B, Block B Model Town"
+            placeholder="Enter address"
             formik={formik}
           />
 

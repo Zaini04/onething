@@ -16,6 +16,7 @@ export default function ClientCard({ client }) {
     );
   }
 
+  // console.log("clgs",client)
   return (
     <div className="w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-5 md:p-6 transition-all duration-300">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -24,7 +25,7 @@ export default function ClientCard({ client }) {
           <div className="relative">
             <img
               src={profile}
-              alt={client.clientName}
+              alt={client[0]?.client?.name}
               className="w-14 h-14 md:w-16 md:h-16 rounded-full object-cover ring-4 ring-gray-50 shadow-sm"
             />
             <span className="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></span>
@@ -33,14 +34,14 @@ export default function ClientCard({ client }) {
           <div>
             <div className="flex items-center gap-2.5 flex-wrap">
               <h3 className="text-base md:text-lg font-medium text-gray-900 tracking-tight">
-                {client.clientName}
+                {client[0]?.client?.name}
               </h3>
               <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${statusStyles[client.status] || "bg-gray-100"}`}>
-                {client.status}
+                {client[0]?.client?.status}
               </span>
             </div>
             <p className="text-[10px] font-medium text-gray-400 mt-0.5 tracking-wide uppercase">
-              System ID: <span className="text-gray-700 font-semibold ">#{client.no}</span>
+              System ID: <span className="text-gray-700 font-semibold ">#{client[0]?.client?._id}</span>
             </p>
           </div>
         </div>
@@ -53,7 +54,7 @@ export default function ClientCard({ client }) {
             </div>
             <div>
               <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Phone Number</p>
-              <p className="font-semibold text-gray-900 tracking-wide mt-0.5">{client.phoneNumber}</p>
+              <p className="font-semibold text-gray-900 tracking-wide mt-0.5">{client[0]?.client?.phoneNumber}</p>
             </div>
           </div>
 
@@ -62,8 +63,8 @@ export default function ClientCard({ client }) {
               <FaIdCard size={14} />
             </div>
             <div>
-              <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Location</p>
-              <p className="font-semibold text-gray-900 tracking-wide mt-0.5">{client.location}</p>
+              <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">City</p>
+              <p className="font-semibold text-gray-900 tracking-wide mt-0.5">{client[0]?.client?.city}</p>
             </div>
           </div>
 

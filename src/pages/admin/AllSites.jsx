@@ -15,7 +15,7 @@ function AllSites() {
   const [apiFilters, setApiFilters] = useState({});
 
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["clients", page, perPage, apiFilters],
+    queryKey: ["sites", page, perPage, apiFilters],
     queryFn: fetchSites,
     staleTime: 1000 * 30,
     cacheTime: 1000 * 60 * 10,
@@ -29,14 +29,12 @@ function AllSites() {
 
   const clientVendorConfig = [
     {
-      name: "name",
+      name: "siteName",
       type: "select",
-      placeholder: "Name",
+      placeholder: "Enter Site Name",
       searchable: true,
       options: [
-        { label: "Salman", value: "salman" },
-        { label: "Imran Khan", value: "1023" },
-        { label: "Saad", value: "saad" },
+        'ali','niazi','ghm'
       ],
     },
 
@@ -57,11 +55,13 @@ function AllSites() {
       options: [
         { label: "Active", value: "Active" },
         { label: "Inactive", value: "Inactive" },
+        { label: "Blocked", value: "Blocked" },
+        { label: "Deleted", value: "Deleted" },
       ],
     },
   ];
 
-  const [filters, setFilters] = useState({ name: "", date: "", status: "" });
+  const [filters, setFilters] = useState({ siteName: "", date: "", status: "" });
 
   const handleFilterChange = (name, value) => {
     setFilters((prev) => ({ ...prev, [name]: value }));
@@ -77,7 +77,7 @@ function AllSites() {
     navigate(`/app/sites/edit`, { state: { siteData: row } });
   }
   return (
-    <div className="w-full px-4 md:px-6 py-6 min-h-screen bg-[#F7F7F7] overflow-hidden">
+    <div className="md:w-[93%] lg:w-[94%] xl:w-[95%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-hidden">
       <div className="w-full flex flex-col  animate-in fade-in duration-200">
         <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
           <div>

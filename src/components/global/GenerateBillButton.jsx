@@ -1,22 +1,12 @@
 import { useSearchParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setEntryVehicleById } from "../../redux/slices/entryVehiclesSlice";
-import { setvehicleLedgerById } from "../../redux/slices/vehicleLedgerSlice";
 
 export default function GenerateBillButton({ row, type = "entry-vehicle" }) {
   const [, setSearchParams] = useSearchParams();
-  const dispatch = useDispatch();
 
   const handleOpenModal = (e) => {
     e.stopPropagation();
-
-    if (type === "entry-vehicle") {
-      dispatch(setEntryVehicleById(row.id));
-    } else if (type === "vehicle-ledger") {
-      dispatch(setvehicleLedgerById(row.id));
-    }
-
-    setSearchParams({ modal: "bill", id: String(row.id), type: type });
+    // Redux dispatch khatam, sirf URL params change honge
+    setSearchParams({ modal: "bill", id: String(row._id), type: type });
   };
 
   return (

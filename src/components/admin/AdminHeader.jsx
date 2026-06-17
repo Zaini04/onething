@@ -14,7 +14,6 @@ function AdminHeader({ openSidebar, setOpenSidebar }) {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const user = useSelector(state => state.auth.user)
 
-  console.log("userloged",user)
 
   
 const dispatch = useDispatch()

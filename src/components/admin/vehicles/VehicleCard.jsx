@@ -16,34 +16,40 @@ export default function VehicleCard({ vehicle }) {
     );
   }
 
+
+
   return (
     <div className="w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-5 md:p-6 transition-all duration-300">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="relative">
+
             <img
               src={profile}
-              alt={vehicle.ownerName}
+              alt={vehicle[0]?.vehicle?.ownerName}
               className="w-14 h-14 md:w-16 md:h-16 rounded-full object-cover ring-4 ring-gray-50 shadow-sm"
             />
             <span className="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></span>
           </div>
 
           <div>
+           <p className="font-medium text-sm text-gray-600">Vehicle Owner</p>
+
             <div className="flex items-center gap-2.5 flex-wrap">
+              
               <h3 className="text-base md:text-lg font-medium text-gray-900 tracking-tight">
-                {vehicle.ownerName}
+                {vehicle[0]?.vehicle?.ownerName}
               </h3>
               <span
                 className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${statusStyles[vehicle.status] || "bg-gray-100"}`}
               >
-                {vehicle.status}
+                {vehicle[0]?.vehicle?.status}
               </span>
             </div>
             <p className="text-[10px] font-medium text-gray-400 mt-0.5 tracking-wide uppercase">
               System ID:{" "}
               <span className="text-gray-700 font-semibold ">
-                #{vehicle.no}
+                #{vehicle[0]?.vehicle?._id}
               </span>
             </p>
           </div>
@@ -59,7 +65,7 @@ export default function VehicleCard({ vehicle }) {
                 Plate Number
               </p>
               <p className="font-semibold text-gray-900 tracking-wide mt-0.5">
-                {vehicle.vehicleNo}
+                {vehicle[0]?.vehicle?.vehicleNo}
               </p>
             </div>
           </div>
@@ -73,7 +79,7 @@ export default function VehicleCard({ vehicle }) {
                 Vehicle Type
               </p>
               <p className="font-semibold text-gray-900 tracking-wide mt-0.5">
-                {vehicle.typeVehicle}
+                {vehicle[0]?.vehicle?.typeVehicle}
               </p>
             </div>
           </div>

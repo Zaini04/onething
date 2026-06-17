@@ -1,4 +1,8 @@
 import { useState } from "react";
+import {  fetchSitesWithClients } from "../../../redux/actions/siteAction";
+import { useQuery } from "@tanstack/react-query";
+import { TableSkeletonRows } from "../../global/TableSkeletonRows";
+import { useParams } from "react-router-dom";
 
 const statusStyles = {
   Active:
@@ -9,33 +13,36 @@ const statusStyles = {
     "bg-[#FEE2E2] text-[#DC2626] font-normal cursor-pointer rounded-lg text-xs px-3 py-1 text-center border border-transparent",
 };
 
-const initialData = Array.from({ length: 50 }, (_, i) => {
-  const sites = ["Multan", "Overseas", "Lahore"];
-  const addresses = ["Plot 41 B, Block B...", "Plot 41 B, Block B..."];
-  const material = ["sand", "soil", "concrete"];
+// const initialData = Array.from({ length: 50 }, (_, i) => {
+//   const sites = ["Multan", "Overseas", "Lahore"];
+//   const addresses = ["Plot 41 B, Block B...", "Plot 41 B, Block B..."];
+//   const material = ["sand", "soil", "concrete"];
 
-  const site = sites[i % 3];
-  const address = addresses[i % 2];
-  const rateType = ["perSft", "perVehicle"][i % 2];
-  const materialType = material[i % 3];
+//   const site = sites[i % 3];
+//   const address = addresses[i % 2];
+//   const rateType = ["perSft", "perVehicle"][i % 2];
+//   const materialType = material[i % 3];
 
-  const status =
-    i === 0 || i === 1 || i === 7 || i === 8 || i === 9
-      ? i === 9
-        ? "Block"
-        : "Active"
-      : "InActive";
+//   const status =
+//     i === 0 || i === 1 || i === 7 || i === 8 || i === 9
+//       ? i === 9
+//         ? "Block"
+//         : "Active"
+//       : "InActive";
 
-  return {
-    id: i + 1,
-    no: String(i + 1).padStart(2, "0"),
-    site,
-    address,
-    rateType,
-    materialType,
-    status,
-  };
-});
+//   return {
+//     id: i + 1,
+//     no: String(i + 1).padStart(2, "0"),
+//     site,
+//     address,
+//     rateType,
+//     materialType,
+//     status,
+//   };
+// });
+
+
+
 
 function SortIcon() {
   return (
@@ -52,25 +59,46 @@ function SortIcon() {
 }
 
 export default function ClientSitesTable() {
+
+  const {id} = useParams()
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [showPerPage, setShowPerPage] = useState(false);
 
-  const totalPages = Math.ceil(initialData.length / perPage);
-  const pageData = initialData.slice((page - 1) * perPage, page * perPage);
+
+  const [apiFilters, setApiFilters] = useState({});
+
+  console.log(id)
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey: ["client-sites", page, perPage , apiFilters,id],
+    queryFn: fetchSitesWithClients,
+    staleTime: 1000 * 30,
+    cacheTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    keepPreviousData: true,
+  });
+
+  const clientSites = data?.docs || [];
+  console.log("clist",clientSites)
+  
+  const totalPages = data?.pages || 1;
+
+
+  const pageData = clientSites.slice((page - 1) * perPage, page * perPage);
   const allSelected =
-    pageData.length > 0 && pageData.every((r) => selected.includes(r.id));
+    pageData.length > 0 && pageData.every((r) => selected.includes(r._id));
 
   const toggleAll = () => {
     if (allSelected) {
       setSelected((prev) =>
-        prev.filter((id) => !pageData.map((r) => r.id).includes(id)),
+        prev.filter((id) => !pageData.map((r) => r._id).includes(id)),
       );
     } else {
       setSelected((prev) => [
         ...prev,
-        ...pageData.map((r) => r.id).filter((id) => !prev.includes(id)),
+        ...pageData.map((r) => r._id).filter((id) => !prev.includes(id)),
       ]);
     }
   };
@@ -144,8 +172,19 @@ export default function ClientSitesTable() {
               </thead>
 
               <tbody className="divide-y divide-gray-50/60">
-                {pageData.map((row) => {
-                  const isRowSelected = selected.includes(row.id);
+
+               {isLoading ? (
+                 <TableSkeletonRows rowsCount={perPage || 5} />
+                              ) : pageData.length === 0 ? (
+                                <tr>
+                                  <td colSpan="7" className="py-8 text-center text-sm text-gray-400">
+                                    No entries found.
+                                  </td>
+                                </tr>
+                              ) :(
+                                pageData.map((row,index) => {
+                                  console.log("roma",row.materialsRates)
+                  const isRowSelected = selected.includes(row._id);
                   return (
                     <tr
                       key={row.id}
@@ -157,18 +196,18 @@ export default function ClientSitesTable() {
                         <input
                           type="checkbox"
                           checked={isRowSelected}
-                          onChange={() => toggleRow(row.id)}
+                          onChange={() => toggleRow(row._id)}
                           className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
                         />
                       </td>
 
                       <td className="py-3.5 px-4 text-[11px] font-normal text-black">
-                        {row.no}
+                        {(page - 1) * perPage + index + 1}
                       </td>
 
                       <td className="py-3.5 px-4">
                         <span className="inline-block bg-[#F1F3F5] text-gray-700 text-[11px] font-medium px-2 py-1 rounded border border-gray-200/50">
-                          {row.site}
+                          {row.siteName}
                         </span>
                       </td>
 
@@ -177,14 +216,14 @@ export default function ClientSitesTable() {
                       </td>
 
                       <td className="py-3.5 px-4 text-[11px] font-normal text-black">
-                        {row.materialType}
+                        {row.materialsRates?.map(item => (<p>{item.materialType}</p>) )}
                       </td>
 
                       <td className="py-3.5 px-4 text-[11px] font-normal text-black tracking-wide">
-                        {row.rateType}
+                        {row.materialsRates?.map(item => (<p>{item.rateType}</p>) )}
                       </td>
                       <td className="py-3.5 px-4 text-[11px] font-normal text-black tracking-wide">
-                        5000
+                        {row.materialsRates?.map(item => (<p>{item.rate}</p>) )}
                       </td>
 
                       <td className="py-3.5 px-4 text-right pr-8">
@@ -196,7 +235,9 @@ export default function ClientSitesTable() {
                       </td>
                     </tr>
                   );
-                })}
+                })
+                              )}
+                
               </tbody>
             </table>
           </div>
@@ -272,8 +313,8 @@ export default function ClientSitesTable() {
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
               <span>
                 Showing {(page - 1) * perPage + 1} to{" "}
-                {Math.min(page * perPage, initialData.length)} of{" "}
-                {initialData.length} entries
+                {Math.min(page * perPage, clientSites.length)} of{" "}
+                {clientSites.length} entries
               </span>
 
               <div className="relative">

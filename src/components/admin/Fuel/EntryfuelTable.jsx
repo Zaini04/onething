@@ -1,5 +1,6 @@
 import { useState } from "react";
 import DeleteButton from "../../global/DeleteButton";
+import { TableSkeletonRows } from "../../global/TableSkeletonRows";
 
 const actionStyles = {
   view: "p-2 rounded-xl bg-[#E6F7F5] text-[#00A389] hover:bg-[#D4F2EE] transition cursor-pointer",
@@ -44,35 +45,23 @@ function SortIcon() {
   );
 }
 
-export default function EntryFuelTable() {
+export default function EntryFuelTable({
+  entryFuels,
+            isLoading,
+            page,
+            perPage,
+            setPage,
+            setPerPage,
+            totalPages,
+}) {
   const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
   const [showPerPage, setShowPerPage] = useState(false);
 
-  const totalPages = Math.ceil(initialData.length / perPage);
-  const pageData = initialData.slice((page - 1) * perPage, page * perPage);
-  const allSelected =
-    pageData.length > 0 && pageData.every((r) => selected.includes(r.id));
+  const pageData = entryFuels.slice((page - 1) * perPage, page * perPage);
+  
+ 
 
-  const toggleAll = () => {
-    if (allSelected) {
-      setSelected((prev) =>
-        prev.filter((id) => !pageData.map((r) => r.id).includes(id)),
-      );
-    } else {
-      setSelected((prev) => [
-        ...prev,
-        ...pageData.map((r) => r.id).filter((id) => !prev.includes(id)),
-      ]);
-    }
-  };
-
-  const toggleRow = (id) => {
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
-    );
-  };
+  
 
   const getPaginationNumbers = () => {
     const nums = [];
@@ -106,19 +95,18 @@ export default function EntryFuelTable() {
             <table className="w-full text-left border-collapse min-w-[800px]">
               <thead>
                 <tr className="bg-[#F7F7F7] border-b border-gray-100">
-                  <th className="py-4 px-5 w-12 text-center">
-                    <input
-                      type="checkbox"
-                      checked={allSelected}
-                      onChange={toggleAll}
-                      className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
-                    />
-                  </th>
+                 
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
                     No
                   </th>
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
+                    Date
+                  </th>
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Vehicle <SortIcon />
+                    Vehicle No <SortIcon />
+                  </th>
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Vehicle Name <SortIcon />
                   </th>
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Fuel Company <SortIcon />
@@ -129,84 +117,62 @@ export default function EntryFuelTable() {
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Total Price <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center pr-8 w-32">
-                    Action
-                  </th>
+                  
                 </tr>
               </thead>
 
               <tbody className="divide-y divide-gray-50/60">
-                {pageData.map((row) => {
-                  const isRowSelected = selected.includes(row.id);
+               {isLoading ? (
+                               <TableSkeletonRows rowsCount={perPage || 5} />
+                                            ) : pageData.length === 0 ? (
+                                              <tr>
+                                                <td colSpan="7" className="py-8 text-center text-sm text-gray-400">
+                                                  No entries found.
+                                                </td>
+                                              </tr>
+                                            ) :(
+pageData.map((row,index) => {
                   return (
                     <tr
-                      key={row.id}
-                      className={`transition-colors duration-150 ${
-                        isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
-                      }`}
+                      key={row.vehicle?.vehicle}
+                      className={`transition-colors duration-150 
+                       bg-blue-50/20  hover:bg-gray-50/30
+                      `}
                     >
-                      <td className="py-3.5 px-5 text-center">
-                        <input
-                          type="checkbox"
-                          checked={isRowSelected}
-                          onChange={() => toggleRow(row.id)}
-                          className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
-                        />
-                      </td>
+                      
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-500">
-                        {row.no}
+                                                {(page - 1) * perPage + index + 1}
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-500">
+{new Date(row.createdAt).toLocaleDateString()}
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-900 tracking-wide">
-                        {row.vehicle}
+                        {row.vehicle?.vehicleNo}
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-900 tracking-wide">
+                        {row.vehicle?.typeVehicle}
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-500">
-                        {row.fuelCompany}
+                        {row.fuelCompany?.fuelCompany}
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
-                        {row.fuelLitter}
+                        {row.dieselInLitters}
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
-                        {row.totalPrice}
+                        {row.dieselCost}
                       </td>
 
-                      <td className="py-2.5 px-4 text-center pr-8">
-                        <div className="flex items-center justify-center gap-3">
-                          <button
-                            onClick={() => handleView(row.id)}
-                            className={actionStyles.view}
-                            title="View Record Details"
-                          >
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                              />
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                              />
-                            </svg>
-                          </button>
-
-                          <DeleteButton row={row} />
-                        </div>
-                      </td>
+                   
                     </tr>
                   );
-                })}
+                })
+                                            )}
+                
               </tbody>
             </table>
           </div>

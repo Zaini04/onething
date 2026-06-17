@@ -78,7 +78,7 @@ export default function AllVehicles({
 
   const pageData = vehiclesData
   const allSelected =
-    pageData.length > 0 && pageData.every((r) => selected.includes(r.id));
+    pageData.length > 0 && pageData.every((r) => selected.includes(r._id));
 
   const navigate = useNavigate();
 
@@ -178,7 +178,7 @@ export default function AllVehicles({
                   </tr>
                 ) :(
                 pageData.map((row,index) => {
-                  const isRowSelected = selected.includes(row.id);
+                  const isRowSelected = selected.includes(row._id);
                   return (
                     <tr
                       key={row.id}

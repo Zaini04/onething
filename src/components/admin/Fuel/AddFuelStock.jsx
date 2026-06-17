@@ -1,5 +1,4 @@
 import { useFormik } from "formik";
-import { addFuelCompany } from "../../../validations/AddFuelCompanyValidation";
 import FormInput from "../../global/FormInput";
 import { toastError } from "../../../hooks/toastError";
 import { toast } from "react-toastify";
@@ -7,12 +6,19 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import Axios from "../../../configs/api";
+import { addFuelStock } from "../../../validations/AddFuelStockValidation";
+import {  useFuelStockCompaniesDropdown } from "../../../redux/actions/fuelAction";
+import SearchSelect from "../../global/SearchSelect";
 
-export default function AddFuelCompany({setEditedFuelCompany,editFuelCompany}) {
+export default function AddFuelStock({editFuelCompany,setEditedFuelCompany}) {
+
+
 
     const queryClient = useQueryClient()
   const navigate = useNavigate()
    const isEdit = !!editFuelCompany
+
+   console.log("edc",editFuelCompany)
     
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -21,18 +27,18 @@ const fuelCompanyMutation = useMutation({
   mutationFn: async (values) => {
     setIsSubmitting(true)
     if (isEdit) {
-      return  Axios.put(`/fuel/company/${editFuelCompany._id}`, values);
+      return  Axios.put(`/fuel/${editFuelCompany._id}`, values);
     }
 
-    return Axios.post("/fuel/add_fuel_company", values);
+    return Axios.post("/fuel/add_fuel_stock", values);
   },
 
   onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ["fuel-companies"] });
+    queryClient.invalidateQueries({ queryKey: ["fuel-stocks"] });
     formik.resetForm();
     setIsSubmitting(false)
-    navigate("/app/entry-fuel/fuel-company");
-    toast.success(isEdit? "fuel edited successfully": "fuel added successfully")
+    navigate("/app/fuel-stock");
+    toast.success(isEdit? "fuel stock edited successfully": "fuel stock added successfully")
   },
 
   onError: (error) => {
@@ -46,9 +52,10 @@ const fuelCompanyMutation = useMutation({
           enableReinitialize: true,
 
     initialValues: {
-      fuelCompany: editFuelCompany?.fuelCompany || '',
+      fuelCompany: editFuelCompany?.fuelCompany._id || '',
+      fuelLiters: editFuelCompany?.fuelLiters.toString() || "",
     },
-    validationSchema: addFuelCompany,
+    validationSchema: addFuelStock,
     onSubmit: async (values) => {
       console.log("fu",values)
         fuelCompanyMutation.mutate(values)
@@ -59,9 +66,20 @@ const fuelCompanyMutation = useMutation({
 
   if (isEdit) {
     setEditedFuelCompany(null);
-    navigate("/app/entry-fuel/fuel-company");
+    navigate("/app/fuel-stock");
   }
 };
+
+const { data:fuelCompaniesData  } = useFuelStockCompaniesDropdown();
+
+const fuelCompanies =
+  fuelCompaniesData?.map((c) => ({
+    id: c._id,
+    name: c.fuelCompany,
+  })) || [];
+
+  console.log("flc",fuelCompanies)
+
   return (
     <div className=" bg-white rounded-2xl flex items-start justify-center p-4">
       <div className="w-full lg:max-w-[440px]">
@@ -74,15 +92,23 @@ const fuelCompanyMutation = useMutation({
           className=" rounded-2xl  flex flex-col  justify-between"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-x-6 gap-y-7 pt-2">
-            <FormInput
+            <SearchSelect
               label="Fuel Company"
-              id="fuelCompany"
-              type="text"
+              options = {fuelCompanies}
               placeholder="Enter fuel company"
+                value={formik.values.fuelCompany}
+            onChange={(val) => formik.setFieldValue("fuelCompany", val, true)}
+            onBlur={() => formik.setFieldTouched("fuelCompany", true, true)}
+            isError={formik.touched.fuelCompany && !!formik.errors.fuelCompany}
+            errorMessage={formik.errors.fuelCompany}            />
+
+            <FormInput
+              label="Fuel Litter"
+              id="fuelLiters"
+              type="text"
+              placeholder="Enter fuel litter"
               formik={formik}
             />
-
-          
           </div>
 
           <div className="flex items-center gap-4 mt-8 justify-start lg:justify-end">

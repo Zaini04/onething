@@ -10,6 +10,7 @@ function SearchSelect({
   onBlur,
   isError,
   errorMessage,
+  searchable = true,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -76,7 +77,9 @@ function SearchSelect({
 
       {isOpen && (
         <div className="absolute left-0 right-0 mt-1 bg-white border border-gray-100 rounded-xl shadow-lg z-50 p-2 flex flex-col gap-2 max-h-56">
-          <div className="relative">
+         
+         {searchable && (
+ <div className="relative">
             <input
               type="text"
               placeholder="Type to search..."
@@ -87,6 +90,10 @@ function SearchSelect({
             />
             <FiSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
           </div>
+         )
+         
+         }
+         
 
           <div className="overflow-y-auto flex-1 max-h-36 scrollbar-thin scrollbar-thumb-gray-200">
             {filteredOptions.length > 0 ? (

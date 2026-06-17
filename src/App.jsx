@@ -7,7 +7,6 @@ import EntryVehicles from "./pages/admin/EntryVehicles";
 import Clients from "./pages/admin/Clients";
 import Vendors from "./pages/admin/Vendors";
 import AllSites from "./pages/admin/AllSites";
-import FuelCompany from "./pages/admin/FuelCompany";
 import   EntryFuels  from "./pages/admin/EntryFuels";
 import IncomeTax from "./pages/admin/IncomeTax";
 import Settings from "./pages/admin/Settings";
@@ -20,6 +19,8 @@ import VehicleDetails from "./pages/admin/VehicleDetails";
 import ClientDetails from "./pages/admin/ClientDetails";
 import {ToastContainer} from "react-toastify";
 import Users from "./pages/admin/Users";
+import FuelCompany from "./pages/admin/FuelCompany";
+import FuelStock from "./pages/admin/FuelStock";
 function App() {
   return (
     <>
@@ -54,7 +55,8 @@ theme="light"
           <Route path="sites" element={<AllSites />} />
           <Route path="sites/add" element={<AddSite />} />
           <Route path="sites/edit" element={<AddSite />} />
-          <Route path ='fuel-company' element={<FuelCompany />} />
+          <Route path ='entry-fuel/fuel-company' element={<FuelCompany />} />
+          <Route path ='fuel-stock' element={<FuelStock />} />
           <Route path ='entry-fuel' element={<EntryFuels />} />
           <Route path ='income-expense' element={<IncomeTax />} />
           <Route path ='users' element={<Users />} />

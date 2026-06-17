@@ -6,7 +6,7 @@ export const entryVehicleValidation = Yup.object({
   client: Yup.string().required("Please select a client"),
   site: Yup.string().required("Please select a site"),
   vehicle: Yup.string().required("Please select a vehicle"),
-  material: Yup.string().required("Please select a material"),
+  materialType: Yup.string().required("Please select a material"),
   rateType: Yup.string().required("Please select a rate type"),
   rate: Yup.number()
     .typeError("Must be a valid number")
@@ -23,10 +23,17 @@ export const entryVehicleValidation = Yup.object({
     .typeError("Must be a valid number")
     .min(0, "Cannot be negative")
     .required("Material cost is required"),
-  driverExpense: Yup.number()
+  dieselCost: Yup.number()
     .typeError("Must be a valid number")
     .min(0, "Cannot be negative")
-    .required("Driver expense is required"),
+    .required("Material cost is required"),
+  dieselInLitters: Yup.number()
+    .typeError("Must be a valid number")
+    .min(0, "Cannot be negative")
+    .required("Material cost is required"),
+  driverExpense: Yup.number()
+    .typeError("Must be a valid number")
+    .min(0, "Cannot be negative"),
   loading: Yup.number()
     .typeError("Must be a valid number")
     .min(0, "Cannot be negative")
@@ -34,6 +41,5 @@ export const entryVehicleValidation = Yup.object({
   otherExpenses: Yup.number()
     .typeError("Must be a valid number")
     .min(0, "Cannot be negative")
-    .required("Other expenses are required"),
   
 });

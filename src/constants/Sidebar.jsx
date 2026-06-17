@@ -223,9 +223,9 @@
       ),
     },
     {
-      id: "fuel-company",
-      label: "Fuel Company",
-      link: "/app/fuel-company",
+      id: "fuel-stock",
+      label: "Fuel Stock",
+      link: "/app/fuel-stock",
       icon: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
           <path

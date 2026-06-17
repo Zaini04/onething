@@ -109,7 +109,7 @@ const handleEdit = (row) => {
   console.log("ownerName",ownerName)
   console.log("vehicleNo",vehicleNo)
   return (
-    <div className="w-full px-4 md:px-6 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
+    <div className="md:w-[93%] lg:w-[94%] xl:w-[95%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
       <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
         <div>
           <h1 className="text-xl font-medium text-black tracking-tight">

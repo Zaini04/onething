@@ -6,6 +6,8 @@ import ViewButton from "../../global/ViewButton";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { setvehicleLedgerById } from "../../../redux/slices/vehicleLedgerSlice";
+import { useSearchParams } from "react-router-dom";
+import { TableSkeletonRows } from "../../global/TableSkeletonRows";
 
 function SortIcon() {
   return (
@@ -64,22 +66,34 @@ function SortIcon() {
 //   };
 // });
 
-export default function VehicleTable() {
+export default function VehicleTable({
+  vehicleLedgerData,
+  isLoading,
+  page,
+  setPage,
+  perPage,
+  setPerPage,
+  totalPages,
+}) {
   const dispatch = useDispatch();
-  const initialData = useSelector((state) => state.vehicleLedger.items);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
   const [showPerPage, setShowPerPage] = useState(false);
   const [activeRowMenu, setActiveRowMenu] = useState(null);
 
   const menuRef = useRef(null);
 
   const handleActionClick = (model, id) => {
-    dispatch(setvehicleLedgerById(id));
-    const newUrl = `${window.location.pathname}?modal=${model}&id=${id}&type=vehicle-ledger`;
-    window.history.pushState({}, "", newUrl);
+    // dispatch(setvehicleLedgerById(id));
+    // const newUrl = `${window.location.pathname}?modal=${model}&id=${id}&type=vehicle-ledger`;
+    // window.history.pushState({}, "", newUrl);
+
+    setSearchParams({
+      modal: model,
+      id: String(id),
+      type: "entry-vehicle",
+    });
 
     setActiveRowMenu(null);
   };
@@ -102,10 +116,12 @@ export default function VehicleTable() {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  const totalPages = Math.ceil(initialData.length / perPage);
-  const pageData = initialData.slice((page - 1) * perPage, page * perPage);
+  const pageData = vehicleLedgerData.slice(
+    (page - 1) * perPage,
+    page * perPage,
+  );
   const allSelected =
-    pageData.length > 0 && pageData.every((r) => selected.includes(r.id));
+    pageData.length > 0 && pageData.every((r) => selected.includes(r._id));
 
   const toggleAll = () => {
     if (allSelected) {
@@ -150,7 +166,7 @@ export default function VehicleTable() {
     <div className="w-full bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm">
       <div className="w-full mx-auto">
         <div className="bg-white rounded-xl overflow-hidden">
-          <div className="overflow-x-auto max-w-full">
+          <div className="overflow-x-auto overflow-y-visible max-w-full">
             <table className="w-full text-left border-collapse min-w-[1100px] table-auto">
               <thead>
                 <tr className="bg-[#F7F7F7] border-b border-gray-100">
@@ -196,7 +212,10 @@ export default function VehicleTable() {
                     Material Cost <SortIcon />
                   </th>
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Diesal <SortIcon />
+                    Diesal Cost <SortIcon />
+                  </th>
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Diesal Liters <SortIcon />
                   </th>
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Driver Expense <SortIcon />
@@ -218,6 +237,13 @@ export default function VehicleTable() {
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Bill Status <SortIcon />
                   </th>
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Received <SortIcon />
+                  </th>
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Due <SortIcon />
+                  </th>
+
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap sticky right-0 z-40 bg-[#F7F7F7]">
                     Action <SortIcon />
                   </th>
@@ -225,162 +251,187 @@ export default function VehicleTable() {
               </thead>
 
               <tbody className="divide-y divide-gray-50/60">
-                {pageData.map((row) => {
-                  const isRowSelected = selected.includes(row.id);
-                  const isMenuOpen = activeRowMenu === row.id;
-                  return (
-                    <tr
-                      key={row.id}
-                      className={`transition-colors duration-150 ${
-                        isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
-                      }`}
+                {isLoading ? (
+                  <TableSkeletonRows rowsCount={perPage || 5} />
+                ) : pageData.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan="7"
+                      className="py-8 text-center text-sm text-gray-400"
                     >
-                      <td className="py-3.5 px-5 text-center">
-                        <input
-                          type="checkbox"
-                          checked={isRowSelected}
-                          onChange={() => toggleRow(row.id)}
-                          className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
-                        />
-                      </td>
-
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
-                        {row.no}
-                      </td>
-
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide select-none">
-                        {row.date}
-                      </td>
-
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-2.5">
-                          <img
-                            src={profile}
-                            alt={row.clientName}
-                            className="w-7 h-7 rounded-full object-cover shadow-sm ring-1 ring-gray-100"
-                          />
-                          <span className="text-[12px] font-normal text-gray-800 whitespace-nowrap">
-                            {row.clientName}
-                          </span>
-                        </div>
-                      </td>
-
-                      <td className="py-3.5 px-4">
-                        <span className="inline-block bg-[#F1F3F5] text-gray-700 text-[11px] font-medium px-2 py-1 rounded border border-gray-200/50">
-                          {row.site}
-                        </span>
-                      </td>
-
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.material}
-                      </td>
-
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700 whitespace-nowrap">
-                        {row.rateType}
-                      </td>
-
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.rate}
-                      </td>
-
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.rateType === "per sft"
-                          ? `${row.totalSft} sft`
-                          : `${row.totalVehicles} vehicles`}
-                      </td>
-
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.totalRate}
-                      </td>
-
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.materialCost}
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.diesal}
-                      </td>
-
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.driverExpense}
-                      </td>
-
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.loading}
-                      </td>
-
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.otherExpenses}
-                      </td>
-
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.remaingAmount}
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.paymentReceived}
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.billStatus}
-                      </td>
-                      <td
-                        className={`py-3.5 px-4 text-[12px] font-normal sticky right-0 transition-colors duration-150 overflow-visible ${
-                          isRowSelected ? "bg-[#F3F7FE]" : "bg-white"
-                        } ${isMenuOpen ? "z-[100]" : "z-30"}`}
+                      No entries found.
+                    </td>
+                  </tr>
+                ) : (
+                  pageData.map((row, index) => {
+                    const isRowSelected = selected.includes(row._id);
+                    const isMenuOpen = activeRowMenu === row._id;
+                    return (
+                      <tr
+                        key={row._id}
+                        className={`transition-colors duration-150 ${
+                          isMenuOpen ? "relative z-40" : ""
+                        } ${
+                          isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
+                        }`}
                       >
-                        <div className="flex justify-center items-center w-full h-full">
-                          <BsThreeDotsVertical
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setActiveRowMenu(isMenuOpen ? null : row.id);
-                            }}
-                            className="cursor-pointer text-gray-500 hover:text-black text-xl p-1 rounded hover:bg-gray-100"
+                        <td className="py-3.5 px-5 text-center">
+                          <input
+                            type="checkbox"
+                            checked={isRowSelected}
+                            onChange={() => toggleRow(row._id)}
+                            className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
                           />
-                        </div>
+                        </td>
 
-                        {isMenuOpen && (
-                          <div
-                            ref={menuRef}
-                            className="absolute right-12 top-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-lg shadow-2xl py-2 px-2 w-44 z-[9999] flex flex-col gap-1.5 animation-fade-in"
-                          >
-                            {row.paymentReceived === "received" ? (
-                              ""
-                            ) : (
-                              <PaymentReceivedButton
-                                onClick={() =>
-                                  handleActionClick("payment", row.id)
-                                }
-                                type="vehicle-ledger"
-                                row={row}
-                              />
-                            )}
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
+                          {(page - 1) * perPage + index + 1}
+                        </td>
 
-                            {row.billStatus === "generated" ? (
-                              ""
-                            ) : (
-                              <GenerateBillButton
-                                onClick={() =>
-                                  handleActionClick("bill", row.id)
-                                }
-                                type="vehicle-ledger"
-                                row={row}
-                              />
-                            )}
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide select-none">
+                          {new Date(row.date).toLocaleDateString()}
+                        </td>
 
-                            {/* <button 
+                        <td className="py-3.5 px-4">
+                          <div className="flex items-center gap-2.5">
+                            <img
+                              src={profile}
+                              alt={row.client?.name}
+                              className="w-7 h-7 rounded-full object-cover shadow-sm ring-1 ring-gray-100"
+                            />
+                            <span className="text-[12px] font-normal text-gray-800 whitespace-nowrap">
+                              {row.client?.name}
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className="py-3.5 px-4">
+                          <span className="inline-block bg-[#F1F3F5] text-gray-700 text-[11px] font-medium px-2 py-1 rounded border border-gray-200/50">
+                            {row.site?.siteName}
+                          </span>
+                        </td>
+
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.materialType}
+                        </td>
+
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700 whitespace-nowrap">
+                          {row.rateType}
+                        </td>
+
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.rate}
+                        </td>
+
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.rateType === "per sft"
+                            ? `${row.totalSftVehicles} sft`
+                            : `${row.totalSftVehicles} vehicles`}
+                        </td>
+
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.totalRate}
+                        </td>
+
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.materialCost}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.dieselCost}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.dieselInLitters}
+                        </td>
+
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.driverExpense}
+                        </td>
+
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.loading}
+                        </td>
+
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.otherExpenses}
+                        </td>
+
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.remainingAmount}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.paymentStatus}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.billStatus}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.payment.amountReceived}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.clientDue}
+                        </td>
+                        <td
+                          className={`py-3.5 px-4 text-[12px] font-normal sticky right-0 transition-colors duration-150 ${
+                            isRowSelected ? "bg-[#F3F7FE]" : "bg-white"
+                          } ${isMenuOpen ? "z-50 shadow-md" : "z-30"}`}
+                        >
+                          <div className="flex justify-center z-50 items-center w-full h-full">
+                            <BsThreeDotsVertical
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveRowMenu(isMenuOpen ? null : row._id);
+                              }}
+                              className="cursor-pointer text-gray-500 hover:text-black text-xl p-1 rounded hover:bg-gray-100"
+                            />
+                          </div>
+
+                          {isMenuOpen && (
+                            <div
+                              ref={menuRef}
+                              className="absolute right-12 top-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-lg shadow-2xl py-2 px-2 w-44 z-[10000] flex flex-col gap-1.5 animation-fade-in"
+                            >
+                              {row.paymentReceived === "received" ? (
+                                ""
+                              ) : (
+                                <PaymentReceivedButton
+                                  onClick={() =>
+                                    handleActionClick("payment", row._id)
+                                  }
+                                  type="vehicle-ledger"
+                                  row={row}
+                                />
+                              )}
+
+                              {row.billStatus === "generated" ? (
+                                ""
+                              ) : (
+                                <GenerateBillButton
+                                  onClick={() =>
+                                    handleActionClick("bill", row._id)
+                                  }
+                                  type="vehicle-ledger"
+                                  row={row}
+                                />
+                              )}
+
+                              {/* <button 
             className="inline-block text-left cursor-pointer px-2 py-1 text-xs font-medium  text-gray-500 hover:bg-gray-300  border-b  border-gray-300"
       >
         
         View 
       </button> */}
-                            <ViewButton
-                              onClick={() => handleActionClick("view", row.id)}
-                              type="vehicle-ledger"
-                              row={row}
-                            />
-                          </div>
-                        )}
-                      </td>
+                              <ViewButton
+                                onClick={() =>
+                                  handleActionClick("view", row._id)
+                                }
+                                type="vehicle-ledger"
+                                row={row}
+                              />
+                            </div>
+                          )}
+                        </td>
 
-                      {/* <td className="py-3.5 px-4">
+                        {/* <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2.5">
                           <img
                             src={profile}
@@ -393,12 +444,13 @@ export default function VehicleTable() {
                         </div>
                       </td> */}
 
-                      {/* <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                        {/* <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
                         {row.fuel}
                       </td> */}
-                    </tr>
-                  );
-                })}
+                      </tr>
+                    );
+                  })
+                )}
               </tbody>
             </table>
           </div>
@@ -474,8 +526,8 @@ export default function VehicleTable() {
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
               <span>
                 Showing {(page - 1) * perPage + 1} to{" "}
-                {Math.min(page * perPage, initialData.length)} of{" "}
-                {initialData.length} entries
+                {Math.min(page * perPage, vehicleLedgerData.length)} of{" "}
+                {vehicleLedgerData.length} entries
               </span>
 
               <div className="relative">

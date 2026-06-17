@@ -32,7 +32,7 @@ const FormInput = ({
       <div className="relative w-full">
         <label
           htmlFor={id}
-          className={`absolute -top-2.5 left-3  bg-white px-1 text-[11px] font-medium text-gray-400 z-10 transition-colors group-focus-within:text-black`}
+          className={`absolute -top-2.5 left-3   px-1 text-[11px] font-medium text-gray-400 ${readOnly ? " bg-transparent":'bg-white '} z-10 transition-colors group-focus-within:text-black`}
         >
           {label}
         </label>

@@ -6,12 +6,13 @@ import { Eye, EyeOff } from "lucide-react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { loginValidation } from "../../validations/loginValidation";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../redux/actions/authAction";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch()
+  const logging = useSelector(state=>state.auth.loading)
   const initialLoginValue = {
     identifier: "",
     password: "",
@@ -24,6 +25,8 @@ function Login() {
   const handleLogin =  (values,{resetForm}) => {
     dispatch(loginUser(values,navigate, resetForm))
   };
+
+
 
   return (
     <div className="flex flex-col bg-black overflow-x-hidden justify-center items-center h-screen w-screen ">
@@ -163,9 +166,12 @@ function Login() {
 
               <button
                 type="submit"
+                disabled = {logging}
                 className="bg-[#1A1917] text-white font-semibold rounded-xl px-4 py-3 w-full mt-2 hover:bg-black transition-colors cursor-pointer"
               >
-                Login
+                {
+                  logging ? "Logging" : 'Login'
+                }
               </button>
             </Form>
           </Formik>

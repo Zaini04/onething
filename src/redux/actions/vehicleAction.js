@@ -24,3 +24,31 @@ export const useVehicles = (page = 1, perPage = 10) => {
   keepPreviousData: true,
   });
 };
+
+export const fetchVehilceDropdown = async () => {
+  const {data:{data:{docs,message}}} = await Axios.get("/vehicle/vehicles_list");
+  console.log("drv",docs)
+  return docs || [];
+};
+
+export const useVehicleDropdown = () => {
+  return useQuery({
+    queryKey: ["vehicleDropdown"],
+    queryFn: fetchVehilceDropdown,
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+  });
+};
+
+export const fetchVehicleLedger = async ({ queryKey }) => {
+
+  const [, page, limit,apiFilters,id] = queryKey;
+  const pageSize = limit
+  const res = await Axios.get(`/vehicle/ledger/${id}`, {
+    params: { page, pageSize,...apiFilters, },
+  });
+
+
+  return res.data.data;
+};

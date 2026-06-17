@@ -3,6 +3,7 @@ import GenerateBillButton from "../../global/GenerateBillButton";
 import ViewButton from "../../global/ViewButton";
 import PaymentReceivedButton from "../../global/PaymentreceivedButton";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { TableSkeletonRows } from "../../global/TableSkeletonRows";
 
 function SortIcon() {
   return (
@@ -18,49 +19,18 @@ function SortIcon() {
   );
 }
 
-const initialData = Array.from({ length: 50 }, (_, i) => {
-  const sites = ["Multan", "Overseas", "Lahore"];
-  const vehicles = [
-    "Standard Dump Truck",
-    "Mini Dump Trucks",
-    "Low-Side Dump Trucks",
-  ];
-  const vehicleNo = ["TLL-4679", "MJU-5210", "ABC-1234"];
-  const materials = ["Concrete", "Sand"];
-  const rateTypes = ["per sft", "per vehicle"];
-  const rate = ["50", "70", "80"];
-  const totalSft = ["100", "150", "200"];
-  const totalVehicles = ["5", "10", "15"];
-  const totalRate = Number(
-    rateTypes[i % 2] === "per sft"
-      ? totalSft[i % 3] * rate[i % 3]
-      : totalVehicles[i % 3] * rate[i % 3],
-  );
 
-  const paymentReceived = ["received", "pending"];
-  const billStatus = ["generated", "pending"];
-  return {
-    id: i + 1,
-    no: String(i + 1).padStart(2, "0"),
-    date: "24-10-2025",
-    vehicleNo: vehicleNo[i % 3],
-    vehicle: vehicles[i % 3],
-    material: materials[i % 2],
-    rateType: rateTypes[i % 2],
-    rate: rate[i % 3],
-    totalSft: totalSft[i % 3],
-    site: sites[i % 3],
-    totalVehicles: totalVehicles[i % 3],
-    totalRate: totalRate,
-    paymentReceived: paymentReceived[i % 2],
-    billStatus: billStatus[i % 2],
-  };
-});
 
-export default function ClientEntryTable() {
+export default function ClientEntryTable({
+   clientLedgerData,
+  isLoading,
+  page,
+  setPage,
+  perPage,
+  setPerPage,
+  totalPages,
+}) {
   const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
   const [showPerPage, setShowPerPage] = useState(false);
   const [activeRowMenu, setActiveRowMenu] = useState(null);
 
@@ -88,10 +58,9 @@ export default function ClientEntryTable() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const totalPages = Math.ceil(initialData.length / perPage);
-  const pageData = initialData.slice((page - 1) * perPage, page * perPage);
+  const pageData = clientLedgerData.slice((page - 1) * perPage, page * perPage);
   const allSelected =
-    pageData.length > 0 && pageData.every((r) => selected.includes(r.id));
+    pageData.length > 0 && pageData.every((r) => selected.includes(r._id));
 
   const toggleAll = () => {
     if (allSelected) {
@@ -195,9 +164,18 @@ export default function ClientEntryTable() {
               </thead>
 
               <tbody className="divide-y divide-gray-50/60">
-                {pageData.map((row) => {
-                  const isRowSelected = selected.includes(row.id);
-                  const isMenuOpen = activeRowMenu === row.id;
+                   {isLoading ? (
+                 <TableSkeletonRows rowsCount={perPage || 5} />
+                              ) : pageData.length === 0 ? (
+                                <tr>
+                                  <td colSpan="7" className="py-8 text-center text-sm text-gray-400">
+                                    No entries found.
+                                  </td>
+                                </tr>
+                              ) :(
+                                pageData.map((row,index) => {
+                  const isRowSelected = selected.includes(row._id);
+                  const isMenuOpen = activeRowMenu === row._id;
                   return (
                     <tr
                       key={row.id}
@@ -215,29 +193,29 @@ export default function ClientEntryTable() {
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
-                        {row.no}
+                          {(page - 1) * perPage + index + 1}
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide select-none">
-                        {row.date}
+                          {new Date(row.date).toLocaleDateString()}
                       </td>
 
                       <td className="py-3.5 px-4">
                         <span className="inline-block bg-[#F1F3F5] text-gray-700 text-[11px] font-medium px-2 py-1 rounded border border-gray-200/50">
-                          {row.site}
+                          {row.site?.siteName}
                         </span>
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700 whitespace-nowrap">
-                        {row.vehicleNo}
+                        {row.vehicle?.vehicleNo}
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700 whitespace-nowrap">
-                        {row.vehicle}
+                        {row.vehicle?.typeVehicle}
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.material}
+                        {row.materialType}
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700 whitespace-nowrap">
@@ -250,15 +228,15 @@ export default function ClientEntryTable() {
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
                         {row.rateType === "per sft"
-                          ? `${row.totalSft} sft`
-                          : `${row.totalVehicles} vehicles`}
+                          ? `${row.totalSftVehicles} sft`
+                          : `${row.totalSftVehicles} vehicles`}
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
                         {row.totalRate}
                       </td>
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.paymentReceived}
+                        {row.paymentStatus}
                       </td>
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
                         {row.billStatus}
@@ -273,7 +251,7 @@ export default function ClientEntryTable() {
                           <BsThreeDotsVertical
                             onClick={(e) => {
                               e.stopPropagation(); 
-                              setActiveRowMenu(isMenuOpen ? null : row.id);
+                              setActiveRowMenu(isMenuOpen ? null : row._id);
                             }}
                             className="cursor-pointer text-gray-500 hover:text-black text-xl p-1 rounded hover:bg-gray-100"
                           />
@@ -325,7 +303,9 @@ export default function ClientEntryTable() {
                       </td> */}
                     </tr>
                   );
-                })}
+                })
+                              )
+                }
               </tbody>
             </table>
           </div>
@@ -401,8 +381,8 @@ export default function ClientEntryTable() {
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
               <span>
                 Showing {(page - 1) * perPage + 1} to{" "}
-                {Math.min(page * perPage, initialData.length)} of{" "}
-                {initialData.length} entries
+                {Math.min(page * perPage, clientLedgerData.length)} of{" "}
+                {clientLedgerData.length} entries
               </span>
 
               <div className="relative">

@@ -1,78 +1,122 @@
-import { Plus, X } from "lucide-react";
 import { useState } from "react";
-import EntryFuel from "../../components/admin/Fuel/EntryFuel";
 import SearchFilters from "../../components/global/SearchFilter";
 import EntryFuelTable from "../../components/admin/Fuel/EntryfuelTable";
 import { useLocation, useNavigate } from "react-router-dom";
 import ExportButton from "../../components/global/ExportButton";
+import { fetchEntryFuels, useFuelCompaniesDropdown } from "../../redux/actions/fuelAction";
+import { useQuery } from "@tanstack/react-query";
+import { useVehicleDropdown } from "../../redux/actions/vehicleAction";
 
 function EntryFuels() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const addFuelOpen = location.hash === "#entry";
+   const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [apiFilters, setApiFilters] = useState({});
+   const [filters, setFilters] = useState({
+    vehicle: "",
+    fuelCompany: "",
+    date: "",
+  });
 
-  const handleToggleSidebar = () => {
-    if (addFuelOpen) {
-      navigate("/app/entry-fuel");
-    } else {
-      navigate("/app/entry-fuel#entry");
-    }
-  };
+
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey: ["entry-fuels", page, perPage, filters],
+    queryFn: fetchEntryFuels,
+    staleTime: 1000 * 30,
+    cacheTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    keepPreviousData: true,
+  });
+
+const entryFuels = data?.docs || [];
+  const totalPages = data?.pages || 1;
+
+
+
+
+  const EntryFuelModel = ()=>{
+    navigate('/app/entry-fuel')
+  }
+  const fuelCompanyModel = ()=>{
+    navigate('/app/entry-fuel/fuel-company')
+}
+
+
+   const { data: vehicleDropDownData } = useVehicleDropdown();
+   const {data: fuelCompanies} =useFuelCompaniesDropdown()
+   console.log("fcd",fuelCompanies)
+
+   
+   const fuelCompaniesOptions = fuelCompanies?.docs.map((v) => ({ id: v._id, name: v.fuelCompany })) || [];
+   const vehicleOptions = vehicleDropDownData?.map((v) => ({ id: v._id, name: v.vehicleNo })) || [];
+
+
   const clientVendorConfig = [
     {
-      name: "Fuel Name",
+      name: "vehicle",
       type: "select",
-      placeholder: "Fuel Name",
+      placeholder: "vehicleNo",
       searchable: true,
-      options: [
-        { label: "Regular", value: "regular" },
-        { label: "Premium", value: "premium" },
-        { label: "Diesel", value: "diesel" },
-      ],
+      options: vehicleOptions
     },
 
     {
-      name: "Fuel Company",
+      name: "fuelCompany",
       type: "select",
       placeholder: "Company Name",
       searchable: true,
-      options: [
-        { label: "Shell", value: "shell" },
-        { label: "BP", value: "bp" },
-        { label: "Total", value: "total" },
-      ],
+      options:fuelCompaniesOptions
     },
     {
-      name: "Fuel Price",
-      type: "select",
-      placeholder: "Per liter Price",
-      searchable: true,
+      name: "date",
+      type: "date",
+      placeholder: "Date",
+      searchable: false,
       options: [
-        { label: "100", value: "100" },
-        { label: "120", value: "120" },
-        { label: "150", value: "150" },
+        
       ],
     },
   ];
 
-  const [filters, setFilters] = useState({
-    "Fuel Name": "",
-    "Fuel Company": "",
-    "Fuel Price": "",
-  });
-
+ 
+ 
   const handleFilterChange = (name, value) => {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSearchSubmit = (finalFilters) => {
     console.log("Fetching Entry Vehicles data with fields:", finalFilters);
+    setApiFilters(finalFilters)
   };
 
   return (
-    <div className="w-full px-4 md:px-6 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
+    <div className=" md:w-[93%] lg:w-[94%] xl:w-[95%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
+      <div className=" mt-4  ">
+              <div className="flex text-xs items-center gap-x-6 gap-y-4 mb-4 bg-gray-200 py-0.5  px-4 rounded-xl">
+                <button onClick={EntryFuelModel}
+                  className={`text-gray-700 hover:border-b-2 h-10 hover:border-black  hover:text-gray-900 cursor-pointer  ${location.pathname === '/app/entry-fuel' ? "font-semibold border-b-2 border-black text-black" : ""} `}
+                >
+                  Entry Fuel
+                </button>
+                <button onClick={fuelCompanyModel}
+                  className={`text-gray-700 hover:border-b-2 h-10 hover:border-black  hover:text-gray-900 cursor-pointer ${location.pathname === '/app/entry-fuel/fuel-company'? "font-semibold border-b-2 border-black text-black" : ""} `}
+                >
+                  Fuel Companies
+                </button>
+              
+              </div>
+              
+            </div>
+
+             <>
+    
       <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
+       
+       
+       
         <div>
           <h1 className="text-xl font-medium text-black tracking-tight">
             Entry Fuel
@@ -82,7 +126,7 @@ function EntryFuels() {
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <ExportButton />
 
-          <button
+          {/* <button
             onClick={handleToggleSidebar}
             type="button"
             className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2.5 font-normal sm:font-medium text-[14px] sm:text-sm rounded-xl active:scale-[0.98] transition-all cursor-pointer shadow-sm ${
@@ -102,7 +146,7 @@ function EntryFuels() {
                 <span>Entry Fuel</span>
               </>
             )}
-          </button>
+          </button> */}
         </div>
       </div>
 
@@ -116,17 +160,25 @@ function EntryFuels() {
       </div>
 
       <div
-        className={`w-full flex flex-col-reverse lg:flex-row ${addFuelOpen ? "gap-6" : ""}  items-start`}
+        className={`w-full flex flex-col-reverse lg:flex-row   items-start`}
       >
         <div
-          className={`transition-all duration-300 ease-in-out ${
-            addFuelOpen ? "w-full lg:w-[65%] shrink-0" : "w-full"
-          }`}
+          className={`transition-all duration-300 ease-in-out 
+           w-full
+          `}
         >
-          <EntryFuelTable />
+          <EntryFuelTable 
+          
+          entryFuels={entryFuels} 
+            isLoading={isLoading || isFetching} 
+            page={page} 
+            perPage={perPage}
+            setPage={setPage} 
+            setPerPage={setPerPage}
+            totalPages={totalPages}/>
         </div>
 
-        <div
+        {/* <div
           className={`transition-all duration-300 ease-in-out ${
             addFuelOpen
               ? "w-full lg:w-[35%] opacity-100 scale-100 visible"
@@ -138,8 +190,11 @@ function EntryFuels() {
               <EntryFuel onSubmitSuccess={() => navigate("/app/entry-fuel")} />
             </div>
           )}
-        </div>
+        </div> */}
       </div>
+              </>
+      
+ 
     </div>
   );
 }

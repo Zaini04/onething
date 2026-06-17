@@ -34,6 +34,7 @@ const AddClient = () => {
     onSuccess: () => {
       // Invalidates cache layer telling clients view to re-fetch on mount
       queryClient.invalidateQueries({ queryKey: ["clients"] });
+      queryClient.invalidateQueries({ queryKey: ["clientDropdown"] });
       setIsSubmitting(false)
       formik.resetForm();
 
@@ -93,7 +94,7 @@ const AddClient = () => {
   };
 
   return (
-    <div className="w-full mx-auto p-4 md:p-6 bg-[#F9FAFB] rounded-2xl">
+    <div className="w-full md:w-[85%] lg:w-[88%] xl:w-[90%]  p-4 md:pl-8 mx-auto bg-[#F9FAFB]  rounded-2xl">
       <div className="flex justify-between items-center text-gray-900 mb-6 tracking-tight">
         <h2 className="text-lg font-medium">{isEditMode ? "Edit Client" : "Add Client"}</h2>
         <button

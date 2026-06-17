@@ -26,8 +26,9 @@ export const useClients = (page = 1, perPage = 10,apiFilters={}) => {
 };
 
 export const fetchClientDropdown = async () => {
-  const res = await Axios.get("/client/clients_list");
-  return res.data?.data || [];
+  const {data:{data:{docs}}} = await Axios.get("/client/clients_list");
+  console.log("dr",docs)
+  return docs || [];
 };
 
 export const useClientDropdown = () => {
@@ -39,3 +40,24 @@ export const useClientDropdown = () => {
     refetchOnWindowFocus: false,
   });
 };
+
+
+export const fetchClientLedger = async ({ queryKey }) => {
+
+  const [, page, limit,apiFilters,id] = queryKey;
+  const pageSize = limit
+  const res = await Axios.get(`/client/ledger/${id}`, {
+    params: { page, pageSize,...apiFilters, },
+  });
+
+
+  return res.data.data;
+};
+
+export const fetchClientSummary = async ({ queryKey }) => {
+  const [, id] = queryKey;  // ✅ queryKey se id uthao
+  const { data: { data } } = await Axios.get(`/client/client_summary/${id}`);
+  return data.summary || {};  // ✅ docs nahi, summary hai
+};
+
+

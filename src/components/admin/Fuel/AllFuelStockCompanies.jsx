@@ -42,7 +42,7 @@ function SortIcon() {
   );
 }
 
-export default function AllFuelCompanies({setEditedFuelCompany,
+export default function AllFuelStockCompanies({setEditedFuelCompany,
   fuelCompaniesData = [],
   isLoading,
   page,
@@ -128,11 +128,15 @@ export default function AllFuelCompanies({setEditedFuelCompany,
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
                     Date
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16 whitespace-nowrap">
                     Fuel Company <SortIcon />
                   </th>
                  
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center pr-8 w-32">
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16 whitespace-nowrap">
+                    Fuel Liters <SortIcon />
+                  </th>
+                 
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16 whitespace-nowrap text-center pr-8 w-32">
                     Action
                   </th>
                 </tr>
@@ -157,7 +161,7 @@ pageData.map((row,index) => {
                         isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
                       }`}
                     >
-                      <td className="py-3.5 px-5 text-center">
+                      <td className="py-3.5 px-5 text-center ">
                         <input
                           type="checkbox"
                           checked={isRowSelected}
@@ -166,20 +170,23 @@ pageData.map((row,index) => {
                         />
                       </td>
 
-                      <td className="py-3.5 px-4 text-[12px] w-16 font-normal text-gray-500">
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-500">
                                                 {(page - 1) * perPage + index + 1}
 
                       </td>
-                      <td className="py-3.5 px-4 text-[12px] w-16 font-normal text-gray-500">
-{new Date(row.createdAt).toLocaleDateString()}
+                      <td className="py-3.5 px-4  text-[12px]  text-start font-normal text-gray-500">
+{new Date(row.updatedAt).toLocaleDateString()}
 
                       </td>
 
-                      <td className="py-3.5 px-4 text-[12px] w-16 font-normal text-gray-900 tracking-wide">
-                        {row.fuelCompany}
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-900 tracking-wide">
+                        {row.fuelCompany?.fuelCompany}
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-900 tracking-wide">
+                        {row.fuelLiters}
                       </td>
 
-                      
+                     
 
                       <td className="py-2.5 px-4 text-center pr-8">
                         <div className="flex items-center justify-center gap-3">
@@ -204,9 +211,9 @@ pageData.map((row,index) => {
                               />
                             </svg>
                           </button>
-   <DeleteButton row={row} deleteFn={(id) => Axios.delete(`/fuel/company/${id}`)} 
-  queryKey="fuel-companies" 
-  title="Delete fuel company"/>                        </div>
+   <DeleteButton row={row} deleteFn={(id) => Axios.delete(`/fuel/${id}`)} 
+  queryKey="fuel-stocks" 
+  title="Delete fuel stock company"/>                        </div>
                       </td>
                     </tr>
                   );
