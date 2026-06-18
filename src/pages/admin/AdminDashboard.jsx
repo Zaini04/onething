@@ -4,10 +4,14 @@ import SalesProfitTrend from "../../components/admin/dashboard/SalesProfitTrend"
 import ClientsTable from "../../components/admin/clients/ClientsTable";
 import { useClients } from "../../redux/actions/clientAction";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 function AdminDashboard() {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
+
+    const user = useSelector(state => state.auth.user)
+    console.log("login user",user)
   const {data,isLoading,isFetching} = useClients(page,perPage)
   console.log("clients",data)
 

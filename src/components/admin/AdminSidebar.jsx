@@ -277,12 +277,12 @@ function AdminSidebar({ isMobile = false, isOpen = false, onClose }) {
               className="w-full flex items-center gap-x-4 px-4 py-3.5 text-red-500 font-medium rounded-xl transition duration-200 hover:bg-red-500 hover:text-white group cursor-pointer mt-auto"
               onClick={handleMobileLogoutClick}
             >
-              <div className="text-red-500 group-hover:text-white transition duration-200">
+              <button onClick={()=>setIsLogoutModalOpen(true)} className="text-red-500 group-hover:text-white transition duration-200">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                   <path d="M12.0526 21C16.9941 21 21 16.9706 21 12C21 7.02944 16.9941 3 12.0526 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M7 8C7 8 3 10.946 3 12C3 13.0541 7 16 7 16M3.5 12H15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-              </div>
+              </button>
               <span className="text-[15px] tracking-wide">Logout</span>
             </div>
           </div>

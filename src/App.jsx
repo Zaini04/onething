@@ -21,6 +21,7 @@ import {ToastContainer} from "react-toastify";
 import Users from "./pages/admin/Users";
 import FuelCompany from "./pages/admin/FuelCompany";
 import FuelStock from "./pages/admin/FuelStock";
+import ProtectedRoute from './hooks/ProtectedRoutes'
 function App() {
   return (
     <>
@@ -43,26 +44,63 @@ theme="light"
         <Route path="/app" element={<AdminLayout />}>
           <Route index element={<Navigate to="dashboard" replace />} />
           
-          <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="vehicles" element={<Vehicles />} />
-          <Route path="entry-vehicles" element={<EntryVehicles />} />
-          <Route path="entry-vehicles/entry" element={<EntryVehicle />} />
-          <Route path="clients" element={<Clients />} />
-          <Route path="clients/add" element={<AddClient />} />
-          <Route path="clients/edit" element={<AddClient />} />
-          <Route path="vendors" element={<Vendors />} />
-          <Route path='vendors/add' element={<AddVendor />} />
-          <Route path="sites" element={<AllSites />} />
-          <Route path="sites/add" element={<AddSite />} />
-          <Route path="sites/edit" element={<AddSite />} />
-          <Route path ='entry-fuel/fuel-company' element={<FuelCompany />} />
-          <Route path ='fuel-stock' element={<FuelStock />} />
-          <Route path ='entry-fuel' element={<EntryFuels />} />
-          <Route path ='income-expense' element={<IncomeTax />} />
-          <Route path ='users' element={<Users />} />
-          <Route path ='settings' element={<Settings />} />
-          <Route path="vehicles/:id" element={<VehicleDetails />} />
-          <Route path="clients/:id" element={<ClientDetails />} />
+            <Route element={<ProtectedRoute requiredMenu = "dashboard"/>} >
+              <Route path="dashboard" element={<AdminDashboard />} />
+            </Route>
+          
+            <Route element={<ProtectedRoute requiredMenu = "vehicles"/>} >
+              <Route path="vehicles" element={<Vehicles />} />
+              <Route path="vehicles/:id" element={<VehicleDetails />} />
+            </Route>
+
+            <Route element={<ProtectedRoute requiredMenu = "entry-vehicle"/>} >
+              <Route path="entry-vehicles" element={<EntryVehicles />} />
+              <Route path="entry-vehicles/entry" element={<EntryVehicle />} />
+            </Route>
+
+            <Route element={<ProtectedRoute requiredMenu = "clients"/>} >
+              <Route path="clients" element={<Clients />} />
+              <Route path="clients/add" element={<AddClient />} />
+              <Route path="clients/edit" element={<AddClient />} />
+              <Route path="clients/:id" element={<ClientDetails />} />
+            </Route>
+
+            <Route element={<ProtectedRoute requiredMenu = "vendors"/>} >
+              <Route path="vendors" element={<Vendors />} />
+              <Route path='vendors/add' element={<AddVendor />} />
+            </Route>
+
+            <Route element={<ProtectedRoute requiredMenu = "sites"/>} >
+              <Route path="sites" element={<AllSites />} />
+              <Route path="sites/add" element={<AddSite />} />
+              <Route path="sites/edit" element={<AddSite />} />
+            </Route>
+
+            <Route element={<ProtectedRoute requiredMenu = "fuel-company"/>} >
+              <Route path ='entry-fuel/fuel-company' element={<FuelCompany />} />
+            </Route>
+
+            <Route element={<ProtectedRoute requiredMenu = "fuel-stock"/>} >
+              <Route path ='fuel-stock' element={<FuelStock />} />
+            </Route>
+
+            <Route element={<ProtectedRoute requiredMenu = "entry-fuel"/>} > 
+              <Route path ='entry-fuel' element={<EntryFuels />} />
+            </Route> 
+
+            <Route element={<ProtectedRoute requiredMenu = "icome-expense"/>} >
+              <Route path ='income-expense' element={<IncomeTax />} />
+            </Route>
+
+            <Route element={<ProtectedRoute requiredMenu = "users"/>} >
+              <Route path ='users' element={<Users />} />
+            </Route>
+
+            <Route element={<ProtectedRoute requiredMenu = "settings"/>} >
+              <Route path ='settings' element={<Settings />} />
+            </Route>
+
+
         </Route>
 
         <Route path="*" element={<Navigate to="/auth/login" replace />} />
