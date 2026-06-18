@@ -24,3 +24,16 @@ export const useEntryVehicles = (page = 1, perPage = 10,apiFilters={}) => {
   keepPreviousData: true,
   });
 };
+
+
+export const fetchIncomeExpense = async ({ queryKey }) => {
+
+  const [, page, limit,apiFilters] = queryKey;
+  const pageSize = limit
+  const res = await Axios.get("/entry-vehicle/income_expense", {
+    params: { page, pageSize,...apiFilters },
+  });
+
+
+  return res.data.data;
+};

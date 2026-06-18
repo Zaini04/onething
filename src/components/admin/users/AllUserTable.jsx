@@ -170,22 +170,22 @@ export default function AllUserTable({
                       className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer disabled:opacity-30"
                     />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight ">
                     No
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     User Name <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16  py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Email <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-4 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Role <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center">
                     Status <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight text-center w-28">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight text-center ">
                     Action
                   </th>
                 </tr>
@@ -239,7 +239,7 @@ export default function AllUserTable({
                           </div>
                         </td>
 
-                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-900 tracking-wide">
+                        <td className="py-3.5  text-[12px] font-normal text-gray-900 ">
                           {row?.email}
                         </td>
 

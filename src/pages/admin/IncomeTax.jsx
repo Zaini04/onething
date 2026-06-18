@@ -2,51 +2,64 @@ import IncomeTaxTable from "../../components/admin/incomeTax/IncomeTaxTable";
 import { useState } from "react";
 import SearchFilters from "../../components/global/SearchFilter";
 import ExportButton from "../../components/global/ExportButton";
+import { fetchIncomeExpense } from "../../redux/actions/entryVehicleAction";
+import { useVehicleDropdown } from "../../redux/actions/vehicleAction";
+import { useQuery } from "@tanstack/react-query";
 
 function IncomeTax() {
-  const clientVendorConfig = [
+
+
+
+
+    const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [apiFilters, setApiFilters] = useState({});
+   const [filters, setFilters] = useState({
+    vehicle: "",
+    date: "",
+  });
+
+
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey: ["income-expense", page, perPage, filters],
+    queryFn: fetchIncomeExpense,
+    staleTime: 1000 * 30,
+    cacheTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    keepPreviousData: true,
+  });
+
+const incomeExpenses = data?.docs || [];
+  const totalPages = data?.pages || 1;
+  const totalEntries = data?.docsCount || 10
+
+
+     const { data: vehicleDropDownData } = useVehicleDropdown();
+   const vehicleOptions = vehicleDropDownData?.map((v) => ({ id: v._id, name: v.vehicleNo })) || [];
+
+
+ const clientVendorConfig = [
     {
-      name: "Fuel Name",
+      name: "vehicle",
       type: "select",
-      placeholder: "Fuel Name",
+      placeholder: "vehicleNo",
       searchable: true,
-      options: [
-        { label: "Regular", value: "regular" },
-        { label: "Premium", value: "premium" },
-        { label: "Diesel", value: "diesel" },
-      ],
+      options: vehicleOptions
     },
 
     {
-      name: "Fuel Company",
-      type: "select",
-      placeholder: "Company Name",
-      searchable: true,
+      name: "date",
+      type: "date",
+      placeholder: "Date",
+      searchable: false,
       options: [
-        { label: "Shell", value: "shell" },
-        { label: "BP", value: "bp" },
-        { label: "Total", value: "total" },
-      ],
-    },
-    {
-      name: "Fuel Price",
-      type: "select",
-      placeholder: "Per liter Price",
-      searchable: true,
-      options: [
-        { label: "100", value: "100" },
-        { label: "120", value: "120" },
-        { label: "150", value: "150" },
+        
       ],
     },
   ];
 
-  const [filters, setFilters] = useState({
-    "Fuel Name": "",
-    "Fuel Company": "",
-    "Fuel Price": "",
-  });
-
+  
   const handleFilterChange = (name, value) => {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
@@ -56,7 +69,7 @@ function IncomeTax() {
   };
 
   return (
-    <div className="md:w-[93%] lg:w-[94%] xl:w-[95%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7]">
+    <div className="w-full md:w-[93%] lg:w-[94%] xl:w-[95%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7]">
       <div className="w-full flex flex-col  animate-in fade-in duration-200">
         <div className="w-full flex flex-row items-center justify-between gap-4 pb-4">
           <div>
@@ -80,7 +93,18 @@ function IncomeTax() {
         </div>
 
         <div className="w-full">
-          <IncomeTaxTable />
+          <IncomeTaxTable 
+          incomeExpenses={incomeExpenses} 
+            isLoading={isLoading || isFetching} 
+            page={page} 
+            perPage={perPage}
+            setPage={setPage} 
+            setPerPage={setPerPage}
+            totalPages={totalPages}
+            totalEntries = {totalEntries}
+          
+          
+          />
         </div>
       </div>
     </div>

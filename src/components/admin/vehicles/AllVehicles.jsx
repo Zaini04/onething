@@ -145,22 +145,22 @@ export default function AllVehicles({
                       className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
                     />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
+                  <th className=" py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
                     No
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Vehicle No <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Owner Name <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Type Vehicle <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap ">
                     Status <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight text-center w-28">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center ">
                     Action
                   </th>
                 </tr>
@@ -220,7 +220,7 @@ export default function AllVehicles({
                         {row.typeVehicle}
                       </td>
 
-                      <td className="py-3.5 px-4 text-center">
+                      <td className="py-3.5 px-4 ">
                         <span
                           className={`inline-block min-w-[80px] ${statusStyles[row.status]}`}
                         >
@@ -229,7 +229,7 @@ export default function AllVehicles({
                       </td>
 
                       <td className="py-3.5 px-4 text-center">
-                        <div className="flex items-center justify-center gap-2">
+                        <div className="flex items-center justify-center gap-3">
                           <button
                             onClick={() => handleView(row)}
                             className={statusStyles.view}

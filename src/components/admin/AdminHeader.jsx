@@ -70,7 +70,7 @@ const dispatch = useDispatch()
             <div className="hidden sm:flex items-center gap-x-3">
               <div className="flex justify-start items-center bg-white rounded-full gap-x-2 px-1 py-1">
                 <img
-                  src={profile}
+                  src={user?.image || profile}
                   alt="Profile"
                   className="rounded-[50%] w-10 h-10"
                 />
@@ -114,7 +114,7 @@ const dispatch = useDispatch()
               className="flex sm:hidden items-center gap-x-1 cursor-pointer p-1 rounded-full hover:bg-gray-50 transition-colors"
             >
               <img
-                src={profile}
+                src={user?.image || profile}
                 alt="Profile"
                 className="rounded-full w-9 h-9 border border-gray-100"
               />
@@ -128,11 +128,12 @@ const dispatch = useDispatch()
               <div className="absolute right-0 top-14 bg-white border border-gray-100 shadow-xl rounded-2xl p-4 w-52 flex flex-col gap-y-3 sm:hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                 <div className="flex flex-col border-b border-gray-50 pb-2.5">
                   <span className="font-semibold text-sm text-gray-900">
-                    Imran Khan
+                    {user?.username}
                   </span>
                   <span className="text-xs text-gray-400 truncate mt-0.5">
-                    imranKhan@gmail.com
+                  {user?.email}
                   </span>
+
                 </div>
 
                 <button

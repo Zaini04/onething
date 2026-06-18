@@ -146,27 +146,27 @@ export default function ClientSitesTable() {
                       className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
                     />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight">
                     No
                   </th>
 
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Site <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Address <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Material <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Rate Type <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Rate <SortIcon />
                   </th>
 
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-right pr-8">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-right pr-8">
                     Status <SortIcon />
                   </th>
                 </tr>

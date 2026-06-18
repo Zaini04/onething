@@ -11,7 +11,6 @@ function AdminDashboard() {
   const [perPage, setPerPage] = useState(10);
 
     const user = useSelector(state => state.auth.user)
-    console.log("login user",user)
   const {data,isLoading,isFetching} = useClients(page,perPage)
   console.log("clients",data)
 
@@ -23,8 +22,8 @@ function AdminDashboard() {
       <div className="w-full">
         <div className="flex flex-col sm:flex-row w-full justify-between items-start sm:items-center gap-y-3 sm:gap-y-0">
           <div className="flex flex-col">
-            <h1 className="font-medium text-2xl text-black tracking-tight">
-              Hi Imran Khan!
+            <h1 className="font-medium text-2xl text-black tracking-tight uppercase">
+                {user?.username}
             </h1>
             <p className="font-medium text-xs text-gray-500 mt-0.5">
               See Reports & Analytics of your business!

@@ -138,7 +138,7 @@ export default function AllFuelStockCompanies({setEditedFuelCompany,
                     Fuel Liters <SortIcon />
                   </th>
                  
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16 whitespace-nowrap text-center pr-8 w-32">
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16 whitespace-nowrap text-center pr-8">
                     Action
                   </th>
                 </tr>

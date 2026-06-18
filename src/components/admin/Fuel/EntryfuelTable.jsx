@@ -96,25 +96,25 @@ export default function EntryFuelTable({
               <thead>
                 <tr className="bg-[#F7F7F7] border-b border-gray-100">
                  
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
                     No
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
                     Date
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Vehicle No <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Vehicle Name <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Fuel Company <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Fuel Litter <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Total Price <SortIcon />
                   </th>
                   
@@ -134,7 +134,7 @@ export default function EntryFuelTable({
 pageData.map((row,index) => {
                   return (
                     <tr
-                      key={row.vehicle?.vehicle}
+                      key={row._id}
                       className={`transition-colors duration-150 
                        bg-blue-50/20  hover:bg-gray-50/30
                       `}

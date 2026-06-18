@@ -134,23 +134,23 @@ const handleEdit = (row) => {
                       className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
                     />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight ">
                     No
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4  px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Client Name <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Site <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Address <SortIcon />
                   </th>
                   
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-right pr-8">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center ">
                     Status <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight text-center w-[110px]">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight  whitespace-nowrap  ">
                     Action
                   </th>
                 </tr>
@@ -168,10 +168,10 @@ const handleEdit = (row) => {
                                 </tr>
                               ) :(
 pageData.map((row,index) => {
-                  const isRowSelected = selected.includes(row.id);
+                  const isRowSelected = selected.includes(row._id);
                   return (
                     <tr
-                      key={row.id}
+                      key={row._id}
                       className={`transition-colors duration-150 ${
                         isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
                       }`}
@@ -180,49 +180,47 @@ pageData.map((row,index) => {
                         <input
                           type="checkbox"
                           checked={isRowSelected}
-                          onChange={() => toggleRow(row.id)}
+                          onChange={() => toggleRow(row._id)}
                           className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
                         />
                       </td>
 
-                      <td className="py-3.5 px-4 text-[11px] font-normal text-black">
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 ">
                         {(page - 1) * perPage + index + 1}
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-2.5">
-                          {/* <img
-                            src={row.image ? row.image: profile}
-                            alt={row.client}
-                            className="w-6 h-6 rounded-full object-cover shadow-sm ring-1 ring-gray-100"
-                          /> */}
-                          <span className="text-[11px] font-norma text-black">
-                            {row.client?.name}
-                          </span>
-                        </div>
-                      </td>
+                                              <div className="flex items-center gap-2.5 max-w-full">
+                                                <img
+                                                  src={row.client?.image || profile}
+                                                  alt={row.name}
+                                                  className="w-7 h-7 rounded-full object-cover shadow-sm flex-shrink-0 ring-1 ring-gray-100"
+                                                />
+                                                <span className="text-[12px] font-normal text-gray-800 truncate">
+                                                  {row.client?.name}
+                                                </span>
+                                              </div>
+                                            </td>
 
-                      <td className="py-3.5 px-4">
-                        <span className="inline-block bg-[#F1F3F5] text-gray-700 text-[11px] font-medium px-2 py-1 rounded border border-gray-200/50">
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 ">
                           {row.siteName}
-                        </span>
                       </td>
 
-                      <td className="py-3.5 px-4 text-[11px] font-normal text-black">
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 ">
                         {row.address}
                       </td>
 
                       
 
-                      <td className="py-3.5 px-4 text-right pr-8">
+                      <td className="py-3.5 px-4 text-center ">
                         <span
-                          className={`inline-block min-w-[80px] ${statusStyles[row.status]}`}
+                          className={`inline-block min-w-[85px] ${statusStyles[row.status]}`}
                         >
                           {row.status}
                         </span>
                       </td>
-                      <td className="py-3.5 px-4 text-center">
-                        <div className="flex items-center justify-center gap-2">
+                      <td className="py-3.5 px-4 ">
+                        <div className="flex items-center justify-start gap-3">
                           
                           <button
                             onClick={() => handleEdit(row)}

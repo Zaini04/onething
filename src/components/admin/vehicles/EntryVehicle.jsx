@@ -196,8 +196,10 @@ const fuelCompanyOptions = fuelCompaniesData?.map((c) => ({
   disabled: c.hasStock && c.availableStock <= 0,  // stock 0 ho toh disable
 })) || [];
 
+
 // Selected company ka data
 const selectedFuelCompany = fuelCompaniesData?.find(c => c._id === values.fuelCompany);
+console.log("fco",fuelCompaniesData)
 const isStockManaged = selectedFuelCompany?.hasStock === true;
   return (
     <div className="w-full md:w-[85%] lg:w-[88%] xl:w-[90%]  p-4 md:pl-8 mx-auto bg-[#F9FAFB]  rounded-2xl">
@@ -275,7 +277,7 @@ const isStockManaged = selectedFuelCompany?.hasStock === true;
     label="Fuel Company"
     placeholder="Select Fuel Company"
     options={fuelCompanyOptions}
-          searchable= {false}
+    searchable={false}
     value={values.fuelCompany}
     onChange={(val) => {
       formik.setFieldValue("fuelCompany", val, true);
@@ -283,9 +285,7 @@ const isStockManaged = selectedFuelCompany?.hasStock === true;
     }}
     onBlur={() => formik.setFieldTouched("fuelCompany", true)}
     isError={formik.touched.fuelCompany && !!formik.errors.fuelCompany}
-    errorMessage={formik.errors.fuelCompany
-
-    }
+    errorMessage={formik.errors.fuelCompany}
   />
   {/* Stock managed hai toh available stock hint dikhao */}
   {isStockManaged && values.fuelCompany && (
@@ -293,6 +293,7 @@ const isStockManaged = selectedFuelCompany?.hasStock === true;
       Available: {selectedFuelCompany?.availableStock}L
     </p>
   )}
+ 
           </div>
           <FormInput label="Diesel Liters" id="dieselInLitters" type="text" placeholder="please enter diesel liters" formik={formik} />
 

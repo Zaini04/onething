@@ -1,12 +1,6 @@
 import { useState } from "react";
+import { TableSkeletonRows } from "../../global/TableSkeletonRows";
 
-const initialData = Array.from({ length: 50 }, (_, i) => ({
-  id: i + 1,
-  no: String(i + 1).padStart(2, "0"),
-  vehicleEntryPrice: "50,000",
-  fuelEntryPrice: "37,000",
-  vendorPrice: "10,0000",
-}));
 
 function SortIcon() {
   return (
@@ -22,35 +16,23 @@ function SortIcon() {
   );
 }
 
-export default function IncomeTaxTable() {
-  const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+export default function IncomeTaxTable({  incomeExpenses,
+            isLoading,
+            page,
+            perPage,
+            setPage, 
+            setPerPage,
+            totalPages,
+            totalEntries,
+          }) {
   const [showPerPage, setShowPerPage] = useState(false);
 
-  const totalPages = Math.ceil(initialData.length / perPage);
-  const pageData = initialData.slice((page - 1) * perPage, page * perPage);
-  const allSelected =
-    pageData.length > 0 && pageData.every((r) => selected.includes(r.id));
+  const pageData = incomeExpenses
 
-  const toggleAll = () => {
-    if (allSelected) {
-      setSelected((prev) =>
-        prev.filter((id) => !pageData.map((r) => r.id).includes(id)),
-      );
-    } else {
-      setSelected((prev) => [
-        ...prev,
-        ...pageData.map((r) => r.id).filter((id) => !prev.includes(id)),
-      ]);
-    }
-  };
 
-  const toggleRow = (id) => {
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
-    );
-  };
+
+
+ 
 
   const getPaginationNumbers = () => {
     const nums = [];
@@ -80,66 +62,81 @@ export default function IncomeTaxTable() {
             <table className="w-full text-left border-collapse min-w-[700px]">
               <thead>
                 <tr className="bg-[#F7F7F7] border-b border-gray-100">
-                  <th className="py-4 px-5 w-12 text-center">
-                    <input
-                      type="checkbox"
-                      checked={allSelected}
-                      onChange={toggleAll}
-                      className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
-                    />
-                  </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
+                 
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
                     No
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Vehicle Entry Price <SortIcon />
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
+                    Date
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Fuel Entry Price <SortIcon />
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Vehicle No <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Vendor Price <SortIcon />
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Vehicle Name <SortIcon />
+                  </th>
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    TotalRate <SortIcon />
+                  </th>
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Total Expense <SortIcon />
+                  </th>
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Total Remaining <SortIcon />
                   </th>
                 </tr>
               </thead>
 
               <tbody className="divide-y divide-gray-50/60">
-                {pageData.map((row) => {
-                  const isRowSelected = selected.includes(row.id);
+
+               {isLoading ? (
+                               <TableSkeletonRows rowsCount={perPage || 5} />
+                                            ) : pageData.length === 0 ? (
+                                              <tr>
+                                                <td colSpan="7" className="py-8 text-center text-sm text-gray-400">
+                                                  No entries found.
+                                                </td>
+                                              </tr>
+                                            ) :(pageData.map((row,index) => {
                   return (
                     <tr
-                      key={row.id}
-                      className={`transition-colors duration-150 ${
-                        isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
-                      }`}
+                      key={row._id}
+                      className={`transition-colors duration-150 
+                      hover:bg-gray-50/30
+                      `}
                     >
-                      <td className="py-3.5 px-5 text-center">
-                        <input
-                          type="checkbox"
-                          checked={isRowSelected}
-                          onChange={() => toggleRow(row.id)}
-                          className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
-                        />
-                      </td>
+                     
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-500">
-                        {row.no}
+                        {(page - 1) * perPage + index + 1}
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-500">
+{new Date(row.createdAt).toLocaleDateString()}
                       </td>
 
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide">
-                        {row.vehicleEntryPrice}
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 ">
+                        {row.vehicle?.vehicleNo}
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 ">
+                        {row.vehicle?.typeVehicle}
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
-                        {row.fuelEntryPrice}
+                        {row.totalRate}
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
-                        {row.vendorPrice}
+                        {Number(row.totalRate) - Number(row.remainingAmount) }
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
+                        {row.remainingAmount}
                       </td>
                     </tr>
                   );
-                })}
+                }))
+
+                                          }
+                
               </tbody>
             </table>
           </div>
@@ -214,9 +211,15 @@ export default function IncomeTaxTable() {
 
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
               <span>
-                Showing {(page - 1) * perPage + 1} to{" "}
-                {Math.min(page * perPage, initialData.length)} of{" "}
-                {initialData.length} entries
+                {isLoading ? (
+                  "Loading entries..."
+                ) : (
+                  <span>
+  Showing {totalEntries === 0 ? 0 : (page - 1) * perPage + 1} to{" "}
+  {Math.min(page * perPage, totalEntries)} of{" "}
+  {totalEntries} entries
+</span>
+                )}
               </span>
 
               <div className="relative">
