@@ -17,6 +17,7 @@ function AdminDashboard() {
 
   const clients = data?.docs || [];
   const totalPages = data?.pages || 1;
+    const totalEntries = data?.docsCount || 10
   return (
     <div className="w-full md:w-[93%] lg:w-[94%] xl:w-[95%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden flex flex-col gap-y-6">
       <div className="w-full">
@@ -128,6 +129,7 @@ function AdminDashboard() {
         setPage={setPage}
         perPage={perPage}
         setPerPage={setPerPage}
+        totalEntries = {totalEntries}
         
         />
       </div>

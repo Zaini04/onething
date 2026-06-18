@@ -49,8 +49,8 @@ export default function ClientDetails() {
   });
 
   const clientLedger = data?.docs || [];
-  console.log("cl",clientLedger)
   const totalPages = data?.pages || 1;
+  const totalEntries = data?.docsCount || 10
 
 
 
@@ -149,7 +149,10 @@ export default function ClientDetails() {
             setPage={setPage}
             perPage={perPage}
             setPerPage={setPerPage}
-            totalPages={totalPages} />}
+            totalPages={totalPages} 
+            totalEntries = {totalEntries}
+
+            />}
       </div>
 
       <PaymentReceivedModel

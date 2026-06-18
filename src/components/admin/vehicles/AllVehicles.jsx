@@ -2,7 +2,6 @@ import { useState } from "react";
 import profile from "../../../assets/images/profileImage.jpg";
 import DeleteButton from "../../global/DeleteButton";
 import { useNavigate } from "react-router-dom";
-import { initialData } from "../../../assets/mockData";
 import { TableSkeletonRows } from "../../global/TableSkeletonRows";
 import Axios from "../../../configs/api";
 
@@ -72,6 +71,7 @@ export default function AllVehicles({
   perPage,
   setPerPage,
   totalPages,
+  totalEntries
 }) {
   const [selected, setSelected] = useState([]);
   const [showPerPage, setShowPerPage] = useState(false);
@@ -358,10 +358,16 @@ export default function AllVehicles({
             </div>
 
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
-              <span>
-                Showing {(page - 1) * perPage + 1} to{" "}
-                {Math.min(page * perPage, vehiclesData.length)} of{" "}
-                {vehiclesData.length} entries
+           <span>
+                {isLoading ? (
+                  "Loading entries..."
+                ) : (
+                  <span>
+  Showing {totalEntries === 0 ? 0 : (page - 1) * perPage + 1} to{" "}
+  {Math.min(page * perPage, totalEntries)} of{" "}
+  {totalEntries} entries
+</span>
+                )}
               </span>
 
               <div className="relative">

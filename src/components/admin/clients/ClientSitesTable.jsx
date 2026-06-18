@@ -81,9 +81,10 @@ export default function ClientSitesTable() {
   });
 
   const clientSites = data?.docs || [];
-  console.log("clist",clientSites)
   
   const totalPages = data?.pages || 1;
+    const totalEntries = data?.docsCount || 10
+
 
 
   const pageData = clientSites.slice((page - 1) * perPage, page * perPage);
@@ -311,10 +312,16 @@ export default function ClientSitesTable() {
             </div>
 
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
-              <span>
-                Showing {(page - 1) * perPage + 1} to{" "}
-                {Math.min(page * perPage, clientSites.length)} of{" "}
-                {clientSites.length} entries
+             <span>
+                {isLoading ? (
+                  "Loading entries..."
+                ) : (
+                  <span>
+  Showing {totalEntries === 0 ? 0 : (page - 1) * perPage + 1} to{" "}
+  {Math.min(page * perPage, totalEntries)} of{" "}
+  {totalEntries} entries
+</span>
+                )}
               </span>
 
               <div className="relative">

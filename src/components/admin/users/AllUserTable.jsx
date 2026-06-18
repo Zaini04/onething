@@ -96,6 +96,7 @@ export default function AllUserTable({
   perPage,
   setPerPage,
   totalPages,
+  totalEntries
 }) {
   const [selected, setSelected] = useState([]);
   const [showPerPage, setShowPerPage] = useState(false);
@@ -382,11 +383,11 @@ export default function AllUserTable({
                 {isLoading ? (
                   "Loading entries..."
                 ) : (
-                  <>
-                    Showing {(page - 1) * perPage + 1} to{" "}
-                    {Math.min(page * perPage, usersData?.length || 0)} of{" "}
-                    {usersData?.length || 0} entries
-                  </>
+                  <span>
+  Showing {totalEntries === 0 ? 0 : (page - 1) * perPage + 1} to{" "}
+  {Math.min(page * perPage, totalEntries)} of{" "}
+  {totalEntries} entries
+</span>
                 )}
               </span>
 

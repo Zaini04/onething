@@ -26,6 +26,8 @@ function AllSites() {
 
   const sites = data?.docs || [];
   const totalPages = data?.pages || 1;
+  const totalEntries = data?.docsCount || 10
+
 
   const clientVendorConfig = [
     {
@@ -119,7 +121,7 @@ function AllSites() {
             setPage={setPage} 
             setPerPage={setPerPage}
             totalPages={totalPages}
-          
+            totalEntries = {totalEntries}
           />
         </div>
       </div>

@@ -53,6 +53,8 @@ export default function EntryFuelTable({
             setPage,
             setPerPage,
             totalPages,
+            totalEntries
+            
 }) {
   const [selected, setSelected] = useState([]);
   const [showPerPage, setShowPerPage] = useState(false);
@@ -83,9 +85,7 @@ export default function EntryFuelTable({
     return nums;
   };
 
-  const handleView = (id) => {
-    console.log("Viewing details for Fuel Entry ID:", id);
-  };
+  
 
   return (
     <div className="w-full bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm">
@@ -247,9 +247,15 @@ pageData.map((row,index) => {
 
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
               <span>
-                Showing {(page - 1) * perPage + 1} to{" "}
-                {Math.min(page * perPage, initialData.length)} of{" "}
-                {initialData.length} entries
+                {isLoading ? (
+                  "Loading entries..."
+                ) : (
+                  <span>
+  Showing {totalEntries === 0 ? 0 : (page - 1) * perPage + 1} to{" "}
+  {Math.min(page * perPage, totalEntries)} of{" "}
+  {totalEntries} entries
+</span>
+                )}
               </span>
 
               <div className="relative">

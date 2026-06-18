@@ -1,7 +1,6 @@
 // src/pages/vehicles/VehicleDetails.jsx
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
-import { initialData } from "../../assets/mockData";
 import VehicleCard from "../../components/admin/vehicles/VehicleCard";
 import VehicleTable from "../../components/admin/vehicles/VehicleTable";
 import { fetchVehicleLedger } from "../../redux/actions/vehicleAction";
@@ -17,7 +16,6 @@ export default function VehicleDetails() {
 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
-  const [status, setStatus] = useState('');
 
 
   const [apiFilters, setApiFilters] = useState({});
@@ -46,8 +44,9 @@ export default function VehicleDetails() {
   });
 
   const vehicleLedger = data?.docs || [];
-  console.log("vhl",vehicleLedger)
   const totalPages = data?.pages || 1;
+    const totalEntries = data?.docsCount || 10
+
 
 
 
@@ -82,7 +81,9 @@ export default function VehicleDetails() {
             setPage={setPage}
             perPage={perPage}
             setPerPage={setPerPage}
-            totalPages={totalPages} />
+            totalPages={totalPages} 
+            totalEntries = {totalEntries}
+            />
       </div>
        <PaymentReceivedModel
               isOpen={currentModal === "payment"}

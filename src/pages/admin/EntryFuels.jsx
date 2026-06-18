@@ -33,6 +33,7 @@ function EntryFuels() {
 
 const entryFuels = data?.docs || [];
   const totalPages = data?.pages || 1;
+  const totalEntries = data?.docsCount || 10
 
 
 
@@ -47,7 +48,6 @@ const entryFuels = data?.docs || [];
 
    const { data: vehicleDropDownData } = useVehicleDropdown();
    const {data: fuelCompanies} =useFuelCompaniesDropdown()
-   console.log("fcd",fuelCompanies)
 
    
    const fuelCompaniesOptions = fuelCompanies?.docs.map((v) => ({ id: v._id, name: v.fuelCompany })) || [];
@@ -175,7 +175,9 @@ const entryFuels = data?.docs || [];
             perPage={perPage}
             setPage={setPage} 
             setPerPage={setPerPage}
-            totalPages={totalPages}/>
+            totalPages={totalPages}
+            totalEntries = {totalEntries}
+            />
         </div>
 
         {/* <div

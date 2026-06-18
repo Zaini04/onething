@@ -156,6 +156,7 @@ export default function AllVehiclesAndCustomers({
   setPage,
   setPerPage,
   totalPages,
+  totalEntries
 }) {
   const dispatch = useDispatch();
   // const initialData = useSelector((state) => state.entryVehicles.items);
@@ -168,7 +169,7 @@ export default function AllVehiclesAndCustomers({
 
   const menuRef = useRef(null);
 
-  const pageData = entryVehicleData.slice((page - 1) * perPage, page * perPage);
+  const pageData = entryVehicleData 
   const allSelected =
     pageData.length > 0 && pageData.every((r) => selected.includes(r._id));
 
@@ -253,7 +254,7 @@ if (dispatch) {
     <div className="w-full bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm">
       <div className="w-full mx-auto">
         <div className="bg-white rounded-xl overflow-hidden">
-          <div className="overflow-x-auto max-w-full">
+          <div className="overflow-x-auto max-w-full pb-10">
             <table className="w-full text-left border-collapse min-w-[1100px] table-auto">
               <thead>
                 <tr className="bg-[#F7F7F7] border-b border-gray-100">
@@ -332,7 +333,7 @@ if (dispatch) {
                      Due<SortIcon />
                   </th>
 
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap sticky right-0 z-40 bg-[#F7F7F7]">
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap sticky right-0 z-10 bg-[#F7F7F7]">
                     Action <SortIcon />
                   </th>
                 </tr>
@@ -451,7 +452,7 @@ if (dispatch) {
                         <td
                           className={`py-3.5 px-4 text-[12px] font-normal sticky right-0 transition-colors duration-150 overflow-visible ${
                             isRowSelected ? "bg-[#F3F7FE]" : "bg-white"
-                          } ${isMenuOpen ? "z-[100]" : "z-30"}`}
+                          } ${isMenuOpen ? "z-[100]" : "z-10"}`}
                         >
                           <div className="flex justify-center items-center w-full h-full">
                             <BsThreeDotsVertical
@@ -582,10 +583,16 @@ if (dispatch) {
             </div>
 
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
-              <span>
-                Showing {(page - 1) * perPage + 1} to{" "}
-                {Math.min(page * perPage, entryVehicleData.length)} of{" "}
-                {entryVehicleData.length} entries
+           <span>
+                {isLoading ? (
+                  "Loading entries..."
+                ) : (
+                  <span>
+  Showing {totalEntries === 0 ? 0 : (page - 1) * perPage + 1} to{" "}
+  {Math.min(page * perPage, totalEntries)} of{" "}
+  {totalEntries} entries
+</span>
+                )}
               </span>
 
               <div className="relative">

@@ -61,7 +61,8 @@ export default function ClientsTable({  setEditedClient,
             page,
             perPage,setPerPage,
             setPage,
-            totalPages}) {
+            totalPages,
+          totalEntries}) {
   const [selected, setSelected] = useState([]);
   const [showPerPage, setShowPerPage] = useState(false);
 
@@ -364,10 +365,16 @@ export default function ClientsTable({  setEditedClient,
             </div>
 
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
-              <span>
-                Showing {(page - 1) * perPage + 1} to{" "}
-                {Math.min(page * perPage, clientsData.length)} of{" "}
-                {clientsData.length} entries
+             <span>
+                {isLoading ? (
+                  "Loading entries..."
+                ) : (
+                  <span>
+  Showing {totalEntries === 0 ? 0 : (page - 1) * perPage + 1} to{" "}
+  {Math.min(page * perPage, totalEntries)} of{" "}
+  {totalEntries} entries
+</span>
+                )}
               </span>
 
               <div className="relative">

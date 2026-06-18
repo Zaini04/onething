@@ -29,6 +29,7 @@ export default function ClientEntryTable({
   perPage,
   setPerPage,
   totalPages,
+  totalEntries
 }) {
   const [selected, setSelected] = useState([]);
   const [showPerPage, setShowPerPage] = useState(false);
@@ -105,7 +106,7 @@ export default function ClientEntryTable({
     <div className="w-full bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm">
       <div className="w-full mx-auto">
         <div className="bg-white rounded-xl overflow-hidden">
-          <div className="overflow-x-auto max-w-full">
+          <div className="overflow-x-auto max-w-full pb-20 ">
             <table className="w-full text-left border-collapse min-w-[1100px] table-auto">
               <thead>
                 <tr className="bg-[#F7F7F7] border-b border-gray-100">
@@ -157,7 +158,7 @@ export default function ClientEntryTable({
                     Bill Status <SortIcon />
                   </th>
 
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap sticky right-0 z-40 bg-[#F7F7F7]">
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap sticky right-0 z-10 bg-[#F7F7F7]">
                     Action <SortIcon />
                   </th>
                 </tr>
@@ -245,9 +246,9 @@ export default function ClientEntryTable({
                       <td
                         className={`py-3.5 px-4 text-[12px] font-normal sticky right-0 transition-colors duration-150 overflow-visible ${
                           isRowSelected ? "bg-[#F3F7FE]" : "bg-white"
-                        } ${isMenuOpen ? "z-[100]" : "z-30"}`}
+                        } ${isMenuOpen ? "z-[100]" : "z-10"}`}
                       >
-                        <div className="flex justify-center items-center w-full h-full">
+                        <div className={`flex justify-center items-center w-full h-full `} >
                           <BsThreeDotsVertical
                             onClick={(e) => {
                               e.stopPropagation(); 
@@ -260,8 +261,13 @@ export default function ClientEntryTable({
                         {isMenuOpen && (
                           <div
                             ref={menuRef}
-                            className="absolute right-12 top-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-lg shadow-2xl py-2 px-2 w-44 z-[9999] flex flex-col gap-1.5 animation-fade-in"
-                          >
+className={`absolute right-12 bg-white border border-gray-200 rounded-lg shadow-2xl py-2 px-2 w-44 z-[9999] flex flex-col gap-1.5 animation-fade-in
+      ${
+        // Agar pageData ki aakhri 1 ya 2 rows hon to menu ko upar push karo (bottom-2) warna center rakho
+        index >= pageData.length - 2 && pageData.length > 2
+          ? "bottom-2" 
+          : "top-1/2 -translate-y-1/2"
+      }`}                          >
                             {row.paymentReceived === "received" ? (
                               ""
                             ) : (
@@ -310,7 +316,7 @@ export default function ClientEntryTable({
             </table>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-4 bg-white">
+          <div className="flex flex-col sm:flex-row  items-center justify-between gap-4 px-5 py-4 bg-white">
             <div className="flex items-center gap-1">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
@@ -332,7 +338,7 @@ export default function ClientEntryTable({
                 </svg>
               </button>
 
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 ">
                 {getPaginationNumbers().map((num, i) =>
                   num === "..." ? (
                     <span
@@ -380,9 +386,15 @@ export default function ClientEntryTable({
 
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
               <span>
-                Showing {(page - 1) * perPage + 1} to{" "}
-                {Math.min(page * perPage, clientLedgerData.length)} of{" "}
-                {clientLedgerData.length} entries
+                {isLoading ? (
+                  "Loading entries..."
+                ) : (
+                  <span>
+  Showing {totalEntries === 0 ? 0 : (page - 1) * perPage + 1} to{" "}
+  {Math.min(page * perPage, totalEntries)} of{" "}
+  {totalEntries} entries
+</span>
+                )}
               </span>
 
               <div className="relative">

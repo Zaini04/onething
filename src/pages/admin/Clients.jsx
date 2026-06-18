@@ -27,6 +27,7 @@ function Clients() {
 
   const clients = data?.docs || [];
   const totalPages = data?.pages || 1;
+  const totalEntries = data?.docsCount || 10
 
   const clientVendorConfig = [
     {
@@ -117,6 +118,8 @@ function Clients() {
             setPage={setPage} 
             setPerPage={setPerPage}
             totalPages={totalPages}
+            totalEntries = {totalEntries}
+
           />
         </div>
       </div>

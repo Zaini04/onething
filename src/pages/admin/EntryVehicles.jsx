@@ -45,6 +45,8 @@ function EntryVehicles() {
   const entry_vehicles = data?.docs || [];
   const totalPages = data?.pages || 1;
 
+  const totalEntries = data?.docsCount || 10
+
   const {data:clientDropDownData} = useClientDropdown()
    const { data: vehicleDropDownData } = useVehicleDropdown();
 
@@ -137,6 +139,7 @@ function EntryVehicles() {
             setPage={setPage} 
             setPerPage={setPerPage}
             totalPages={totalPages}
+            totalEntries = {totalEntries}
           />
         </div>
       </div>

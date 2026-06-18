@@ -42,6 +42,8 @@ const handleEdit = (row) => {
 
   const fuelCompanies = data?.docs || [];
   const totalPages = data?.pages || 1;
+    const totalEntries = data?.docsCount || 10
+
 
   const handleToggleSidebar = () => {
     if (addFuelOpen) {
@@ -149,7 +151,9 @@ const handleEdit = (row) => {
             setPage={setPage}
             perPage={perPage}
             setPerPage={setPerPage}
-            totalPages={totalPages}/>
+            totalPages={totalPages}
+            totalEntries = {totalEntries}
+            />
         </div>
 
         <div

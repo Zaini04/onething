@@ -49,7 +49,9 @@ export default function AllFuelCompanies({setEditedFuelCompany,
   setPage,
   perPage,
   setPerPage,
-  totalPages,}) {
+  totalPages,
+  totalEntries
+}) {
   const [selected, setSelected] = useState([]);
   const [showPerPage, setShowPerPage] = useState(false);
 
@@ -287,9 +289,15 @@ pageData.map((row,index) => {
 
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
               <span>
-                Showing {(page - 1) * perPage + 1} to{" "}
-                {Math.min(page * perPage, fuelCompaniesData.length)} of{" "}
-                {fuelCompaniesData.length} entries
+                {isLoading ? (
+                  "Loading entries..."
+                ) : (
+                  <span>
+  Showing {totalEntries === 0 ? 0 : (page - 1) * perPage + 1} to{" "}
+  {Math.min(page * perPage, totalEntries)} of{" "}
+  {totalEntries} entries
+</span>
+                )}
               </span>
 
               <div className="relative">

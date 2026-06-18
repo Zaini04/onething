@@ -74,6 +74,7 @@ export default function VehicleTable({
   perPage,
   setPerPage,
   totalPages,
+  totalEntries
 }) {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -244,7 +245,7 @@ export default function VehicleTable({
                     Due <SortIcon />
                   </th>
 
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap sticky right-0 z-40 bg-[#F7F7F7]">
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap sticky right-0 z-10 bg-[#F7F7F7]">
                     Action <SortIcon />
                   </th>
                 </tr>
@@ -373,7 +374,7 @@ export default function VehicleTable({
                         <td
                           className={`py-3.5 px-4 text-[12px] font-normal sticky right-0 transition-colors duration-150 ${
                             isRowSelected ? "bg-[#F3F7FE]" : "bg-white"
-                          } ${isMenuOpen ? "z-50 shadow-md" : "z-30"}`}
+                          } ${isMenuOpen ? "z-50 shadow-md" : "z-10"}`}
                         >
                           <div className="flex justify-center z-50 items-center w-full h-full">
                             <BsThreeDotsVertical
@@ -524,10 +525,16 @@ export default function VehicleTable({
             </div>
 
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
-              <span>
-                Showing {(page - 1) * perPage + 1} to{" "}
-                {Math.min(page * perPage, vehicleLedgerData.length)} of{" "}
-                {vehicleLedgerData.length} entries
+          <span>
+                {isLoading ? (
+                  "Loading entries..."
+                ) : (
+                  <span>
+  Showing {totalEntries === 0 ? 0 : (page - 1) * perPage + 1} to{" "}
+  {Math.min(page * perPage, totalEntries)} of{" "}
+  {totalEntries} entries
+</span>
+                )}
               </span>
 
               <div className="relative">

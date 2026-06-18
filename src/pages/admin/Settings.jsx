@@ -58,6 +58,7 @@ const [perPage, setPerPage] = useState(10);
   const {data,isLoading,isFetching} = useUsers(page,perPage)
 const users = data?.docs || [];
 const totalPages = data?.pages || 1;
+  const totalEntries = data?.docsCount || 10
 
 
 
@@ -297,6 +298,7 @@ const totalPages = data?.pages || 1;
   perPage={perPage}
   setPerPage={setPerPage}
   totalPages={totalPages}
+  totalEntries = {totalEntries}
     
     
     />

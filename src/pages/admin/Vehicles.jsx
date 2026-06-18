@@ -53,6 +53,8 @@ const handleEdit = (row) => {
 
   const vehicles = data?.docs || [];
   const totalPages = data?.pages || 1;
+    const totalEntries = data?.docsCount || 10
+
 
   const vehicleConfig = [
     { name: "vehicleNo", type: "select", searchable: true, placeholder: "Number",      options: ["123", "22","144"],
@@ -169,7 +171,9 @@ const handleEdit = (row) => {
             setPage={setPage}
             perPage={perPage}
             setPerPage={setPerPage}
-            totalPages={totalPages}/>
+            totalPages={totalPages}
+            totalEntries = {totalEntries}
+            />
         </div>
 
         <div

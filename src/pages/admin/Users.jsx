@@ -51,6 +51,8 @@ const handleEdit = (row) => {
 
   const users = data?.docs || [];
   const totalPages = data?.pages || 1;
+    const totalEntries = data?.docsCount || 10
+
   //   const getAllUsers = async () => {
   //   dispatch(setUserLoading(true));
 
@@ -127,6 +129,7 @@ const handleEdit = (row) => {
             perPage={perPage}
             setPerPage={setPerPage}
             totalPages={totalPages}
+            totalEntries = {totalEntries}
           />
         </div>
 
