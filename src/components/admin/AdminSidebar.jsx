@@ -4,7 +4,8 @@ import ReactDOM from "react-dom";
 import LogoutModal from "../auth/LogoutModel";
 import { menuItems } from "../../constants/Sidebar";
 import { hasMenuAccess } from "../../hooks/MenuAccess";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "../../redux/actions/authAction";
 
 function FloatingTooltip({ label, anchorRef, color = "black" }) {
   const [pos, setPos] = useState(null);
@@ -224,10 +225,10 @@ function AdminSidebar({ isMobile = false, isOpen = false, onClose }) {
       setScrollbarVisible(false);
     }, 1000); // 1 second baad hide
   };
-
+const dispatch = useDispatch()
   const handleLogoutConfirm = () => {
     setIsLogoutModalOpen(false);
-    navigate("/auth/login");
+    dispatch(logoutUser(navigate))
   };
 
   const handleMobileLogoutClick = () => {
