@@ -5,6 +5,7 @@ import ExportButton from "../../components/global/ExportButton";
 import { fetchIncomeExpense } from "../../redux/actions/entryVehicleAction";
 import { useVehicleDropdown } from "../../redux/actions/vehicleAction";
 import { useQuery } from "@tanstack/react-query";
+import IncomeSummaryCards from "../../components/admin/incomeTax/IncomeSummaryCards";
 
 function IncomeTax() {
 
@@ -14,6 +15,10 @@ function IncomeTax() {
     const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [apiFilters, setApiFilters] = useState({});
+  const [dateFilter,setDateFilter]=useState({
+    from:'',
+    to:''
+  })
    const [filters, setFilters] = useState({
     vehicle: "",
     date: "",
@@ -21,7 +26,7 @@ function IncomeTax() {
 
 
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["income-expense", page, perPage, filters],
+    queryKey: ["income-expense", page, perPage, apiFilters],
     queryFn: fetchIncomeExpense,
     staleTime: 1000 * 30,
     cacheTime: 1000 * 60 * 10,
@@ -66,6 +71,9 @@ const incomeExpenses = data?.docs || [];
 
   const handleSearchSubmit = (finalFilters) => {
     console.log("Fetching Entry Vehicles data with fields:", finalFilters);
+    setApiFilters(finalFilters)
+
+
   };
 
   return (
@@ -90,6 +98,9 @@ const incomeExpenses = data?.docs || [];
             onFilterChange={handleFilterChange}
             onSubmit={handleSearchSubmit}
           />
+        </div>
+        <div className="w-full">
+            <IncomeSummaryCards/>
         </div>
 
         <div className="w-full">

@@ -37,3 +37,18 @@ export const fetchIncomeExpense = async ({ queryKey }) => {
 
   return res.data.data;
 };
+export const fetchIncomeExpenseSummary = async ({ queryKey }) => {
+  const [, from, to] = queryKey;
+
+  const params = {};
+
+  if (from) params.from = from;
+  if (to) params.to = to;
+
+  const res = await Axios.get(
+    "/entry-vehicle/income_expense_summary",
+    { params }
+  );
+
+  return res.data.data;
+};

@@ -57,7 +57,7 @@ export default function EntryVehicle() {
       totalSftVehicles: "",
       totalRate: "",
       materialCost:  "",
-      dieselCost:  "", // Safeguard backend spelling variations
+      dieselCost:  "", 
       fuelCompany: "",
       isStockManaged: false,   
       dieselInLitters: "",
@@ -67,24 +67,23 @@ export default function EntryVehicle() {
       loading:  "",
       otherExpenses: "",
       remainingAmount: "",
-      // Use boolean state locally inside UI Formik tracking
     },
     validationSchema: entryVehicleValidation,
     onSubmit: (values) => {
       const cleanTotalRate = Number(values.totalRate?.toString().replace(/,/g, "")) || 0;
       const cleanRemainingAmount = Number(values.remainingAmount?.toString().replace(/,/g, "")) || 0;
 
-      // Map values securely to match backend Joi + Mongoose expected layout
+      // Realtime flag map directly dynamically from safe computation
+      const selectedCompany = fuelCompaniesData?.find(c => c._id === values.fuelCompany);
+      const dynamicStockManaged = selectedCompany?.hasStock === true;
+
       const payload = {
         ...values,
         totalRate: cleanTotalRate,
         remainingAmount: cleanRemainingAmount,
-        isStockManaged
+        isStockManaged: dynamicStockManaged,
       };
 
-      // Clean out local UI-only boolean states so Joi does not throw an unexpected key error
-
-      // Now 'vehicle' and 'paymentStatus' pass safely to your mutation instance
       clientMutation.mutate(payload);
     },
   });
@@ -111,6 +110,8 @@ export default function EntryVehicle() {
   const { data: clientDropdownData } = useClientDropdown();
   const { data: vehicleDropDownData } = useVehicleDropdown();
   const { data: siteMaterials } = useSiteMaterials(client);
+  // Destructured isLoading to manage spinner state safely ──🔥
+  const { data: fuelCompaniesData, isLoading: isFuelLoading } = useFuelStockCompaniesListsDropdown();
 
   const clientOptions = clientDropdownData?.map((c) => ({ id: c._id, name: c.name })) || [];
   const vehicleOptions = vehicleDropDownData?.map((v) => ({ id: v._id, name: v.vehicleNo })) || [];
@@ -187,20 +188,17 @@ export default function EntryVehicle() {
   const activeVehicleLabel = vehicleDropDownData?.find((v) => v._id === vehicle)?.vehicleNo || "---";
   const activeSiteLabel = siteMaterials?.find((s) => s._id === site)?.siteName || "---";
 
-  const { data: fuelCompaniesData } = useFuelStockCompaniesListsDropdown();
+  // Dropdown options computed safely using optional chaining ──🔥
+  const fuelCompanyOptions = fuelCompaniesData?.map((c) => ({
+    id: c._id,
+    name: c.hasStock ? `${c.fuelCompany} (${c.availableStock}L)` : c.fuelCompany,
+    disabled: c.hasStock && c.availableStock <= 0,
+  })) || [];
 
-// Dropdown options
-const fuelCompanyOptions = fuelCompaniesData?.map((c) => ({
-  id: c._id,
-  name: c.hasStock ? `${c.fuelCompany} (${c.availableStock}L)` : c.fuelCompany,
-  disabled: c.hasStock && c.availableStock <= 0,  // stock 0 ho toh disable
-})) || [];
+  // Recalculates dynamically every render loop securely
+  const selectedFuelCompany = fuelCompaniesData?.find(c => c._id === values.fuelCompany);
+  const isStockManaged = selectedFuelCompany?.hasStock === true;
 
-
-// Selected company ka data
-const selectedFuelCompany = fuelCompaniesData?.find(c => c._id === values.fuelCompany);
-console.log("fco",fuelCompaniesData)
-const isStockManaged = selectedFuelCompany?.hasStock === true;
   return (
     <div className="w-full md:w-[85%] lg:w-[88%] xl:w-[90%]  p-4 md:pl-8 mx-auto bg-[#F9FAFB]  rounded-2xl">
       {/* Header section */}
@@ -272,31 +270,40 @@ const isStockManaged = selectedFuelCompany?.hasStock === true;
           <FormInput label="Total Sft/Vehicles" id="totalSftVehicles" type="text" placeholder="please enter amount" formik={formik} />
           <FormInput label="Total Rate" id="totalRate" type="text" placeholder="0" readOnly={true} formik={formik} />
           <FormInput label="Material Cost" id="materialCost" type="text" placeholder="please enter amount" formik={formik} />
-          <div>
-             <SearchSelect
-    label="Fuel Company"
-    placeholder="Select Fuel Company"
-    options={fuelCompanyOptions}
-    searchable={false}
-    value={values.fuelCompany}
-    onChange={(val) => {
-      formik.setFieldValue("fuelCompany", val, true);
-      formik.setFieldValue("dieselInLitters", "");
-    }}
-    onBlur={() => formik.setFieldTouched("fuelCompany", true)}
-    isError={formik.touched.fuelCompany && !!formik.errors.fuelCompany}
-    errorMessage={formik.errors.fuelCompany}
-  />
-  {/* Stock managed hai toh available stock hint dikhao */}
-  {isStockManaged && values.fuelCompany && (
-    <p className="text-[11px] mt-1 ml-1 text-emerald-600 font-medium">
-      Available: {selectedFuelCompany?.availableStock}L
-    </p>
-  )}
- 
+          
+          {/* Fuel Company Dropdown Container with Rounded Spinner Loader ──🔥 */}
+          <div className="relative flex flex-col w-full">
+            <SearchSelect
+              label="Fuel Company"
+              placeholder={isFuelLoading ? "Loading Companies..." : "Select Fuel Company"}
+              options={fuelCompanyOptions}
+              searchable={false}
+              value={values.fuelCompany}
+              onChange={(val) => {
+                formik.setFieldValue("fuelCompany", val, true);
+                formik.setFieldValue("dieselInLitters", "");
+              }}
+              onBlur={() => formik.setFieldTouched("fuelCompany", true)}
+              isError={formik.touched.fuelCompany && !!formik.errors.fuelCompany}
+              errorMessage={formik.errors.fuelCompany}
+            />
+            
+            {/* Smooth CSS Rounded Spinner Loader */}
+            {isFuelLoading && (
+              <div className="absolute right-3 top-[38px] flex items-center justify-center pointer-events-none">
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-300 border-t-black"></div>
+              </div>
+            )}
+            
+            {/* Live Hint Calculation for Managed Stocks */}
+            {isStockManaged && values.fuelCompany && (
+              <p className="text-[11px] mt-1 ml-1 text-emerald-600 font-medium animate-fadeIn">
+                Available: {selectedFuelCompany?.availableStock}L
+              </p>
+            )}
           </div>
-          <FormInput label="Diesel Liters" id="dieselInLitters" type="text" placeholder="please enter diesel liters" formik={formik} />
 
+          <FormInput label="Diesel Liters" id="dieselInLitters" type="text" placeholder="please enter diesel liters" formik={formik} />
           <FormInput label="Diesel Cost" id="dieselCost" type="text" placeholder="please enter amount" formik={formik} />
           <FormInput label="Driver Expense" id="driverExpense" placeholder="please enter amount" formik={formik} />
           <FormInput label="Loading + Labor Cost" id="loading" placeholder="please enter amount" formik={formik} />
@@ -306,9 +313,8 @@ const isStockManaged = selectedFuelCompany?.hasStock === true;
           <FormInput label="Remaining Amount" id="remainingAmount" placeholder="0" readOnly={true} formik={formik} />
         </div>
 
-        {/* Checkbox controls row */}
+        {/* Action Controls Row */}
         <div className="flex items-center justify-end gap-4 mt-8 pt-2">
-         
           <div className="flex gap-2 justify-center items-center">
             <button
               type="button"
@@ -378,18 +384,18 @@ const isStockManaged = selectedFuelCompany?.hasStock === true;
               <p className="font-semibold text-gray-800 mt-1">{materialCost ? `Rs. ${materialCost}` : "Rs. 0"}</p>
             </div>
             <div>
-  <p className="text-gray-400 font-medium">Fuel Company</p>
-  <p className="font-semibold text-gray-800 mt-1 wrap-break-word">
-    {selectedFuelCompany?.fuelCompany || "---"}
-  </p>
-</div>
+              <p className="text-gray-400 font-medium">Fuel Company</p>
+              <p className="font-semibold text-gray-800 mt-1 wrap-break-word">
+                {selectedFuelCompany?.fuelCompany || "---"}
+              </p>
+            </div>
 
-<div>
-  <p className="text-gray-400 font-medium">Diesel Liters</p>
-  <p className="font-semibold text-gray-800 mt-1">
-    {values.dieselInLitters ? `${values.dieselInLitters}L` : "---"}
-  </p>
-</div>
+            <div>
+              <p className="text-gray-400 font-medium">Diesel Liters</p>
+              <p className="font-semibold text-gray-800 mt-1">
+                {values.dieselInLitters ? `${values.dieselInLitters}L` : "---"}
+              </p>
+            </div>
             <div>
               <p className="text-gray-400 font-medium">Diesel</p>
               <p className="font-semibold text-gray-800 mt-1">{dieselCost ? `Rs. ${dieselCost}` : "Rs. 0"}</p>
@@ -416,10 +422,7 @@ const isStockManaged = selectedFuelCompany?.hasStock === true;
             </div>
             <div>
               <p className="text-gray-400 font-medium">Payment Status</p>
-              <span className={`inline-block mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider 
-                
-                bg-amber-50 text-amber-700 border border-amber-200
-              `}>
+              <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
                 Pending
               </span>
             </div>
