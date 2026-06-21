@@ -1,6 +1,6 @@
 import React from 'react'
 import EditProfile from '../../components/auth/EditProfile'
-import UpdatePassword from '../../components/auth/updatePassword'
+import UpdatePassword from '../../components/auth/UpdatePassword'
 
 function UserProfile() {
   return (
