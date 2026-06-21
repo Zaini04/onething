@@ -15,14 +15,11 @@ function IncomeTax() {
     const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [apiFilters, setApiFilters] = useState({});
-  const [dateFilter,setDateFilter]=useState({
-    from:'',
-    to:''
-  })
+ 
    const [filters, setFilters] = useState({
     vehicle: "",
-    date: "",
-  });
+    from: "",
+    to: "",  });
 
 
   const { data, isLoading, isFetching } = useQuery({
@@ -54,26 +51,35 @@ const incomeExpenses = data?.docs || [];
     },
 
     {
-      name: "date",
-      type: "date",
-      placeholder: "Date",
-      searchable: false,
-      options: [
-        
-      ],
+      name: "dateRange", 
+      type: "date-range", // 👈 Custom Type
+      label: "Select Date Range",
+      placeholder: "Choose Range (From - To)",
     },
   ];
 
   
   const handleFilterChange = (name, value) => {
-    setFilters((prev) => ({ ...prev, [name]: value }));
+    if (name === "dateRange") {
+      setFilters((prev) => ({ 
+        ...prev, 
+        from: value.from, 
+        to: value.to 
+      }));
+    } else {
+      setFilters((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSearchSubmit = (finalFilters) => {
-    console.log("Fetching Entry Vehicles data with fields:", finalFilters);
-    setApiFilters(finalFilters)
-
-
+    // API ko submit karte waqt sirf 'vehicle', 'from' aur 'to' bhejen gy
+    const payload = {
+      vehicle: filters.vehicle,
+      from: filters.from,
+      to: filters.to
+    };
+    console.log("Submitting Range Filters to API:", payload);
+    setApiFilters(payload);
   };
 
   return (
@@ -100,7 +106,7 @@ const incomeExpenses = data?.docs || [];
           />
         </div>
         <div className="w-full">
-            <IncomeSummaryCards/>
+            <IncomeSummaryCards vehicle={apiFilters.vehicle} from={apiFilters.from} to={apiFilters.to}/>
         </div>
 
         <div className="w-full">

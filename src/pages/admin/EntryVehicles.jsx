@@ -27,6 +27,8 @@ function EntryVehicles() {
     console.log(`Action confirmed for ${currentModal}:`, data);
     handleCloseModal();
   };
+  const [filters, setFilters] = useState({ client: "", vehicle: "",  from: "",
+    to: "",  });
 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
@@ -52,7 +54,7 @@ function EntryVehicles() {
 
    const clientOptions = clientDropDownData?.map((v) => ({ id: v._id, name: v.name })) || [];
 
-      const vehicleOptions = vehicleDropDownData?.map((v) => ({ id: v._id, name: v.vehicleNo })) || [];
+   const vehicleOptions = vehicleDropDownData?.map((v) => ({ id: v._id, name: v.vehicleNo })) || [];
 
 
   const clientVendorConfig = [
@@ -71,27 +73,37 @@ function EntryVehicles() {
       options: vehicleOptions
     },
     {
-      name: "date",
-      type: "date",
-      placeholder: "Date",
-      searchable: false,
-      options: [
-        
-      ],
+      name: "dateRange", 
+      type: "date-range", // 👈 Custom Type
+      label: "Select Date Range",
+      placeholder: "Choose Range (From - To)",
     },
   ];
 
-  const [filters, setFilters] = useState({ client: "", vehicle: "", date: "" });
 
-  const handleFilterChange = (name, value) => {
-    setFilters((prev) => ({ ...prev, [name]: value }));
+   const handleFilterChange = (name, value) => {
+    if (name === "dateRange") {
+      setFilters((prev) => ({ 
+        ...prev, 
+        from: value.from, 
+        to: value.to 
+      }));
+    } else {
+      setFilters((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSearchSubmit = (finalFilters) => {
-    console.log("Fetching Entry Vehicles data with fields:", finalFilters);
-    setApiFilters(finalFilters);
-    setPage(1);
+    // API ko submit karte waqt sirf 'vehicle', 'from' aur 'to' bhejen gy
+    const payload = {
+      vehicle: filters.vehicle,
+      from: filters.from,
+      to: filters.to
+    };
+    console.log("Submitting Range Filters to API:", payload);
+    setApiFilters(payload);
   };
+
   const handleEdit = (row)=>{
     navigate(`/app/entry-vehicle/edit`, { state: { entryVehicleData: row } });
   }

@@ -38,10 +38,10 @@ export const fetchIncomeExpense = async ({ queryKey }) => {
   return res.data.data;
 };
 export const fetchIncomeExpenseSummary = async ({ queryKey }) => {
-  const [, from, to] = queryKey;
+  const [,vehicle, from, to] = queryKey;
 
   const params = {};
-
+  if(vehicle) params.vehicle= vehicle
   if (from) params.from = from;
   if (to) params.to = to;
 

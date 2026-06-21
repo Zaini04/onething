@@ -18,7 +18,8 @@ function RoleForm() {
   "fuel-stock",
   "entry-fuel",
   "income-expense",
-  "settings"
+  "settings",
+  "profile"
 
 ];
 

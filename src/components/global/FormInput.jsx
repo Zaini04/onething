@@ -46,7 +46,7 @@ const FormInput = ({
   onChange={onChange || formikProps.onChange}
   onBlur={onBlur || formikProps.onBlur}
 
-              className={`w-full px-4 py-2.5 border rounded-xl text-xs font-normal appearance-none bg-white focus:outline-none transition-all ${
+              className={`w-full px-4 py-3 border rounded-xl text-xs font-normal appearance-none bg-white focus:outline-none transition-all ${
                 isError
                   ? "border-red-500 focus:border-red-500"
                   : "border-gray-200 focus:border-black"

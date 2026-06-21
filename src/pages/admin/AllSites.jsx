@@ -13,7 +13,8 @@ function AllSites() {
   const [perPage, setPerPage] = useState(10);
   const [status, setStatus] = useState('');
   const [apiFilters, setApiFilters] = useState({});
-
+  
+  const [filters, setFilters] = useState({ siteName: "",  from: "",  to: "",  status: "" });
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ["sites", page, perPage, apiFilters],
     queryFn: fetchSites,
@@ -40,15 +41,11 @@ function AllSites() {
       ],
     },
 
-    {
-      name: "date",
-      type: "date",
-      placeholder: "Date",
-      options: [
-        { label: "Today", value: "today" },
-        { label: "Yesterday", value: "yesterday" },
-        { label: "This Week", value: "this_week" },
-      ],
+     {
+      name: "dateRange", 
+      type: "date-range", // 👈 Custom Type
+      label: "Select Date Range",
+      placeholder: "Choose Range (From - To)",
     },
     {
       name: "status",
@@ -63,17 +60,30 @@ function AllSites() {
     },
   ];
 
-  const [filters, setFilters] = useState({ siteName: "", date: "", status: "" });
 
-  const handleFilterChange = (name, value) => {
-    setFilters((prev) => ({ ...prev, [name]: value }));
+   const handleFilterChange = (name, value) => {
+    if (name === "dateRange") {
+      setFilters((prev) => ({ 
+        ...prev, 
+        from: value.from, 
+        to: value.to 
+      }));
+    } else {
+      setFilters((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSearchSubmit = (finalFilters) => {
-    console.log("Fetching Entry Vehicles data with fields:", finalFilters);
-     setApiFilters(finalFilters);
-    setPage(1);
+    // API ko submit karte waqt sirf 'vehicle', 'from' aur 'to' bhejen gy
+    const payload = {
+      vehicle: filters.vehicle,
+      from: filters.from,
+      to: filters.to
+    };
+    console.log("Submitting Range Filters to API:", payload);
+    setApiFilters(payload);
   };
+
 
    const handleEdit = (row)=>{
     navigate(`/app/sites/edit`, { state: { siteData: row } });

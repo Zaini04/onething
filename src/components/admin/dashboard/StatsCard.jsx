@@ -1,34 +1,53 @@
+import { useQuery } from "@tanstack/react-query";
+import { fetchTodayDashboard } from "../../../redux/actions/superAdminActions";
+import { TotalSalesSkeleton } from "./TotalSales";
+import { formatAmount } from "../../../hooks/formatAmount";
+
 export default function StatsCards() {
+
+     const { data  ,isLoading} = useQuery({
+queryKey: ["today-dashboard"],
+  queryFn: fetchTodayDashboard,
+    staleTime: 1000 * 30,
+    cacheTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    keepPreviousData: true,
+  });
+  const todayDashboard = data?.docs
+  console.log("td",todayDashboard)
+
+
   const cards = [
     {
       title: "Today Sales",
-      value: "Rs. 12.",
-      valueSuffix: "lac",
-      change: "100% vs yesterday",
+      value: formatAmount(todayDashboard?.totalRates),
+      valueSuffix: "",
+      change: "",
       dark: true,
       iconColor: "bg-orange-500 text-white",
     },
     {
-      title: "Total Orders",
-      value: "9",
+      title: "Today Orders",
+      value: formatAmount(todayDashboard?.totalOrders),
       valueSuffix: "",
-      change: "100% today",
+      change: "",
       dark: false,
       iconColor: "bg-orange-500/10 text-orange-500",
     },
     {
-      title: "Gross Profit",
-      value: "Rs. -40.",
-      valueSuffix: "k",
-      change: "100% today",
+      title: "Today Profit",
+      value: formatAmount(todayDashboard?.totalProfit),
+      valueSuffix: "",
+      change: "",
       dark: false,
       iconColor: "bg-orange-500/10 text-orange-500",
     },
     {
-      title: "Returned Orders",
-      value: "1",
+      title: "Today Received",
+      value: formatAmount(todayDashboard?.totalReceived),
       valueSuffix: "",
-      change: "100% today",
+      change: "",
       dark: false,
       iconColor: "bg-orange-500/10 text-orange-500",
     },
@@ -49,7 +68,12 @@ export default function StatsCards() {
     </svg>
   );
 
+  
+
   return (
+    isLoading ? 
+    <TotalSalesSkeleton/> : 
+
     <div className="grid grid-cols-1  xs:grid-cols-2 gap-3 w-full h-full">
       {cards.map((card, i) => (
         <div

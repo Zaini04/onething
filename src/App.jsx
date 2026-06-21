@@ -22,6 +22,7 @@ import Users from "./pages/admin/Users";
 import FuelCompany from "./pages/admin/FuelCompany";
 import FuelStock from "./pages/admin/FuelStock";
 import ProtectedRoute from './hooks/ProtectedRoutes'
+import UserProfile from "./pages/admin/UserProfile";
 function App() {
   return (
     <>
@@ -98,6 +99,10 @@ theme="light"
 
             <Route element={<ProtectedRoute requiredMenu = "settings"/>} >
               <Route path ='settings' element={<Settings />} />
+            </Route>
+           
+            <Route element={<ProtectedRoute requiredMenu = "profile"/>} >
+              <Route path ='profile' element={<UserProfile />} />
             </Route>
 
 

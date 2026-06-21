@@ -17,12 +17,13 @@ function EntryFuels() {
    const [filters, setFilters] = useState({
     vehicle: "",
     fuelCompany: "",
-    date: "",
+    from: "",
+    to: "", 
   });
 
 
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["entry-fuels", page, perPage, filters],
+    queryKey: ["entry-fuels", page, perPage, apiFilters],
     queryFn: fetchEntryFuels,
     staleTime: 1000 * 30,
     cacheTime: 1000 * 60 * 10,
@@ -71,26 +72,38 @@ const entryFuels = data?.docs || [];
       options:fuelCompaniesOptions
     },
     {
-      name: "date",
-      type: "date",
-      placeholder: "Date",
-      searchable: false,
-      options: [
-        
-      ],
+      name: "dateRange", 
+      type: "date-range", // 👈 Custom Type
+      label: "Select Date Range",
+      placeholder: "Choose Range (From - To)",
     },
   ];
 
  
  
   const handleFilterChange = (name, value) => {
-    setFilters((prev) => ({ ...prev, [name]: value }));
+    if (name === "dateRange") {
+      setFilters((prev) => ({ 
+        ...prev, 
+        from: value.from, 
+        to: value.to 
+      }));
+    } else {
+      setFilters((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSearchSubmit = (finalFilters) => {
-    console.log("Fetching Entry Vehicles data with fields:", finalFilters);
-    setApiFilters(finalFilters)
+    // API ko submit karte waqt sirf 'vehicle', 'from' aur 'to' bhejen gy
+    const payload = {
+      vehicle: filters.vehicle,
+      from: filters.from,
+      to: filters.to
+    };
+    console.log("Submitting Range Filters to API:", payload);
+    setApiFilters(payload);
   };
+
 
   return (
     <div className=" md:w-[93%] lg:w-[94%] xl:w-[95%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">

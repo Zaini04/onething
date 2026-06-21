@@ -120,3 +120,21 @@ export const useRoles =  ()=>{
 }
 
 
+
+export const fetchDashboard = async () => {
+
+  const res = await Axios.get(
+    "/entry-vehicle/dashboard",
+  );
+
+  return res.data.data;
+};
+
+export const fetchTodayDashboard = async () => {
+
+  const res = await Axios.get(
+    "/entry-vehicle/today_dashboard",
+  );
+
+  return res.data.data;
+};

@@ -9,12 +9,12 @@ import { fetchClients } from "../../redux/actions/clientAction";
 
 function Clients() {
   const navigate = useNavigate();
-
+  const [filters, setFilters] = useState({ name: "", from: "",   to: "",   status: "" });
+  
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
-  const [status, setStatus] = useState('');
   const [apiFilters, setApiFilters] = useState({});
-
+  
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ["clients", page, perPage, apiFilters],
     queryFn: fetchClients,
@@ -37,15 +37,11 @@ function Clients() {
       placeholder: "Name",
       options: ["ali", "awais", "zain"],
     },
-    {
-      name: "date",
-      type: "date",
-      placeholder: "Date",
-      options: [
-        { label: "Today", value: "today" },
-        { label: "Yesterday", value: "yesterday" },
-        { label: "This Week", value: "this_week" },
-      ],
+   {
+      name: "dateRange", 
+      type: "date-range", // 👈 Custom Type
+      label: "Select Date Range",
+      placeholder: "Choose Range (From - To)",
     },
     {
       name: "status",
@@ -58,17 +54,30 @@ function Clients() {
     },
   ];
 
-  const [filters, setFilters] = useState({ name: "",date:"",  status: "" });
 
-  const handleFilterChange = (name, value) => {
-    setFilters((prev) => ({ ...prev, [name]: value }));
+ const handleFilterChange = (name, value) => {
+    if (name === "dateRange") {
+      setFilters((prev) => ({ 
+        ...prev, 
+        from: value.from, 
+        to: value.to 
+      }));
+    } else {
+      setFilters((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSearchSubmit = (finalFilters) => {
-    console.log("Fetching clients data with fields:", finalFilters);
-    setApiFilters(finalFilters);
-    setPage(1);
+    // API ko submit karte waqt sirf 'vehicle', 'from' aur 'to' bhejen gy
+    const payload = {
+      vehicle: filters.vehicle,
+      from: filters.from,
+      to: filters.to
+    };
+    console.log("Submitting Range Filters to API:", payload);
+    setApiFilters(payload);
   };
+
 
   const handleEdit = (row)=>{
     navigate(`/app/clients/edit`, { state: { clientData: row } });

@@ -1,18 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { MdOutlineAccountBalanceWallet, MdCallReceived, MdPriorityHigh, MdHourglassEmpty } from "react-icons/md";
+import { MdOutlineAccountBalanceWallet, MdCallReceived, MdPriorityHigh } from "react-icons/md";
 import { fetchIncomeExpenseSummary } from "../../../redux/actions/entryVehicleAction";
-import { useState } from "react";
-import FormInput from "../../global/FormInput";
 
-export default function IncomeSummaryCards() {
+export default function IncomeSummaryCards({from,to,vehicle}) {
 
-const [dateFilter,setDateFilter]=useState({
-    from:'',
-    to:''
-})
 
   const { data  ,isLoading,isFetching } = useQuery({
-queryKey: ["income-summary", dateFilter.from, dateFilter.to],
+queryKey: ["income-summary",vehicle, from, to],
   queryFn: fetchIncomeExpenseSummary,
       staleTime: 1000 * 30,
     cacheTime: 1000 * 60 * 10,
@@ -25,19 +19,9 @@ queryKey: ["income-summary", dateFilter.from, dateFilter.to],
 
   const incomeSummary = data?.docs
 
-  const handleFromChange = (e) => {
-  setDateFilter((prev) => ({
-    ...prev,
-    from: e.target.value,
-  }));
-};
+ 
 
-const handleToChange = (e) => {
-  setDateFilter((prev) => ({
-    ...prev,
-    to: e.target.value,
-  }));
-};
+
 
 
   const stats = [
@@ -63,7 +47,7 @@ const handleToChange = (e) => {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 w-full px-1">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 w-full px-1">
       {stats.map((card, index) => (
         <div
           key={index}
@@ -93,28 +77,7 @@ const handleToChange = (e) => {
           </div>
         </div>
       ))}
-         <div className="bg-white border border-gray-100 rounded-2xl p-4 flex flex-col justify-center gap-3">
-
-        <FormInput
-          type="date"
-          id='from'
-          value={dateFilter.from}
-          label='from'
-          onChange={handleFromChange
-          }
-          className="border rounded-lg px-3 py-2 text-sm"
-        />
-
-        <FormInput
-          type="date"
-          id="to"
-          label="to"
-          value={dateFilter.to}
-          onChange={handleToChange
-          }
-          className="border rounded-lg px-3 py-2 text-sm"
-        />
-      </div>
+       
     </div>
   );
 }
