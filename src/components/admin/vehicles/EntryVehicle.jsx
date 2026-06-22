@@ -13,6 +13,7 @@ import Axios from "../../../configs/api";
 import { toast } from "react-toastify";
 import { toastError } from "../../../hooks/toastError";
 import { useFuelStockCompaniesListsDropdown } from "../../../redux/actions/fuelAction";
+import DropDownLoader from "../../../hooks/DropDownLoader";
 
 export default function EntryVehicle() {
   const navigate = useNavigate();
@@ -107,9 +108,9 @@ export default function EntryVehicle() {
   // ----------------------------------------------------
   // Data Fetching via Hooks
   // ----------------------------------------------------
-  const { data: clientDropdownData } = useClientDropdown();
-  const { data: vehicleDropDownData } = useVehicleDropdown();
-  const { data: siteMaterials } = useSiteMaterials(client);
+  const { data: clientDropdownData, isLoading:isClientLoading} = useClientDropdown();
+  const { data: vehicleDropDownData, isLoading:isvehicleLoading } = useVehicleDropdown();
+  const { data: siteMaterials, isLoading:isSiteLoading } = useSiteMaterials(client);
   // Destructured isLoading to manage spinner state safely ──🔥
   const { data: fuelCompaniesData, isLoading: isFuelLoading } = useFuelStockCompaniesListsDropdown();
 
@@ -181,20 +182,17 @@ export default function EntryVehicle() {
     setFieldValue("remainingAmount", remainingAmount ? remainingAmount.toLocaleString() : "0", false);
   }, [rate, totalSftVehicles, driverExpense, dieselCost, loading, materialCost, otherExpenses, setFieldValue]);
 
-  // ----------------------------------------------------
-  // Live-Preview Card Helper Labels Lookup
-  // ----------------------------------------------------
   const activeClientLabel = clientDropdownData?.find((c) => c._id === client)?.name || "---";
   const activeVehicleLabel = vehicleDropDownData?.find((v) => v._id === vehicle)?.vehicleNo || "---";
   const activeSiteLabel = siteMaterials?.find((s) => s._id === site)?.siteName || "---";
 
-  // Dropdown options computed safely using optional chaining ──🔥
   const fuelCompanyOptions = fuelCompaniesData?.map((c) => ({
     id: c._id,
     name: c.hasStock ? `${c.fuelCompany} (${c.availableStock}L)` : c.fuelCompany,
     disabled: c.hasStock && c.availableStock <= 0,
   })) || [];
 
+  // console.log("fco",fuelCompanyOptions)
   // Recalculates dynamically every render loop securely
   const selectedFuelCompany = fuelCompaniesData?.find(c => c._id === values.fuelCompany);
   const isStockManaged = selectedFuelCompany?.hasStock === true;
@@ -217,10 +215,11 @@ export default function EntryVehicle() {
       <form onSubmit={formik.handleSubmit} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100/80">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-7">
           <FormInput label="Date" id="date" name="date" type="date" formik={formik} />
+          <div className="relative flex flex-col w-full">
 
           <SearchSelect
             label="Vehicle"
-            placeholder="Select Vehicle No"
+            placeholder={isvehicleLoading ? "Loading Vehicles ":"Select Vehicle No"}
             options={vehicleOptions}
             value={vehicle}
             onChange={handleVehicle}
@@ -229,9 +228,16 @@ export default function EntryVehicle() {
             errorMessage={formik.errors.vehicle}
           />
 
+          {isvehicleLoading && (
+              <DropDownLoader/>
+            )}
+
+          </div>
+       <div className="relative flex flex-col w-full">
+
           <SearchSelect
             label="Client"
-            placeholder="Select Client"
+            placeholder={isClientLoading ? "Loading Clients ":"Select Client"}
             options={clientOptions}
             value={client}
             onChange={handleClientChange}
@@ -240,9 +246,18 @@ export default function EntryVehicle() {
             errorMessage={formik.errors.client}
           />
 
+           {isClientLoading && (
+              <DropDownLoader/>
+            )}
+
+          </div>
+
+          
+       <div className="relative flex flex-col w-full">
+
           <SearchSelect
             label="Site"
-            placeholder="Select Site"
+            placeholder={isSiteLoading ? "Loading Sites ":"Select Site"}
             options={siteOptions}
             value={site}
             onChange={handleSiteChange}
@@ -250,6 +265,10 @@ export default function EntryVehicle() {
             isError={formik.touched.site && !!formik.errors.site}
             errorMessage={formik.errors.site}
           />
+{isSiteLoading && (
+              <DropDownLoader/>
+            )}
+          </div>
 
           <SearchSelect
             label="Material Type"
@@ -290,7 +309,7 @@ export default function EntryVehicle() {
             
             {/* Smooth CSS Rounded Spinner Loader */}
             {isFuelLoading && (
-              <div className="absolute right-3 top-[38px] flex items-center justify-center pointer-events-none">
+              <div className="absolute right-10 top-[15px] flex items-center justify-center pointer-events-none">
                 <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-300 border-t-black"></div>
               </div>
             )}

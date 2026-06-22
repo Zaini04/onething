@@ -105,7 +105,7 @@ const FormInput = ({
             onBlur={onBlur}
             readOnly={readOnly}
             {...(formik && !onChange ? formik.getFieldProps(id) : {})}
-            className={`w-full px-4 py-2.5 border rounded-xl text-xs font-normal text-black placeholder:text-gray-400 focus:outline-none transition-all ${
+            className={`w-full  px-4 py-2.5 border rounded-xl text-xs font-normal text-black placeholder:text-gray-400 focus:outline-none transition-all ${
               readOnly ? "bg-gray-100/50 cursor-not-allowed select-none" : ""
             } ${isError ? "border-red-500 focus:border-red-500" : "border-gray-200 focus:border-black"}`}
           />

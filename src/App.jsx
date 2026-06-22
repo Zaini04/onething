@@ -23,6 +23,8 @@ import FuelCompany from "./pages/admin/FuelCompany";
 import FuelStock from "./pages/admin/FuelStock";
 import ProtectedRoute from './hooks/ProtectedRoutes'
 import UserProfile from "./pages/admin/UserProfile";
+import EditProfile from "./components/auth/EditProfile";
+import UpdatePassword from "./components/auth/UpdatePassword";
 function App() {
   return (
     <>
@@ -102,7 +104,10 @@ theme="light"
             </Route>
            
             <Route element={<ProtectedRoute requiredMenu = "profile"/>} >
-              <Route path ='profile' element={<UserProfile />} />
+              
+              {/* <Route path ='profile-edit' element={<UserProfile />} /> */}
+              <Route path ='profile-edit' element={<EditProfile />} />
+              <Route path ='profile-edit/update-password' element={<UpdatePassword />} />
             </Route>
 
 

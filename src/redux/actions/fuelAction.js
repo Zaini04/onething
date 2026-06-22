@@ -75,7 +75,7 @@ export const fetchFuelStockCompaniesList = async () => {
 
 export const useFuelStockCompaniesListsDropdown = () => {
   return useQuery({
-    queryKey: ["fuelCompaniesLists"],
+    queryKey: ["fuelCompaniesStockLists"],
     queryFn: fetchFuelStockCompaniesList,
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 10,

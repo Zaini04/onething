@@ -201,7 +201,7 @@ export default function ClientsTable({  setEditedClient,
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2.5 max-w-full">
                           <img
-                            src={profile}
+                            src={row?.image || profile}
                             alt={row.name}
                             className="w-7 h-7 rounded-full object-cover shadow-sm flex-shrink-0 ring-1 ring-gray-100"
                           />

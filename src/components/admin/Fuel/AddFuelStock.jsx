@@ -9,6 +9,7 @@ import Axios from "../../../configs/api";
 import { addFuelStock } from "../../../validations/AddFuelStockValidation";
 import {  useFuelStockCompaniesDropdown } from "../../../redux/actions/fuelAction";
 import SearchSelect from "../../global/SearchSelect";
+import DropDownLoader from "../../../hooks/DropDownLoader";
 
 export default function AddFuelStock({editFuelCompany,setEditedFuelCompany}) {
 
@@ -70,7 +71,7 @@ const fuelCompanyMutation = useMutation({
   }
 };
 
-const { data:fuelCompaniesData  } = useFuelStockCompaniesDropdown();
+const { data:fuelCompaniesData , isLoading:isFuelCompaniesLoading } = useFuelStockCompaniesDropdown();
 
 const fuelCompanies =
   fuelCompaniesData?.map((c) => ({
@@ -92,15 +93,25 @@ const fuelCompanies =
           className=" rounded-2xl  flex flex-col  justify-between"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-x-6 gap-y-7 pt-2">
+                   <div className="relative flex flex-col w-full">
+
             <SearchSelect
               label="Fuel Company"
               options = {fuelCompanies}
-              placeholder="Enter fuel company"
+            placeholder={isFuelCompaniesLoading ? "Loading Fuel Companies ":"Select fuel company"}
                 value={formik.values.fuelCompany}
             onChange={(val) => formik.setFieldValue("fuelCompany", val, true)}
             onBlur={() => formik.setFieldTouched("fuelCompany", true, true)}
             isError={formik.touched.fuelCompany && !!formik.errors.fuelCompany}
             errorMessage={formik.errors.fuelCompany}            />
+            
+            {isFuelCompaniesLoading && (
+              <DropDownLoader/>
+            )}
+
+
+
+            </div>
 
             <FormInput
               label="Fuel Litter"

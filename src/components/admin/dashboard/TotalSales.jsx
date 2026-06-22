@@ -54,7 +54,7 @@ const dashboard = dashboardData?.docs
           
           <div>
             <p className="text-sm font-medium text-black">
-              This Month Collections
+              This Month Sales
             </p>
             <h2 className="text-xl font-semibold mt-1 text-black flex items-baseline">
               Rs. {formatAmount(dashboard?.totalRates)}

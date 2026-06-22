@@ -134,7 +134,8 @@ export default function ClientDetails() {
             setPage={setPage}
             perPage={perPage}
             setPerPage={setPerPage}
-            totalPages={totalPages}  />}
+            totalPages={totalPages}
+            totalEntries={totalEntries}  />}
         {siteModel && <ClientSitesTable />}
         {ledgerModel && <Ledger  clientLedgerData={clientLedger}
             isLoading={isLoading || isFetching}

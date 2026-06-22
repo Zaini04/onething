@@ -11,6 +11,7 @@ import Axios from "../../../configs/api";
 import { toast } from "react-toastify";
 import { toastError } from "../../../hooks/toastError";
 import { useClientDropdown } from "../../../redux/actions/clientAction";
+import DropDownLoader from "../../../hooks/DropDownLoader";
 
 const AddSite = () => {
   const availableMaterials = ["Soil", "Sand", "Crush", "Gravel", "Concrete"];
@@ -72,7 +73,7 @@ const AddSite = () => {
     },
   });
 
-const { data: clientDropdownData, } = useClientDropdown();
+const { data: clientDropdownData,isLoading:isClientLoading } = useClientDropdown();
 
 const clientOptions =
   clientDropdownData?.map((c) => ({
@@ -126,7 +127,7 @@ const clientOptions =
       reader.onloadend = () => setSiteImage(reader.result);
       reader.readAsDataURL(file);
     } else {
-      alert("File size should be less than 800KB");
+      toast.error("File size should be less than 800KB");
     }
   };
 
@@ -202,10 +203,12 @@ const clientOptions =
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-7">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-7">       <div className="relative flex flex-col w-full">
+
+          
           <SearchSelect
             label="Client"
-            placeholder="Choose a client"
+            placeholder={isClientLoading ? "Loading Clients ":"Select Client"}
             options={clientOptions}
             value={formik.values.client}
             onChange={(val) => formik.setFieldValue("client", val, true)}
@@ -213,6 +216,11 @@ const clientOptions =
             isError={formik.touched.client && !!formik.errors.client}
             errorMessage={formik.errors.client}
           />
+
+          {isClientLoading && (
+              <DropDownLoader/>
+            )}
+          </div>
 
           <FormInput
             label="Site Name"

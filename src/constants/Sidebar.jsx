@@ -435,7 +435,7 @@ export const menuItems = [
   {
     id: "profile",
     label: "Profile",
-    link: "/app/profile",
+    link: "/app/profile-edit",
     icon: (
       <svg
         width="18"

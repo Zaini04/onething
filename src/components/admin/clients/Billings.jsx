@@ -83,12 +83,12 @@ export default function Billings({
   const toggleAll = () => {
     if (allSelected) {
       setSelected((prev) =>
-        prev.filter((id) => !pageData.map((r) => r.id).includes(id)),
+        prev.filter((id) => !pageData.map((r) => r._id).includes(id)),
       );
     } else {
       setSelected((prev) => [
         ...prev,
-        ...pageData.map((r) => r.id).filter((id) => !prev.includes(id)),
+        ...pageData.map((r) => r._id).filter((id) => !prev.includes(id)),
       ]);
     }
   };

@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import {
   BarChart,
   Bar,
@@ -7,6 +8,8 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { fetchSalesChart } from "../../../redux/actions/superAdminActions";
+import { TotalSalesSkeleton } from "./TotalSales";
 
 const data = [
   { month: "Oct", Revenue: 2, Profit: 1.5 },
@@ -49,9 +52,24 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function SalesProfitTrend() {
-  const peakSales = Math.max(...data.map((d) => d.Revenue));
+
+   const { data  ,isLoading} = useQuery({
+queryKey: ["sales-chart"],
+  queryFn: fetchSalesChart,
+    staleTime: 1000 * 30,
+    cacheTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    keepPreviousData: true,
+  });
+  const monthlyChart = data?.docs
+  console.log("mc",monthlyChart)
+
+
+  const peakSales = monthlyChart ?  Math.max(...monthlyChart.map((d) => d.Revenue)) : 0  ;
 
   return (
+    isLoading ? <TotalSalesSkeleton/> :
     <div className="w-full h-full flex flex-col justify-between">
       <div>
         <h2 className="text-sm font-medium text-black">Sales & Profit Trend</h2>
@@ -61,14 +79,14 @@ export default function SalesProfitTrend() {
       </div>
 
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-bold text-gray-800">Revenue and Profit</span>
+        <span className="text-xs font-semibold text-gray-800">Revenue and Profit</span>
         <CustomLegend />
       </div>
 
       <div className="w-full h-[160px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
-            data={data}
+            data={monthlyChart}
             barCategoryGap="25%"
             barGap={3}
             margin={{ top: 10, right: 4, left: -20, bottom: 0 }}
@@ -78,7 +96,7 @@ export default function SalesProfitTrend() {
               dataKey="month"
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 12, fill: "#6b7280", fontWeight: 500 }}
+              tick={{ fontSize: 10, fill: "#6b7280", fontWeight: 500 }}
             />
             <YAxis hide />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(0,0,0,0.03)" }} />

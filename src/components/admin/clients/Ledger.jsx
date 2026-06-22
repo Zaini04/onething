@@ -76,12 +76,12 @@ export default function Ledger({
   const toggleAll = () => {
     if (allSelected) {
       setSelected((prev) =>
-        prev.filter((id) => !pageData.map((r) => r.id).includes(id)),
+        prev.filter((id) => !pageData.map((r) => r._id).includes(id)),
       );
     } else {
       setSelected((prev) => [
         ...prev,
-        ...pageData.map((r) => r.id).filter((id) => !prev.includes(id)),
+        ...pageData.map((r) => r._id).filter((id) => !prev.includes(id)),
       ]);
     }
   };
@@ -192,7 +192,7 @@ pageData.map((row,index) => {
                           <input
                             type="checkbox"
                             checked={isRowSelected}
-                            onChange={() => toggleRow(row.id)}
+                            onChange={() => toggleRow(row._id)}
                             className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
                           />
                         </td>

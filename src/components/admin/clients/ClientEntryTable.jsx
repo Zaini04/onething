@@ -4,6 +4,7 @@ import ViewButton from "../../global/ViewButton";
 import PaymentReceivedButton from "../../global/PaymentreceivedButton";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { TableSkeletonRows } from "../../global/TableSkeletonRows";
+import { useSearchParams } from "react-router-dom";
 
 function SortIcon() {
   return (
@@ -34,29 +35,42 @@ export default function ClientEntryTable({
   const [selected, setSelected] = useState([]);
   const [showPerPage, setShowPerPage] = useState(false);
   const [activeRowMenu, setActiveRowMenu] = useState(null);
+    const [searchParams, setSearchParams] = useSearchParams();
+
 
   const menuRef = useRef(null);
 
-  useEffect(() => {
+   const handleActionClick = (model, id) => {
+    // dispatch(setvehicleLedgerById(id));
+    // const newUrl = `${window.location.pathname}?modal=${model}&id=${id}&type=vehicle-ledger`;
+    // window.history.pushState({}, "", newUrl);
+
+    setSearchParams({
+      modal: model,
+      id: String(id),
+      type: "entry-vehicle",
+    });
+
+    setActiveRowMenu(null);
+  };
+
+
+   useEffect(() => {
     function handleClickOutside(event) {
-      if (menuRef.current && menuRef.current.contains(event.target)) {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("modal")) {
         return;
       }
 
-      const isClickInsideModal =
-        event.target.closest(".fixed") ||
-        event.target.closest('[role="dialog"]') ||
-        event.target.closest(".backdrop-blur-xs");
-
-      if (isClickInsideModal) {
+      if (menuRef.current && menuRef.current.contains(event.target)) {
         return;
       }
 
       setActiveRowMenu(null);
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
   const pageData = clientLedgerData.slice((page - 1) * perPage, page * perPage);
@@ -66,12 +80,12 @@ export default function ClientEntryTable({
   const toggleAll = () => {
     if (allSelected) {
       setSelected((prev) =>
-        prev.filter((id) => !pageData.map((r) => r.id).includes(id)),
+        prev.filter((id) => !pageData.map((r) => r._id).includes(id)),
       );
     } else {
       setSelected((prev) => [
         ...prev,
-        ...pageData.map((r) => r.id).filter((id) => !prev.includes(id)),
+        ...pageData.map((r) => r._id).filter((id) => !prev.includes(id)),
       ]);
     }
   };
@@ -179,7 +193,7 @@ export default function ClientEntryTable({
                   const isMenuOpen = activeRowMenu === row._id;
                   return (
                     <tr
-                      key={row.id}
+                      key={row._id}
                       className={`transition-colors duration-150 ${
                         isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
                       }`}
@@ -188,7 +202,7 @@ export default function ClientEntryTable({
                         <input
                           type="checkbox"
                           checked={isRowSelected}
-                          onChange={() => toggleRow(row.id)}
+                          onChange={() => toggleRow(row._id)}
                           className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
                         />
                       </td>
@@ -271,13 +285,24 @@ className={`absolute right-12 bg-white border border-gray-200 rounded-lg shadow-
                             {row.paymentReceived === "received" ? (
                               ""
                             ) : (
-                              <PaymentReceivedButton row={row} />
+                              <PaymentReceivedButton 
+                              onClick={() =>
+                                    handleActionClick("payment", row._id)
+                                  }
+                                  type="client-ledger"
+                              row={row} />
                             )}
 
                             {row.billStatus === "generated" ? (
                               ""
                             ) : (
-                              <GenerateBillButton row={row} />
+                              <GenerateBillButton
+                              onClick={() =>
+                                    handleActionClick("bill", row._id)
+                                  }
+                                  type="client-ledger"
+                                  
+                              row={row} />
                             )}
 
                             {/* <button 
@@ -286,7 +311,13 @@ className={`absolute right-12 bg-white border border-gray-200 rounded-lg shadow-
         
         View 
       </button> */}
-                            <ViewButton row={row} />
+                            <ViewButton 
+                            onClick={() =>
+                                  handleActionClick("view", row._id)
+                                }
+                                type="client-ledger"
+                                row={row}
+                            />
                           </div>
                         )}
                       </td>

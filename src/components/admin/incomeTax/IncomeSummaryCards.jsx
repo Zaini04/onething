@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { MdOutlineAccountBalanceWallet, MdCallReceived, MdPriorityHigh } from "react-icons/md";
 import { fetchIncomeExpenseSummary } from "../../../redux/actions/entryVehicleAction";
+import { formatAmount } from "../../../hooks/formatAmount";
 
 export default function IncomeSummaryCards({from,to,vehicle}) {
 
@@ -27,19 +28,19 @@ queryKey: ["income-summary",vehicle, from, to],
   const stats = [
     {
       title: "Total Vehicles Cost",
-      amount: incomeSummary?.totalRateSum,
+      amount: formatAmount(incomeSummary?.totalRateSum),
       icon: <MdOutlineAccountBalanceWallet size={24} />,
       bgColor: "bg-blue-50 text-blue-600 border-blue-100",
     },
     {
       title: "Total Expense",
-      amount: incomeSummary?.totalExpense,
+      amount: formatAmount(incomeSummary?.totalExpense),
       icon: <MdCallReceived size={24} />,
       bgColor: "bg-emerald-50 text-emerald-600 border-emerald-100",
     },
     {
       title: "Total Profit",
-      amount: incomeSummary?.remainingAmountSum,
+      amount: formatAmount(incomeSummary?.remainingAmountSum),
       icon: <MdPriorityHigh size={24} />,
       bgColor: "bg-amber-50 text-amber-600 border-amber-100",
     },

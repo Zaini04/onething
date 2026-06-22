@@ -66,6 +66,7 @@ export const updateUser = (id,data,resetForm)=>async(dispatch)=>{
     }
 }
 
+
 export const deleteUser = (id)=>async(dispatch)=>{
     dispatch(setUserLoading(true))
     try {
@@ -138,3 +139,18 @@ export const fetchTodayDashboard = async () => {
 
   return res.data.data;
 };
+
+
+
+export const fetchSalesChart = async () => {
+
+  const res = await Axios.get(
+    "/entry-vehicle/sales_profit_chart",
+  );
+
+  return res?.data?.data;
+};
+
+
+
+

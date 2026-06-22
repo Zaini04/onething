@@ -278,7 +278,7 @@ if (dispatch) {
                   <th className="py-4 px-4 w-16 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Sites <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-w-16 xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="py-4 px-4 text-w-16 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Vehicle <SortIcon />
                   </th>
                   <th className="py-4 px-4 text-xs w-16 font-semibold text-gray-400 tracking-tight whitespace-nowrap">
