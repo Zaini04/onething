@@ -67,10 +67,7 @@ export default function ClientsTable({  setEditedClient,
   const [showPerPage, setShowPerPage] = useState(false);
 
   const navigate = useNavigate();
-  const pageData = clientsData.slice(
-    (page - 1) * perPage,
-    page * perPage,
-  ) || [];
+  const pageData = clientsData
   const allSelected =
     pageData.length > 0 && pageData.every((r) => selected.includes(r._id));
 

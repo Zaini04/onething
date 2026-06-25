@@ -92,21 +92,21 @@ const dashboard = dashboardData?.docs
             <div className="grid grid-cols-1 xs:grid-cols-3 gap-2 mt-3">
               <div className="bg-gray-50/70 hover:bg-white transition-all duration-300 delay-100 cursor-pointer hover:shadow-sm rounded-xl p-3 flex flex-col items-start">
                 <p className="text-xs font-medium text-black">Cash</p>
-                <p className="text-sm font-semibold text-black mt-1">Rs. {formatAmount(dashboard?.cashReceived)}</p>
+                <p className="text-xs font-semibold text-black mt-1">Rs. {formatAmount(dashboard?.cashReceived)}</p>
                 <p className="text-[10px] text-gray-400 mt-0.5 whitespace-nowrap">
                   cash collected
                 </p>
               </div>
               <div className="bg-gray-50/70 hover:bg-white transition-all duration-300 delay-100 cursor-pointer hover:shadow-sm rounded-xl p-3 flex flex-col items-start">
                 <p className="text-xs font-medium text-black">Fuel</p>
-                <p className="text-sm font-semibold text-black mt-1">Rs. {formatAmount(dashboard?.fuelReceived)}</p>
+                <p className="text-xs font-semibold text-black mt-1">Rs. {formatAmount(dashboard?.fuelReceived)}</p>
                 <p className="text-[10px] text-gray-400 mt-0.5 whitespace-nowrap">
                   fuel collected
                 </p>
               </div>
               <div className="bg-gray-50/70 hover:bg-white transition-all duration-300 delay-100 cursor-pointer hover:shadow-sm rounded-xl p-3 flex flex-col items-start">
                 <p className="text-xs font-medium text-black">Check</p>
-                <p className="text-sm font-semibold text-black mt-1">Rs. {formatAmount(dashboard?.checkReceived)}</p>
+                <p className="text-xs font-semibold text-black mt-1">Rs. {formatAmount(dashboard?.checkReceived)}</p>
                 <p className="text-[10px] text-gray-400 mt-0.5 whitespace-nowrap">
                   check receivable
                 </p>

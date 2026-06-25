@@ -51,7 +51,7 @@ const entryFuels = data?.docs || [];
    const {data: fuelCompanies} =useFuelCompaniesDropdown()
 
    
-   const fuelCompaniesOptions = fuelCompanies?.docs.map((v) => ({ id: v._id, name: v.fuelCompany })) || [];
+   const fuelCompaniesOptions = fuelCompanies?.docs.map((v) => ({ id: v.fuelCompany, name: v.fuelCompany })) || [];
    const vehicleOptions = vehicleDropDownData?.map((v) => ({ id: v._id, name: v.vehicleNo })) || [];
 
 
@@ -98,7 +98,8 @@ const entryFuels = data?.docs || [];
     const payload = {
       vehicle: filters.vehicle,
       from: filters.from,
-      to: filters.to
+      to: filters.to,
+      fuelCompany:filters.fuelCompany
     };
     console.log("Submitting Range Filters to API:", payload);
     setApiFilters(payload);

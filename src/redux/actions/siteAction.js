@@ -86,3 +86,18 @@ export const fetchSitesWithClients = async ({ queryKey }) => {
   return  res.data?.data || [];
 };
 
+export const fetchSitesDropdown = async () => {
+  const {data:{data:{docs}}} = await Axios.get("/site/sites_list");
+  console.log("dr",docs)
+  return docs || [];
+};
+
+export const useSiteDropdown = () => {
+  return useQuery({
+    queryKey: ["clientDropdown"],
+    queryFn: fetchSitesDropdown,
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+  });
+};

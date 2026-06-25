@@ -25,6 +25,9 @@ import ProtectedRoute from './hooks/ProtectedRoutes'
 import UserProfile from "./pages/admin/UserProfile";
 import EditProfile from "./components/auth/EditProfile";
 import UpdatePassword from "./components/auth/UpdatePassword";
+import CompanyRecords from "./pages/admin/CompanyRecords";
+import CompanyRecordsDetails from "./pages/admin/CompanyRecordsDetails";
+import AddCompanyRecord from "./components/admin/companyRecords/AddCompanyRecord";
 function App() {
   return (
     <>
@@ -66,6 +69,12 @@ theme="light"
               <Route path="clients/add" element={<AddClient />} />
               <Route path="clients/edit" element={<AddClient />} />
               <Route path="clients/:id" element={<ClientDetails />} />
+            </Route>
+
+             <Route element={<ProtectedRoute requiredMenu = "company-records"/>} >
+              <Route path="company-records" element={<CompanyRecords />} />
+              <Route path="company-records/add/:id" element={<AddCompanyRecord />} />
+              <Route path="company-records/:id" element={<CompanyRecordsDetails />} />
             </Route>
 
             <Route element={<ProtectedRoute requiredMenu = "vendors"/>} >

@@ -69,9 +69,10 @@ const dispatch = useDispatch()
             className="flex justify-center items-center gap-x-3 relative"
             ref={dropdownRef}
           >
+            
             <div className="rounded-[50%] border-2 border-white p-3">
               {/* <BellRing size={20} className="text-[#379756] cursor-pointer " /> */}
-                <svg onClick={handleProfile} className="cursor-pointer hover:font-bold hidden sm:flex"
+                {/* <svg onClick={handleProfile} className="cursor-pointer hover:font-bold hidden sm:flex"
         width="18"
         height="18"
         viewBox="0 0 24 24"
@@ -102,11 +103,11 @@ const dispatch = useDispatch()
           stroke-linecap="round"
           stroke-linejoin="round"
         />
-      </svg>
+      </svg> */}
             </div>
 
-            <div className="hidden sm:flex items-center gap-x-3">
-              <div className="flex justify-start items-center bg-white rounded-full gap-x-2 px-1 py-1">
+            <div className="hidden  items-center gap-x-3">
+              {/* <div className="flex justify-start items-center bg-white rounded-full gap-x-2 px-1 py-1">
                 <img
                   src={user?.image || profile}
                   alt="Profile"
@@ -118,9 +119,9 @@ const dispatch = useDispatch()
                     {user?.email}
                   </span>
                 </p>
-              </div>
+              </div> */}
 
-              <button
+              {/* <button
                 onClick={() => setIsLogoutModalOpen(true)}
                 className="group flex justify-center text-red-500 text-xs items-center gap-2 hover:bg-red-400 hover:text-white cursor-pointer p-2 rounded-xl transition-all duration-300"
               >
@@ -144,18 +145,19 @@ const dispatch = useDispatch()
                     strokeLinejoin="round"
                   />
                 </svg>
-              </button>
+              </button> */}
             </div>
 
             <div
               onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-              className="flex sm:hidden items-center gap-x-1 cursor-pointer p-1 rounded-full hover:bg-gray-50 transition-colors"
+              className="flex  items-center gap-x-2 cursor-pointer p-1 rounded-full hover:bg-gray-50 transition-colors"
             >
               <img
                 src={user?.image || profile}
                 alt="Profile"
                 className="rounded-full w-9 h-9 border border-gray-100"
               />
+              <p className="font-semibold text-black">{user?.username}</p>
               <ChevronDown
                 size={16}
                 className={`text-gray-500 transition-transform duration-200 ${showProfileDropdown ? "rotate-180" : ""}`}
@@ -163,7 +165,7 @@ const dispatch = useDispatch()
             </div>
 
             {showProfileDropdown && (
-              <div className="absolute right-0 top-14 bg-white border border-gray-100 shadow-xl rounded-2xl pt-4 w-52 flex flex-col gap-y-1 sm:hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="absolute right-0 top-14 bg-white border border-gray-100 shadow-xl rounded-2xl pt-4 w-52 flex flex-col gap-y-1  z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                 <div className="flex flex-col border-b border-gray-200 px-3.5  ">
                   <span className="font-semibold text-sm text-gray-900">
                     {user?.username}

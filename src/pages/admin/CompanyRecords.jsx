@@ -1,23 +1,24 @@
 import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import SearchFilters from "../../components/global/SearchFilter";
+import { useState } from "react";
+import ClientsTable from "../../components/admin/clients/ClientsTable";
 import ExportButton from "../../components/global/ExportButton";
-import AllSitesTable from "../../components/admin/sites/AllSitesTable";
-import { fetchSites, useSiteDropdown } from "../../redux/actions/siteAction";
 import { useQuery } from "@tanstack/react-query";
+import { fetchClients, useClientDropdown } from "../../redux/actions/clientAction";
+import CompanyRecordsTable from "../../components/admin/companyRecords/CompanyRecordsTable";
 
-function AllSites() {
+function CompanyRecords() {
   const navigate = useNavigate();
+  const [filters, setFilters] = useState({ name: "", from: "",   to: "",   status: "" });
+  
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
-  const [status, setStatus] = useState('');
+  const [perPage, setPerPage] = useState(10); 
   const [apiFilters, setApiFilters] = useState({});
   
-  const [filters, setFilters] = useState({ siteName: "",  from: "",  to: "",  status: "" });
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["sites", page, perPage, apiFilters],
-    queryFn: fetchSites,
+    queryKey: ["clients", page, perPage, apiFilters],
+    queryFn: fetchClients,
     staleTime: 1000 * 30,
     cacheTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
@@ -25,24 +26,23 @@ function AllSites() {
     keepPreviousData: true,
   });
 
-  const sites = data?.docs || [];
+  const clients = data?.docs || [];
   const totalPages = data?.pages || 1;
   const totalEntries = data?.docsCount || 10
 
- const {data:siteDropDownData} = useSiteDropdown()
-       const siteOptions = siteDropDownData?.map((v) => ({ id: v.siteName, name: v.siteName })) || [];
+  const {data:clientDropDownData} = useClientDropdown()
+         const clientOptions = clientDropDownData?.map((v) => ({ id: v.name, name: v.name })) || [];
+  
 
-       console.log(siteOptions)
   const clientVendorConfig = [
     {
-      name: "siteName",
+      name: "name",
       type: "select",
-      placeholder: "Select Site",
       searchable: true,
-      options: siteOptions,
+      placeholder: "Name",
+      options: clientOptions,
     },
-
-     {
+   {
       name: "dateRange", 
       type: "date-range", // 👈 Custom Type
       label: "Select Date Range",
@@ -55,14 +55,12 @@ function AllSites() {
       options: [
         { label: "Active", value: "Active" },
         { label: "Inactive", value: "Inactive" },
-        { label: "Blocked", value: "Blocked" },
-        { label: "Deleted", value: "Deleted" },
       ],
     },
   ];
 
 
-   const handleFilterChange = (name, value) => {
+ const handleFilterChange = (name, value) => {
     if (name === "dateRange") {
       setFilters((prev) => ({ 
         ...prev, 
@@ -77,7 +75,7 @@ function AllSites() {
   const handleSearchSubmit = (finalFilters) => {
     // API ko submit karte waqt sirf 'vehicle', 'from' aur 'to' bhejen gy
     const payload = {
-      siteName: filters.siteName,
+      name: filters.name,
       from: filters.from,
       to: filters.to,
       status:filters.status
@@ -87,31 +85,18 @@ function AllSites() {
   };
 
 
-   const handleEdit = (row)=>{
-    navigate(`/app/sites/edit`, { state: { siteData: row } });
-  }
+ 
+
   return (
     <div className="md:w-[93%] lg:w-[94%] xl:w-[95%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-hidden">
       <div className="w-full flex flex-col  animate-in fade-in duration-200">
         <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
           <div>
             <h1 className="text-xl font-medium text-black tracking-tight">
-              All Sites
+              All Clients
             </h1>
           </div>
-
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            <ExportButton />
-
-            <button
-              onClick={() => navigate("/app/sites/add")}
-              type="button"
-              className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2.5 bg-[#1A1C1E] hover:bg-black text-white font-normal sm:font-medium text-[14px] sm:text-sm rounded-xl active:scale-[0.98] transition-all cursor-pointer shadow-sm shadow-gray-200"
-            >
-              <Plus size={18} className="stroke-[2.5]" />
-              <span>Add Site</span>
-            </button>
-          </div>
+        
         </div>
 
         <div className="w-full">
@@ -124,9 +109,9 @@ function AllSites() {
         </div>
 
         <div className="w-full ">
-          <AllSitesTable 
-          setEditedSite={handleEdit}
-            sitesData={sites} 
+          {/* Passing down the data and edit props with original css maintained */}
+          <CompanyRecordsTable
+            clientsData={clients} 
             isLoading={isLoading || isFetching} 
             page={page} 
             perPage={perPage}
@@ -134,6 +119,7 @@ function AllSites() {
             setPerPage={setPerPage}
             totalPages={totalPages}
             totalEntries = {totalEntries}
+
           />
         </div>
       </div>
@@ -141,4 +127,4 @@ function AllSites() {
   );
 }
 
-export default AllSites;
+export default CompanyRecords;

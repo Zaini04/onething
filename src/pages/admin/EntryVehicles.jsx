@@ -52,7 +52,7 @@ function EntryVehicles() {
   const {data:clientDropDownData} = useClientDropdown()
    const { data: vehicleDropDownData } = useVehicleDropdown();
 
-   const clientOptions = clientDropDownData?.map((v) => ({ id: v._id, name: v.name })) || [];
+   const clientOptions = clientDropDownData?.map((v) => ({ id: v.name, name: v.name })) || [];
 
    const vehicleOptions = vehicleDropDownData?.map((v) => ({ id: v._id, name: v.vehicleNo })) || [];
 
@@ -96,6 +96,7 @@ function EntryVehicles() {
   const handleSearchSubmit = (finalFilters) => {
     // API ko submit karte waqt sirf 'vehicle', 'from' aur 'to' bhejen gy
     const payload = {
+      client:filters.client,
       vehicle: filters.vehicle,
       from: filters.from,
       to: filters.to

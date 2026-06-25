@@ -52,3 +52,9 @@ export const fetchVehicleLedger = async ({ queryKey }) => {
 
   return res.data.data;
 };
+
+export const fetchVehicle = async ({ queryKey }) => {
+  const [, id] = queryKey;  
+  const { data: { data } } = await Axios.get(`/vehicle/${id}`);
+  return data.doc || {}; 
+};

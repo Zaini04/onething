@@ -5,7 +5,7 @@ import { useState } from "react";
 import ClientsTable from "../../components/admin/clients/ClientsTable";
 import ExportButton from "../../components/global/ExportButton";
 import { useQuery } from "@tanstack/react-query";
-import { fetchClients } from "../../redux/actions/clientAction";
+import { fetchClients, useClientDropdown } from "../../redux/actions/clientAction";
 
 function Clients() {
   const navigate = useNavigate();
@@ -28,6 +28,10 @@ function Clients() {
   const clients = data?.docs || [];
   const totalPages = data?.pages || 1;
   const totalEntries = data?.docsCount || 10
+    const {data:clientDropDownData} = useClientDropdown()
+       const clientOptions = clientDropDownData?.map((v) => ({ id: v.name, name: v.name })) || [];
+
+  
 
   const clientVendorConfig = [
     {
@@ -35,7 +39,7 @@ function Clients() {
       type: "select",
       searchable: true,
       placeholder: "Name",
-      options: ["ali", "awais", "zain"],
+      options: clientOptions,
     },
    {
       name: "dateRange", 
@@ -70,9 +74,10 @@ function Clients() {
   const handleSearchSubmit = (finalFilters) => {
     // API ko submit karte waqt sirf 'vehicle', 'from' aur 'to' bhejen gy
     const payload = {
-      vehicle: filters.vehicle,
+      name: filters.name,
       from: filters.from,
-      to: filters.to
+      to: filters.to,
+      status:filters.status
     };
     console.log("Submitting Range Filters to API:", payload);
     setApiFilters(payload);

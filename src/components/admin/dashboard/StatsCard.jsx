@@ -44,7 +44,7 @@ queryKey: ["today-dashboard"],
       iconColor: "bg-orange-500/10 text-orange-500",
     },
     {
-      title: "Today Received",
+      title: "Today Payment Collected",
       value: formatAmount(todayDashboard?.totalReceived),
       valueSuffix: "",
       change: "",

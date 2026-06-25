@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import ExportButton from "../../components/global/ExportButton";
 import { useQuery } from "@tanstack/react-query";
 import AddFuelStock from "../../components/admin/Fuel/AddFuelStock";
-import { fetchFuelStocks } from "../../redux/actions/fuelAction";
+import { fetchFuelStocks, useFuelCompaniesDropdown } from "../../redux/actions/fuelAction";
 import AllFuelStockCompanies from "../../components/admin/Fuel/AllFuelStockCompanies";
 
 function FuelStock() {
@@ -52,6 +52,12 @@ const handleEdit = (row) => {
       navigate("/app/fuel-stock#add");
     }
   };
+   const {data:fuelCompaniesData} =useFuelCompaniesDropdown()
+
+   
+   const fuelCompaniesOptions = fuelCompaniesData?.docs.map((v) => ({ id: v.fuelCompany, name: v.fuelCompany })) || [];
+
+
   const clientVendorConfig = [
     {
       name: "fuelLiters",
@@ -70,11 +76,7 @@ const handleEdit = (row) => {
       type: "select",
       placeholder: "Fuel Company",
       searchable: true,
-      options: [
-       "shell",
-        "total",
-        "pso"
-      ],
+      options:fuelCompaniesOptions,
     },
   ];
 

@@ -1,5 +1,8 @@
 import profile from "../../../assets/images/profileImage.jpg";
 import {  FaIdCard } from "react-icons/fa";
+import { fetchClient } from "../../../redux/actions/clientAction";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 
 const statusStyles = {
   Active: "bg-[#E6F6EC] text-[#15803D] border-emerald-200",
@@ -7,14 +10,24 @@ const statusStyles = {
   Block: "bg-[#FEE2E2] text-[#DC2626] border-red-200",
 };
 
-export default function ClientCard({ client }) {
-  if (!client) {
-    return (
-      <div className="w-full bg-white  rounded-2xl border border-gray-100 text-center text-sm text-gray-400">
-        No client details found.
-      </div>
-    );
-  }
+export default function ClientCard() {
+
+  const {id} = useParams()
+
+  const { data   } = useQuery({
+    queryKey: ["client",id],
+    queryFn:  fetchClient,
+    staleTime: 1000 * 30,
+    cacheTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    keepPreviousData: true,
+  });
+
+  const clientData = data
+
+
+
 
   // console.log("clgs",client)
   return (
@@ -24,8 +37,8 @@ export default function ClientCard({ client }) {
         <div className="flex items-center gap-4">
           <div className="relative">
             <img
-              src={profile}
-              alt={client[0]?.client?.name}
+              src={clientData?.image || profile}
+              alt={clientData?.name}
               className="w-14 h-14 md:w-16 md:h-16 rounded-full object-cover ring-4 ring-gray-50 shadow-sm"
             />
             <span className="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></span>
@@ -34,15 +47,13 @@ export default function ClientCard({ client }) {
           <div>
             <div className="flex items-center gap-2.5 flex-wrap">
               <h3 className="text-base md:text-lg font-medium text-gray-900 tracking-tight">
-                {client[0]?.client?.name}
+                {clientData?.name}
               </h3>
-              <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${statusStyles[client.status] || "bg-gray-100"}`}>
-                {client[0]?.client?.status}
+              <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${statusStyles[clientData?.status] || "bg-gray-100"}`}>
+                {clientData?.status}
               </span>
             </div>
-            <p className="text-[10px] font-medium text-gray-400 mt-0.5 tracking-wide uppercase">
-              System ID: <span className="text-gray-700 font-semibold ">#{client[0]?.client?._id}</span>
-            </p>
+           
           </div>
         </div>
 
@@ -54,7 +65,7 @@ export default function ClientCard({ client }) {
             </div>
             <div>
               <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Phone Number</p>
-              <p className="font-semibold text-gray-900 tracking-wide mt-0.5">{client[0]?.client?.phoneNumber}</p>
+              <p className="font-semibold text-gray-900 tracking-wide mt-0.5">{clientData?.phoneNumber}</p>
             </div>
           </div>
 
@@ -64,7 +75,7 @@ export default function ClientCard({ client }) {
             </div>
             <div>
               <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">City</p>
-              <p className="font-semibold text-gray-900 tracking-wide mt-0.5">{client[0]?.client?.city}</p>
+              <p className="font-semibold text-gray-900 tracking-wide mt-0.5">{clientData?.city}</p>
             </div>
           </div>
 

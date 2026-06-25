@@ -6,7 +6,7 @@ import SearchFilters from "../../components/global/SearchFilter";
 import { useLocation, useNavigate } from "react-router-dom";
 import ExportButton from "../../components/global/ExportButton";
 import { useQuery } from "@tanstack/react-query";
-import { fetchVehicles } from "../../redux/actions/vehicleAction";
+import { fetchVehicles, useVehicleDropdown } from "../../redux/actions/vehicleAction";
 import { useEffect } from "react";
 
 function Vehicles() {
@@ -54,10 +54,13 @@ const handleEdit = (row) => {
   const vehicles = data?.docs || [];
   const totalPages = data?.pages || 1;
     const totalEntries = data?.docsCount || 10
+       const { data: vehicleDropDownData } = useVehicleDropdown();
+       const vehicleOptions = vehicleDropDownData?.map((v) => ({ id: v.vehicleNo, name: v.vehicleNo })) || [];
+
 
 
   const vehicleConfig = [
-    { name: "vehicleNo", type: "select", searchable: true, placeholder: "Number",      options: ["123", "22","144"],
+    { name: "vehicleNo", type: "select", searchable: true, placeholder: "Number",      options: vehicleOptions,
  },
     {
       name: "ownerName",

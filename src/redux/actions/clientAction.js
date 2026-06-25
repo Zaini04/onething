@@ -54,10 +54,26 @@ export const fetchClientLedger = async ({ queryKey }) => {
   return res.data.data;
 };
 
+export const useClientLedger = () => {
+  return useQuery({
+    queryKey: ["client-ledger"],
+    queryFn: fetchClientLedger,
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+  });
+};
+
 export const fetchClientSummary = async ({ queryKey }) => {
-  const [, id] = queryKey;  // ✅ queryKey se id uthao
+  const [, id] = queryKey;  
   const { data: { data } } = await Axios.get(`/client/client_summary/${id}`);
-  return data.summary || {};  // ✅ docs nahi, summary hai
+  return data.summary || {};  
+};
+
+export const fetchClient = async ({ queryKey }) => {
+  const [, id] = queryKey;  
+  const { data: { data } } = await Axios.get(`/client/${id}`);
+  return data.doc || {}; 
 };
 
 

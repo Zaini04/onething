@@ -1,5 +1,8 @@
+import { useParams } from "react-router-dom";
 import profile from "../../../assets/images/profileImage.jpg";
 import { FaTruck, FaIdCard } from "react-icons/fa";
+import { useQuery } from "@tanstack/react-query";
+import { fetchVehicle } from "../../../redux/actions/vehicleAction";
 
 const statusStyles = {
   Active: "bg-[#E6F6EC] text-[#15803D] border-emerald-200",
@@ -7,14 +10,22 @@ const statusStyles = {
   Block: "bg-[#FEE2E2] text-[#DC2626] border-red-200",
 };
 
-export default function VehicleCard({ vehicle }) {
-  if (!vehicle) {
-    return (
-      <div className="w-full bg-white  rounded-2xl border border-gray-100 text-center text-sm text-gray-400">
-        No vehicle details found.
-      </div>
-    );
-  }
+export default function VehicleCard() {
+ 
+
+    const {id} = useParams()
+
+  const { data   } = useQuery({
+    queryKey: ["vehicle",id],
+    queryFn:  fetchVehicle,
+    staleTime: 1000 * 30,
+    cacheTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    keepPreviousData: true,
+  });
+
+  const vehicleData = data
 
 
 
@@ -24,12 +35,7 @@ export default function VehicleCard({ vehicle }) {
         <div className="flex items-center gap-4">
           <div className="relative">
 
-            <img
-              src={profile}
-              alt={vehicle[0]?.vehicle?.ownerName}
-              className="w-14 h-14 md:w-16 md:h-16 rounded-full object-cover ring-4 ring-gray-50 shadow-sm"
-            />
-            <span className="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></span>
+           
           </div>
 
           <div>
@@ -38,20 +44,15 @@ export default function VehicleCard({ vehicle }) {
             <div className="flex items-center gap-2.5 flex-wrap">
               
               <h3 className="text-base md:text-lg font-medium text-gray-900 tracking-tight">
-                {vehicle[0]?.vehicle?.ownerName}
+                {vehicleData?.ownerName}
               </h3>
               <span
-                className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${statusStyles[vehicle.status] || "bg-gray-100"}`}
+                className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${statusStyles[vehicleData?.status] || "bg-gray-100"}`}
               >
-                {vehicle[0]?.vehicle?.status}
+                {vehicleData?.status}
               </span>
             </div>
-            <p className="text-[10px] font-medium text-gray-400 mt-0.5 tracking-wide uppercase">
-              System ID:{" "}
-              <span className="text-gray-700 font-semibold ">
-                #{vehicle[0]?.vehicle?._id}
-              </span>
-            </p>
+            
           </div>
         </div>
 
@@ -65,7 +66,7 @@ export default function VehicleCard({ vehicle }) {
                 Plate Number
               </p>
               <p className="font-semibold text-gray-900 tracking-wide mt-0.5">
-                {vehicle[0]?.vehicle?.vehicleNo}
+                {vehicleData?.vehicleNo}
               </p>
             </div>
           </div>
@@ -79,7 +80,7 @@ export default function VehicleCard({ vehicle }) {
                 Vehicle Type
               </p>
               <p className="font-semibold text-gray-900 tracking-wide mt-0.5">
-                {vehicle[0]?.vehicle?.typeVehicle}
+                {vehicleData?.typeVehicle}
               </p>
             </div>
           </div>

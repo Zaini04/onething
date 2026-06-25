@@ -7,9 +7,8 @@ export default function LedgerSummaryCards() {
 
   const {id} = useParams()
 
-  console.log("cldid",id)
 
-  const { data   } = useQuery({
+  const { data, isLoading,isFetching   } = useQuery({
     queryKey: ["client-summary",id],
     queryFn:  fetchClientSummary,
     staleTime: 1000 * 30,
@@ -19,7 +18,6 @@ export default function LedgerSummaryCards() {
     keepPreviousData: true,
   });
 
-  console.log("cldd",data)
 
   const clientSummary = data
 
@@ -58,6 +56,18 @@ export default function LedgerSummaryCards() {
           key={index}
           className="bg-white cursor-pointer border border-gray-100 rounded-2xl p-5 flex items-center justify-between shadow-xs hover:shadow-md hover:border-gray-200/80 transition-all duration-200"
         >
+              {isLoading || isFetching ? (
+      <div className="animate-pulse space-y-2">
+        {/* title skeleton */}
+        <div className="h-3 w-24 bg-gray-200 rounded" />
+
+        {/* value skeleton */}
+        <div className="h-6 w-20 bg-gray-300 rounded" />
+      </div>
+    ) :(
+
+    
+
           <div className="space-y-1">
             <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
               {card.title}
@@ -66,11 +76,14 @@ export default function LedgerSummaryCards() {
               {card.amount}
             </h3>
           </div>
+      )}
 
           <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${card.bgColor} shrink-0`}>
             {card.icon}
           </div>
+  
         </div>
+        
       ))}
     </div>
   );
