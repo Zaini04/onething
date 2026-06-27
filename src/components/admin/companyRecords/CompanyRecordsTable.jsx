@@ -12,6 +12,8 @@ const statusStyles = {
     "bg-[#EFF6FF] text-[#1D4ED8] font-medium rounded-lg text-xs px-3 py-1.5 text-center border border-transparent",
   Block:
     "bg-[#FEE2E2] text-[#DC2626] font-semibold rounded-lg text-xs px-3 py-1.5 text-center border border-transparent",
+  Deleted:
+    "bg-[#FEE2E2] text-[#DC2626] font-semibold rounded-lg text-xs px-3 py-1.5 text-center border border-transparent",
 };
 
 // const initialData = Array.from({ length: 50 }, (_, i) => {

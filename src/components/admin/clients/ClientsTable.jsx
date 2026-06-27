@@ -10,7 +10,9 @@ const statusStyles = {
     "bg-[#E6F6EC] text-[#15803D] font-medium rounded-lg text-xs px-3 py-1.5 text-center border border-transparent",
   Inactive:
     "bg-[#EFF6FF] text-[#1D4ED8] font-medium rounded-lg text-xs px-3 py-1.5 text-center border border-transparent",
-  Block:
+  Blocked:
+    "bg-[#FEE2E2] text-[#DC2626] font-semibold rounded-lg text-xs px-3 py-1.5 text-center border border-transparent",
+  Deleted:
     "bg-[#FEE2E2] text-[#DC2626] font-semibold rounded-lg text-xs px-3 py-1.5 text-center border border-transparent",
 };
 

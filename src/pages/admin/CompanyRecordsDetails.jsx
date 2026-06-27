@@ -6,14 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 import ClientRecordTable from "../../components/admin/companyRecords/ClientRecordTable";
 import ExportButton from "../../components/global/ExportButton";
 import { Plus } from "lucide-react";
-import { exportCompanyRecordsPdf, fetchCompanyRecord } from "../../redux/actions/companyRecordsAction";
+import {  fetchCompanyRecord } from "../../redux/actions/companyRecordsAction";
 import SearchFilters from "../../components/global/SearchFilter";
-import { useClientDropdown } from "../../redux/actions/clientAction";
 import { useSiteMaterials } from "../../redux/actions/siteAction";
-import Axios from "../../configs/api";
 
 export default function CompanyRecordsDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
     const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
@@ -45,64 +44,9 @@ const [selectedRows, setSelectedRows] = useState([]);
 
     console.log("so",siteOptions)
 
-    const exportExcel = async () => {
-  const response = await Axios.post(
-    `/company-records/client_records/${id}/export-excel`,
-    {
-      ids: selectedRows,
-    },
-    {
-      params: apiFilters,
-      responseType: "blob",
-    }
-  );
-
-  const url = window.URL.createObjectURL(
-    new Blob([response.data])
-  );
-
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "company-records.xlsx";
-  link.click();
-};
     
 
-const exportPdf = async () => {
 
-  console.log("pdf")
-
-  const response = await Axios.post(
-    `/company-records/client_records/${id}/export-pdf`,
-    {
-      ids: selectedRows,
-    },
-    {
-      params: apiFilters,
-      responseType: "blob",
-    }
-  );
-
-  console.log("pdf res",response)
-
-const url = window.URL.createObjectURL(
-    new Blob([response.data])
-  );
-
-    const link = document.createElement("a");
-
-    link.href = url;
-    link.download = `company-records-${Date.now()}.pdf`;
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    link.remove();
-
-    window.URL.revokeObjectURL(url);
-  
-};
 
   const clientVendorConfig = [
     {
@@ -134,8 +78,7 @@ const url = window.URL.createObjectURL(
     }
   };
 
-  const handleSearchSubmit = (finalFilters) => {
-    // API ko submit karte waqt sirf 'vehicle', 'from' aur 'to' bhejen gy
+  const handleSearchSubmit = () => {
     const payload = {
       site: filters.site,
       from: filters.from,
@@ -145,43 +88,15 @@ const url = window.URL.createObjectURL(
     setApiFilters(payload);
   };
 
-  const handleExportPdf = async () => {
-  try {
-    const blob = await exportCompanyRecordsPdf({
-      id,
-      selectedRows,
-      filters: apiFilters,
-    });
-
-    const url = window.URL.createObjectURL(
-      new Blob([blob])
-    );
-
-    const link = document.createElement("a");
-
-    link.href = url;
-    link.download = `company-records-${Date.now()}.pdf`;
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    link.remove();
-
-    window.URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error(error);
-  }
-};
+  
  
-  const navigate = useNavigate();
 
 
   return (
     <div className="md:w-[93%] lg:w-[94%] xl:w-[95%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
-      <div className="flex justify-between items-center text-gray-900 tracking-tight mb-4">
+      <div className="flex flex-col xs:flex-row justify-between items-center text-gray-900 tracking-tight mb-4">
         <div>
-          <h2 className="text-xl font-medium text-black">Client Details</h2>
+          <h2 className="text-xl font-medium text-black">Company Details</h2>
         </div>
        
         <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -195,20 +110,8 @@ const url = window.URL.createObjectURL(
             size={20}
           />
         </button>
-            <button
-            onClick={exportExcel}
-            type="button"
-            className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2.5 bg-[#1A1C1E] hover:bg-black text-white font-normal sm:font-medium text-[14px] sm:text-sm rounded-xl active:scale-[0.98] transition-all cursor-pointer shadow-sm shadow-gray-200"
-            >
-              Export Excel
-              </button>
-            <button
-            onClick={exportPdf}
-            type="button"
-            className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2.5 bg-[#1A1C1E] hover:bg-black text-white font-normal sm:font-medium text-[14px] sm:text-sm rounded-xl active:scale-[0.98] transition-all cursor-pointer shadow-sm shadow-gray-200"
-            >
-              Export Pdf
-              </button>
+          
+              <ExportButton id={id} selectedRows={selectedRows} apiFilters={apiFilters}/>
 
             <button
               onClick={() => navigate(`/app/company-records/add/${id}`)} // Clean page navigation route
@@ -216,7 +119,7 @@ const url = window.URL.createObjectURL(
               className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2.5 bg-[#1A1C1E] hover:bg-black text-white font-normal sm:font-medium text-[14px] sm:text-sm rounded-xl active:scale-[0.98] transition-all cursor-pointer shadow-sm shadow-gray-200"
             >
               <Plus size={18} className="stroke-[2.5]" />
-              <span>Add Company Record</span>
+              <span>Add Record</span>
             </button>
           </div>
 

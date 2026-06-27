@@ -71,8 +71,7 @@ function Clients() {
     }
   };
 
-  const handleSearchSubmit = (finalFilters) => {
-    // API ko submit karte waqt sirf 'vehicle', 'from' aur 'to' bhejen gy
+  const handleSearchSubmit = () => {
     const payload = {
       name: filters.name,
       from: filters.from,

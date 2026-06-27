@@ -1,15 +1,10 @@
-import { Plus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import SearchFilters from "../../components/global/SearchFilter";
 import { useState } from "react";
-import ClientsTable from "../../components/admin/clients/ClientsTable";
-import ExportButton from "../../components/global/ExportButton";
 import { useQuery } from "@tanstack/react-query";
 import { fetchClients, useClientDropdown } from "../../redux/actions/clientAction";
 import CompanyRecordsTable from "../../components/admin/companyRecords/CompanyRecordsTable";
 
 function CompanyRecords() {
-  const navigate = useNavigate();
   const [filters, setFilters] = useState({ name: "", from: "",   to: "",   status: "" });
   
   const [page, setPage] = useState(1);
@@ -44,7 +39,7 @@ function CompanyRecords() {
     },
    {
       name: "dateRange", 
-      type: "date-range", // 👈 Custom Type
+      type: "date-range", 
       label: "Select Date Range",
       placeholder: "Choose Range (From - To)",
     },
@@ -72,8 +67,7 @@ function CompanyRecords() {
     }
   };
 
-  const handleSearchSubmit = (finalFilters) => {
-    // API ko submit karte waqt sirf 'vehicle', 'from' aur 'to' bhejen gy
+  const handleSearchSubmit = () => {
     const payload = {
       name: filters.name,
       from: filters.from,
