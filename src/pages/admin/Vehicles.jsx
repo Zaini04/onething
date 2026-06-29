@@ -11,11 +11,17 @@ import { fetchVehicles, useVehicleDropdown } from "../../redux/actions/vehicleAc
 function Vehicles() {
   const location = useLocation();
   const navigate = useNavigate();
-
+const [filters, setFilters] = useState({
+    vehicleNo: "",
+    ownerName: "",
+    status: "Active",
+  });
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
-  const [apiFilters, setApiFilters] = useState({});
-
+  const [apiFilters, setApiFilters] = useState({ownerName: "",
+       vehicleNo: "",
+       status:"Active"});
+  
   const [editVehicle, setEditedVehicle] = useState(null);
 const [selectedRows, setSelectedRows] = useState([]);
   const [link]= useState(`/vehicle/vehicle_records`)
@@ -75,15 +81,12 @@ const handleEdit = (row) => {
       options: [
         { label: "Active", value: "Active" },
         { label: "Inactive", value: "Inactive" },
+        { label: "Deleted", value: "Deleted" },
       ],
     },
   ];
 
-  const [filters, setFilters] = useState({
-    vehicleNo: "",
-    ownerName: "",
-    status: "",
-  });
+  
 
   const handleFilterChange = (name, value) => {
     setFilters((prev) => ({ ...prev, [name]: value }));

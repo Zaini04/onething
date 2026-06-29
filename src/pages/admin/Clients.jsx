@@ -9,13 +9,13 @@ import { fetchClients, useClientDropdown } from "../../redux/actions/clientActio
 
 function Clients() {
   const navigate = useNavigate();
-  const [filters, setFilters] = useState({ name: "", from: "",   to: "",   status: "" });
+  const [filters, setFilters] = useState({ name: "", from: "",   to: "",   status: "Active" });
   const [selectedRows, setSelectedRows] = useState([]);
   const [link]= useState(`/client/client_records`)
 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
-  const [apiFilters, setApiFilters] = useState({});
+  const [apiFilters, setApiFilters] = useState({name: "", from: "",   to: "",   status: "Active"});
   
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ["clients", page, perPage, apiFilters],

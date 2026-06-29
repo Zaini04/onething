@@ -12,7 +12,7 @@ function AllSites() {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [status, setStatus] = useState('');
-  const [apiFilters, setApiFilters] = useState({});
+  const [apiFilters, setApiFilters] = useState({siteName: "",  from: "",  to: "",  status: "Active"});
   const [selectedRows, setSelectedRows] = useState([]);
   const [link]= useState(`/site/site_records`)
 

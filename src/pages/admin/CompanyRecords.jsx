@@ -5,11 +5,11 @@ import { fetchClients, useClientDropdown } from "../../redux/actions/clientActio
 import CompanyRecordsTable from "../../components/admin/companyRecords/CompanyRecordsTable";
 
 function CompanyRecords() {
-  const [filters, setFilters] = useState({ name: "", from: "",   to: "",   status: "" });
+  const [filters, setFilters] = useState({ name: "", from: "",   to: "",   status: "Active" });
   
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10); 
-  const [apiFilters, setApiFilters] = useState({});
+  const [apiFilters, setApiFilters] = useState({ name: "", from: "",   to: "",   status: "Active"});
   
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ["clients", page, perPage, apiFilters],
