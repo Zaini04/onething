@@ -20,6 +20,7 @@ export default function CompanyRecordsDetails() {
 const [selectedRows, setSelectedRows] = useState([]);
   const [apiFilters, setApiFilters] = useState({});
   const [filters, setFilters] = useState({ site: "", from: "",   to: "",   });
+  const [link]= useState(`/company-records/client_records/${id}`)
 
 
 
@@ -111,7 +112,7 @@ const [selectedRows, setSelectedRows] = useState([]);
           />
         </button>
           
-              <ExportButton id={id} selectedRows={selectedRows} apiFilters={apiFilters}/>
+              <ExportButton  selectedRows={selectedRows} apiFilters={apiFilters} linkRecord={link} />
 
             <button
               onClick={() => navigate(`/app/company-records/add/${id}`)} // Clean page navigation route

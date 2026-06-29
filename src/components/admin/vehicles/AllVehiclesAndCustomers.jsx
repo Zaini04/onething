@@ -156,7 +156,8 @@ export default function AllVehiclesAndCustomers({
   setPage,
   setPerPage,
   totalPages,
-  totalEntries
+  totalEntries,
+  setSelectedRows
 }) {
   const dispatch = useDispatch();
   // const initialData = useSelector((state) => state.entryVehicles.items);
@@ -209,8 +210,15 @@ if (dispatch) {
       setSelected((prev) =>
         prev.filter((id) => !pageData.map((r) => r._id).includes(id)),
       );
+      setSelectedRows((prev) =>
+        prev.filter((id) => !pageData.map((r) => r._id).includes(id)),
+      );
     } else {
       setSelected((prev) => [
+        ...prev,
+        ...pageData.map((r) => r._id).filter((id) => !prev.includes(id)),
+      ]);
+      setSelectedRows((prev) => [
         ...prev,
         ...pageData.map((r) => r._id).filter((id) => !prev.includes(id)),
       ]);
@@ -219,6 +227,9 @@ if (dispatch) {
 
   const toggleRow = (id) => {
     setSelected((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
+    );
+    setSelectedRows((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );
   };

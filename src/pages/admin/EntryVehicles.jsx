@@ -17,6 +17,8 @@ function EntryVehicles() {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const currentModal = searchParams.get("modal");
+const [selectedRows, setSelectedRows] = useState([]);
+  const [link]= useState(`/entry-vehicle/entry_records`)
 
   const handleCloseModal = () => {
     // URL ko clean karne ke liye standard tareeqa
@@ -120,7 +122,7 @@ function EntryVehicles() {
           </div>
 
           <div className="flex items-center gap-3 w-full sm:w-auto">
-            <ExportButton />
+          <ExportButton selectedRows={selectedRows} apiFilters={apiFilters} linkRecord={link}/>
 
             <button
               onClick={() => navigate("/app/entry-vehicles/entry")}
@@ -153,6 +155,7 @@ function EntryVehicles() {
             setPerPage={setPerPage}
             totalPages={totalPages}
             totalEntries = {totalEntries}
+            setSelectedRows={setSelectedRows}
           />
         </div>
       </div>

@@ -8,28 +8,7 @@ const actionStyles = {
     "p-2 rounded-xl bg-[#FFF2F3] text-[#D93F4C] hover:bg-[#FFE5E7] transition cursor-pointer",
 };
 
-const initialData = Array.from({ length: 50 }, (_, i) => {
-  const vehicles = [
-    "Standard Dump Truck",
-    "Standard Dump Truck",
-    "Mini Dump Trucks",
-    "Low-Side Dump Trucks",
-  ];
-  const companies = ["PSO", "Shell"];
 
-  let vehicleName = vehicles[i % 4];
-  if (i === 4 || i === 7) vehicleName = "Standard Dump Truck";
-  if (i === 6 || i === 8 || i === 9) vehicleName = "Low-Side Dump Trucks";
-
-  return {
-    id: i + 1,
-    no: String(i + 1).padStart(2, "0"),
-    vehicle: vehicleName,
-    fuelCompany: i % 2 === 0 ? companies[0] : companies[1],
-    fuelLitter: i === 9 ? 600 : 25,
-    totalPrice: i === 9 ? "600" : "18,000",
-  };
-});
 
 function SortIcon() {
   return (
@@ -53,15 +32,49 @@ export default function EntryFuelTable({
             setPage,
             setPerPage,
             totalPages,
-            totalEntries
-            
+            totalEntries,
+            setSelectedRows
 }) {
   const [selected, setSelected] = useState([]);
   const [showPerPage, setShowPerPage] = useState(false);
 
-  const pageData = entryFuels.slice((page - 1) * perPage, page * perPage);
+  const pageData = entryFuels
   
- 
+ const allSelected =
+    pageData.length > 0 && pageData.every((r) => selected.includes(r._id));
+
+  
+
+
+
+  const toggleAll = () => {
+    if (allSelected) {
+      setSelected((prev) =>
+        prev.filter((id) => !pageData.map((r) => r._id).includes(id)),
+      );
+      setSelectedRows((prev) =>
+        prev.filter((id) => !pageData.map((r) => r._id).includes(id)),
+      );
+    } else {
+      setSelected((prev) => [
+        ...prev,
+        ...pageData.map((r) => r._id).filter((id) => !prev.includes(id)),
+      ]);
+      setSelectedRows((prev) => [
+        ...prev,
+        ...pageData.map((r) => r._id).filter((id) => !prev.includes(id)),
+      ]);
+    }
+  };
+
+  const toggleRow = (id) => {
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
+    );
+    setSelectedRows((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
+    );
+  };
 
   
 
@@ -95,7 +108,14 @@ export default function EntryFuelTable({
             <table className="w-full text-left border-collapse min-w-[800px]">
               <thead>
                 <tr className="bg-[#F7F7F7] border-b border-gray-100">
-                 
+                 <th className="py-4 px-5 w-12 text-center">
+                    <input
+                      type="checkbox"
+                      checked={allSelected}
+                      onChange={toggleAll}
+                      className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
+                    />
+                  </th>
                   <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
                     No
                   </th>
@@ -132,20 +152,30 @@ export default function EntryFuelTable({
                                               </tr>
                                             ) :(
 pageData.map((row,index) => {
+                    const isRowSelected = selected.includes(row._id);
+
                   return (
-                    <tr
+                     <tr
                       key={row._id}
-                      className={`transition-colors duration-150 
-                       bg-blue-50/20  hover:bg-gray-50/30
-                      `}
+                      className={`transition-colors duration-150 ${
+                        isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
+                      }`}
                     >
+                      <td className="py-3.5 px-5 text-center">
+                        <input
+                          type="checkbox"
+                          checked={isRowSelected}
+                          onChange={() => toggleRow(row._id)}
+                          className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
+                        />
+                      </td>
                       
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-500">
                                                 {(page - 1) * perPage + index + 1}
                       </td>
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-500">
-{new Date(row.createdAt).toLocaleDateString()}
+{new Date(row.date).toLocaleDateString()}
                       </td>
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-900 tracking-wide">

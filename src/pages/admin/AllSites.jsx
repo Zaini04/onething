@@ -13,7 +13,9 @@ function AllSites() {
   const [perPage, setPerPage] = useState(10);
   const [status, setStatus] = useState('');
   const [apiFilters, setApiFilters] = useState({});
-  
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [link]= useState(`/site/site_records`)
+
   const [filters, setFilters] = useState({ siteName: "",  from: "",  to: "",  status: "" });
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ["sites", page, perPage, apiFilters],
@@ -101,7 +103,7 @@ function AllSites() {
           </div>
 
           <div className="flex items-center gap-3 w-full sm:w-auto">
-            <ExportButton />
+          <ExportButton selectedRows={selectedRows} apiFilters={apiFilters} linkRecord={link}/>
 
             <button
               onClick={() => navigate("/app/sites/add")}
@@ -134,6 +136,7 @@ function AllSites() {
             setPerPage={setPerPage}
             totalPages={totalPages}
             totalEntries = {totalEntries}
+            setSelectedRows={setSelectedRows}
           />
         </div>
       </div>

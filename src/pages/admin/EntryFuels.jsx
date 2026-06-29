@@ -10,6 +10,8 @@ import { useVehicleDropdown } from "../../redux/actions/vehicleAction";
 function EntryFuels() {
   const location = useLocation();
   const navigate = useNavigate();
+const [selectedRows, setSelectedRows] = useState([]);
+  const [link]= useState(`/fuel/entry_records`)
 
    const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
@@ -106,6 +108,7 @@ const entryFuels = data?.docs || [];
   };
 
 
+
   return (
     <div className=" md:w-[93%] lg:w-[94%] xl:w-[95%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
       <div className=" mt-4  ">
@@ -138,7 +141,7 @@ const entryFuels = data?.docs || [];
         </div>
 
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          <ExportButton />
+          <ExportButton selectedRows={selectedRows} apiFilters={apiFilters} linkRecord={link}/>
 
           {/* <button
             onClick={handleToggleSidebar}
@@ -191,6 +194,7 @@ const entryFuels = data?.docs || [];
             setPerPage={setPerPage}
             totalPages={totalPages}
             totalEntries = {totalEntries}
+            setSelectedRows={setSelectedRows}
             />
         </div>
 

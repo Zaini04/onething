@@ -64,7 +64,9 @@ export default function ClientsTable({  setEditedClient,
             perPage,setPerPage,
             setPage,
             totalPages,
-          totalEntries}) {
+          totalEntries,
+        setSelectedRows
+        }) {
   const [selected, setSelected] = useState([]);
   const [showPerPage, setShowPerPage] = useState(false);
 
@@ -78,8 +80,15 @@ export default function ClientsTable({  setEditedClient,
       setSelected((prev) =>
         prev.filter((id) => !pageData.map((r) => r._id).includes(id)),
       );
+      setSelectedRows((prev) =>
+        prev.filter((id) => !pageData.map((r) => r._id).includes(id)),
+      );
     } else {
       setSelected((prev) => [
+        ...prev,
+        ...pageData.map((r) => r._id).filter((id) => !prev.includes(id)),
+      ]);
+      setSelectedRows((prev) => [
         ...prev,
         ...pageData.map((r) => r._id).filter((id) => !prev.includes(id)),
       ]);
@@ -88,6 +97,9 @@ export default function ClientsTable({  setEditedClient,
 
   const toggleRow = (id) => {
     setSelected((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
+    );
+    setSelectedRows((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );
   };

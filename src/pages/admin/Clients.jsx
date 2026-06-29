@@ -10,7 +10,9 @@ import { fetchClients, useClientDropdown } from "../../redux/actions/clientActio
 function Clients() {
   const navigate = useNavigate();
   const [filters, setFilters] = useState({ name: "", from: "",   to: "",   status: "" });
-  
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [link]= useState(`/client/client_records`)
+
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [apiFilters, setApiFilters] = useState({});
@@ -43,7 +45,7 @@ function Clients() {
     },
    {
       name: "dateRange", 
-      type: "date-range", // 👈 Custom Type
+      type: "date-range", 
       label: "Select Date Range",
       placeholder: "Choose Range (From - To)",
     },
@@ -98,7 +100,7 @@ function Clients() {
           </div>
 
           <div className="flex items-center gap-3 w-full sm:w-auto">
-            <ExportButton />
+          <ExportButton selectedRows={selectedRows} apiFilters={apiFilters} linkRecord={link}/>
 
             <button
               onClick={() => navigate("/app/clients/add")} // Clean page navigation route
@@ -121,7 +123,6 @@ function Clients() {
         </div>
 
         <div className="w-full ">
-          {/* Passing down the data and edit props with original css maintained */}
           <ClientsTable 
             setEditedClient={handleEdit}
             clientsData={clients} 
@@ -132,7 +133,7 @@ function Clients() {
             setPerPage={setPerPage}
             totalPages={totalPages}
             totalEntries = {totalEntries}
-
+            setSelectedRows={setSelectedRows}
           />
         </div>
       </div>

@@ -15,7 +15,9 @@ function IncomeTax() {
     const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [apiFilters, setApiFilters] = useState({});
- 
+ const [link]= useState(`/entry-vehicle/income_records`)
+    const [selectedRows, setSelectedRows] = useState([]);
+
    const [filters, setFilters] = useState({
     vehicle: "",
     from: "",
@@ -93,7 +95,7 @@ const incomeExpenses = data?.docs || [];
           </div>
 
           <div className="flex items-center gap-3 w-fit sm:w-auto">
-            <ExportButton />
+          <ExportButton selectedRows={selectedRows} apiFilters={apiFilters} linkRecord={link}/>
           </div>
         </div>
 
@@ -119,7 +121,7 @@ const incomeExpenses = data?.docs || [];
             setPerPage={setPerPage}
             totalPages={totalPages}
             totalEntries = {totalEntries}
-          
+          setSelectedRows={setSelectedRows}
           
           />
         </div>

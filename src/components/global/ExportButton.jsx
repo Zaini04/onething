@@ -4,9 +4,10 @@ import ExportModel from "./ExportModel";
 import { exportCompanyRecordsPdf } from "../../redux/actions/companyRecordsAction";
 import Axios from "../../configs/api";
 
-function ExportButton({ id, selectedRows, apiFilters }) {
+function ExportButton({ selectedRows, apiFilters,linkRecord }) {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isSubmitting,setIsSubmitting] = useState(false)
+  console.log(linkRecord)
 
   const handleExportConfirm = async (exportType) => {
     isSubmitting ? setIsExportModalOpen(true) :     setIsExportModalOpen(false);
@@ -14,13 +15,16 @@ function ExportButton({ id, selectedRows, apiFilters }) {
     if (exportType === "PDF") {
       setIsSubmitting(true)
       try {
-        const blob = await exportCompanyRecordsPdf({
-          id,
-          selectedRows,
-          filters: apiFilters,
-        });
-
-        const url = window.URL.createObjectURL(new Blob([blob]));
+         const response = await Axios.post(
+        `${linkRecord}/export-pdf`,
+        {
+          ids: selectedRows,
+        },
+        {
+          params: apiFilters,
+          responseType: "blob",
+        },)
+        const url = window.URL.createObjectURL(new Blob([response.data]));
 
         const link = document.createElement("a");
 
@@ -45,7 +49,7 @@ function ExportButton({ id, selectedRows, apiFilters }) {
       setIsSubmitting(true)
       try {
          const response = await Axios.post(
-        `/company-records/client_records/${id}/export-excel`,
+        `${linkRecord}/export-excel`,
         {
           ids: selectedRows,
         },

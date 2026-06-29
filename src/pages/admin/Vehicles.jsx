@@ -7,7 +7,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ExportButton from "../../components/global/ExportButton";
 import { useQuery } from "@tanstack/react-query";
 import { fetchVehicles, useVehicleDropdown } from "../../redux/actions/vehicleAction";
-import { useEffect } from "react";
 
 function Vehicles() {
   const location = useLocation();
@@ -15,12 +14,11 @@ function Vehicles() {
 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
-  const [status, setStatus] = useState('');
   const [apiFilters, setApiFilters] = useState({});
 
-  const [ownerName, setOwnerName] = useState('');
-  const [vehicleNo,setVehicleNo]= useState('')
   const [editVehicle, setEditedVehicle] = useState(null);
+const [selectedRows, setSelectedRows] = useState([]);
+  const [link]= useState(`/vehicle/vehicle_records`)
 
 const mode = location.hash.replace("#", "");
 const addVehicleModelOpen = mode === "add" || mode === "edit";
@@ -101,18 +99,9 @@ const handleEdit = (row) => {
        status:finalFilters.status
  
     })
-    setStatus(finalFilters.status)
-    setOwnerName(finalFilters.ownerName)
-    setVehicleNo(finalFilters.vehicleNo)
   };
 
-  // useEffect(()=>{
-  //   setPage(1)
-  // },{filters})
-  
-  console.log("status",status)
-  console.log("ownerName",ownerName)
-  console.log("vehicleNo",vehicleNo)
+
   return (
     <div className="md:w-[93%] lg:w-[94%] xl:w-[95%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
       <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
@@ -123,7 +112,7 @@ const handleEdit = (row) => {
         </div>
 
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          <ExportButton />
+          <ExportButton selectedRows={selectedRows} apiFilters={apiFilters} linkRecord={link}/>
 
           <button
             onClick={handleToggleSidebar}
@@ -176,6 +165,7 @@ const handleEdit = (row) => {
             setPerPage={setPerPage}
             totalPages={totalPages}
             totalEntries = {totalEntries}
+            setSelectedRows={setSelectedRows}
             />
         </div>
 

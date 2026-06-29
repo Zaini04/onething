@@ -14,6 +14,10 @@ function FuelStock() {
  const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [apiFilters, setApiFilters] = useState({});
+    const [link]= useState(`/fuel/stock_records`)
+    const [selectedRows, setSelectedRows] = useState([]);
+
+
 
     const [editFuelCompany, setEditedFuelCompany] = useState(null);
 
@@ -87,7 +91,6 @@ const handleEdit = (row) => {
   };
 
   const handleSearchSubmit = (finalFilters) => {
-    console.log("Fetching Entry Vehicles data with fields:", finalFilters);
     setApiFilters(finalFilters)
   };
 
@@ -101,8 +104,7 @@ const handleEdit = (row) => {
         </div>
 
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          <ExportButton />
-
+          <ExportButton selectedRows={selectedRows} apiFilters={apiFilters} linkRecord={link}/>
           <button
             onClick={handleToggleSidebar}
             type="button"
@@ -155,6 +157,7 @@ const handleEdit = (row) => {
             setPerPage={setPerPage}
             totalPages={totalPages}
             totalEntries = {totalEntries}
+            setSelectedRows={setSelectedRows}
             />
         </div>
 

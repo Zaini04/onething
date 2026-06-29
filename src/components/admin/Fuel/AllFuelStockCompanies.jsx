@@ -50,12 +50,13 @@ export default function AllFuelStockCompanies({setEditedFuelCompany,
   perPage,
   setPerPage,
   totalPages,
-  totalEntries
+  totalEntries,
+  setSelectedRows
 }) {
   const [selected, setSelected] = useState([]);
   const [showPerPage, setShowPerPage] = useState(false);
 
-  const pageData = fuelCompaniesData.slice((page - 1) * perPage, page * perPage);
+  const pageData = fuelCompaniesData
   const allSelected =
     pageData.length > 0 && pageData.every((r) => selected.includes(r._id));
 
@@ -64,8 +65,15 @@ export default function AllFuelStockCompanies({setEditedFuelCompany,
       setSelected((prev) =>
         prev.filter((id) => !pageData.map((r) => r._id).includes(id)),
       );
+      setSelectedRows((prev) =>
+        prev.filter((id) => !pageData.map((r) => r._id).includes(id)),
+      );
     } else {
       setSelected((prev) => [
+        ...prev,
+        ...pageData.map((r) => r._id).filter((id) => !prev.includes(id)),
+      ]);
+      setSelectedRows((prev) => [
         ...prev,
         ...pageData.map((r) => r._id).filter((id) => !prev.includes(id)),
       ]);
@@ -74,6 +82,9 @@ export default function AllFuelStockCompanies({setEditedFuelCompany,
 
   const toggleRow = (id) => {
     setSelected((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
+    );
+    setSelectedRows((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );
   };
@@ -104,9 +115,7 @@ export default function AllFuelStockCompanies({setEditedFuelCompany,
     setEditedFuelCompany(row)
     console.log("Viewing details for Fuel Entry ID:", row._id);
   };
-  const handleView = (id) => {
-    console.log("Viewing details for Fuel Entry ID:", id);
-  };
+
 
   return (
     <div className="w-full bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm">
