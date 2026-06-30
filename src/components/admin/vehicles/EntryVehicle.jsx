@@ -28,12 +28,16 @@ export default function EntryVehicle() {
     mutationFn: async (payload) => {
       setIsSubmitting(true);
       if (isEditMode) {
-        return Axios.put(`/entry-vehicle/${editData._id}`, payload);
+        return Axios.put(`/entry-vehicle/entry/${editData._id}`, payload);
       }
       return Axios.post('/entry-vehicle/entry', payload);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entry-vehicles"] });
+      queryClient.invalidateQueries({ queryKey: ["fuelCompaniesStockLists"] });
+      queryClient.invalidateQueries({ queryKey: ["fuelCompaniesLists"] });
+      queryClient.invalidateQueries({ queryKey: ["fuel-stocks"] });
+
       setIsSubmitting(false);
       formik.resetForm();
       toast.success(isEditMode ? "EntryVehicle updated successfully!" : "EntryVehicle created successfully!");
@@ -47,27 +51,28 @@ export default function EntryVehicle() {
   });
 
   const formik = useFormik({
+    enableReinitialize:true,
     initialValues: {
-      date:  new Date().toISOString().split('T')[0] ,
-      client:  "",
-      site: "",
-      vehicle:  "",
-      materialType:  "",
-      rateType:  "",
-      rate:  "",
-      totalSftVehicles: "",
-      totalRate: "",
-      materialCost:  "",
-      dieselCost:  "", 
-      fuelCompany: "",
-      isStockManaged: false,   
-      dieselInLitters: "",
-      vendor:  "",
-      fuel: "",
-      driverExpense: "",
-      loading:  "",
-      otherExpenses: "",
-      remainingAmount: "",
+      date: editData?.date || new Date().toISOString().split('T')[0] ,
+     client: editData?.client?._id || editData?.client || "", 
+      site: editData?.site?._id || editData?.site || "", 
+      vehicle: editData?.vehicle?._id || editData?.vehicle || "",
+      materialType:  editData?.materialType || "",
+      rateType: editData?.rateType || "",
+      rate:  editData?.rate || "",
+      totalSftVehicles: editData?.totalSftVehicles || "",
+      totalRate: editData?.totalRate || "",
+      materialCost: editData?.materialCost || "",
+      dieselCost: editData?.dieselCost || "", 
+      fuelCompany:editData?.fuelCompany?._id ||editData?.fuelCompany || "",
+      isStockManaged: editData?.isStockManaged || false,   
+      dieselInLitters:editData?.dieselInLitters || "",
+      vendor: editData?.vendor || "",
+      fuel: editData?.fuel || "",
+      driverExpense: editData?.driverExpense || "",
+      loading: editData?.loading || "",
+      otherExpenses: editData?.otherExpenses || "",
+      remainingAmount: editData?.remainingAmount || "",
     },
     validationSchema: entryVehicleValidation,
     onSubmit: (values) => {
@@ -88,6 +93,14 @@ export default function EntryVehicle() {
       clientMutation.mutate(payload);
     },
   });
+
+
+  const handleClear = () => {
+    formik.resetForm();
+    if (isEditMode) {
+      navigate("/app/entry-vehicles");
+    }
+  };
 
   const { values, setFieldValue } = formik;
   const {
@@ -199,7 +212,7 @@ export default function EntryVehicle() {
   const isStockManaged = selectedFuelCompany?.hasStock === true;
 
   return (
-    <div className="w-full md:w-[85%] lg:w-[88%] xl:w-[90%]  p-4 md:pl-8 mx-auto bg-[#F9FAFB]  rounded-2xl">
+    <div className="w-full md:w-[80%] lg:w-[85%] xl:w-[87%]  p-4 md:pl-8 bg-[#F9FAFB]  rounded-2xl">
       {/* Header section */}
       <div className="flex justify-between items-center text-gray-900 mb-6 tracking-tight">
         <h2 className="text-lg font-medium">{isEditMode ? "Edit Vehicle Entry" : "Entry Vehicle"}</h2>
@@ -338,7 +351,7 @@ export default function EntryVehicle() {
           <div className="flex gap-2 justify-center items-center">
             <button
               type="button"
-              onClick={formik.handleReset}
+              onClick={handleClear}
               className="px-5 sm:px-8 py-2.5 border border-gray-200 hover:bg-gray-50 text-gray-900 font-medium text-sm rounded-xl transition-all cursor-pointer shadow-sm active:scale-[0.99]"
               disabled={isSubmitting}
             >
@@ -349,7 +362,7 @@ export default function EntryVehicle() {
               className="px-5 sm:px-8 py-2.5 bg-[#1A1C1E] hover:bg-black text-white font-medium text-sm rounded-xl transition-all cursor-pointer shadow-sm active:scale-[0.99]"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Saving..." : "Confirm"}
+              {isSubmitting ? isEditMode ? "Updating": "Saving..." : isEditMode ? "Update" : "Confirm"}
             </button>
           </div>
         </div>

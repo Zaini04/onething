@@ -82,7 +82,7 @@ export default function ClientDetails() {
 
 
   return (
-    <div className="md:w-[93%] lg:w-[94%] xl:w-[95%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
+    <div className="w-full md:w-[80%] lg:w-[85%] xl:w-[87%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
       <div className="flex justify-between items-center text-gray-900 tracking-tight mb-4">
         <div>
           <h2 className="text-xl font-medium text-black">Client Details</h2>

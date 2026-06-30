@@ -137,6 +137,9 @@ export default function EntryFuelTable({
                   <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Total Price <SortIcon />
                   </th>
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Created By <SortIcon />
+                  </th>
                   
                 </tr>
               </thead>
@@ -195,6 +198,10 @@ pageData.map((row,index) => {
 
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
                         {row.dieselCost}
+                      </td>
+                     <td className="py-3.5 text-center px-4 text-[12px] font-normal text-gray-700">
+                        
+                          {row.createdBy?.username || '-'}
                       </td>
 
                    

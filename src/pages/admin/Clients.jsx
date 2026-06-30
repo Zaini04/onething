@@ -90,7 +90,7 @@ function Clients() {
   }
 
   return (
-    <div className="md:w-[93%] lg:w-[94%] xl:w-[95%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-hidden">
+    <div className="w-full md:w-[80%] lg:w-[85%] xl:w-[87%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-hidden">
       <div className="w-full flex flex-col  animate-in fade-in duration-200">
         <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
           <div>

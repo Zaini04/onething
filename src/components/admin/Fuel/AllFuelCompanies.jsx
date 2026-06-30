@@ -133,6 +133,9 @@ export default function AllFuelCompanies({setEditedFuelCompany,
                   <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight ">
                     Fuel Company <SortIcon />
                   </th>
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight ">
+                    Created By <SortIcon />
+                  </th>
                  
                   <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center pr-8">
                     Action
@@ -179,6 +182,11 @@ pageData.map((row,index) => {
 
                       <td className="py-3.5 px-4 text-[12px] w-16 font-normal text-gray-900 tracking-wide">
                         {row.fuelCompany}
+                      </td>
+
+                      <td className="py-3.5 text-center px-4 text-[12px] font-normal text-gray-700">
+                        
+                          {row.createdBy?.username || '-'}
                       </td>
 
                       

@@ -28,6 +28,7 @@ import UpdatePassword from "./components/auth/UpdatePassword";
 import CompanyRecords from "./pages/admin/CompanyRecords";
 import CompanyRecordsDetails from "./pages/admin/CompanyRecordsDetails";
 import AddCompanyRecord from "./components/admin/companyRecords/AddCompanyRecord";
+import OfficeExpenses from "./pages/admin/OfficeExpenses";
 function App() {
   return (
     <>
@@ -62,6 +63,7 @@ theme="light"
             <Route element={<ProtectedRoute requiredMenu = "entry-vehicle"/>} >
               <Route path="entry-vehicles" element={<EntryVehicles />} />
               <Route path="entry-vehicles/entry" element={<EntryVehicle />} />
+              <Route path="entry-vehicles/edit" element={<EntryVehicle />} />
             </Route>
 
             <Route element={<ProtectedRoute requiredMenu = "clients"/>} >
@@ -69,6 +71,10 @@ theme="light"
               <Route path="clients/add" element={<AddClient />} />
               <Route path="clients/edit" element={<AddClient />} />
               <Route path="clients/:id" element={<ClientDetails />} />
+            </Route>
+            <Route element={<ProtectedRoute requiredMenu = "office-expense"/>} >
+              <Route path="office-expense" element={<OfficeExpenses />} />
+              
             </Route>
 
              <Route element={<ProtectedRoute requiredMenu = "company-records"/>} >

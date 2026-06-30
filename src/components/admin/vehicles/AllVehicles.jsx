@@ -171,6 +171,9 @@ export default function AllVehicles({
                   <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap ">
                     Status <SortIcon />
                   </th>
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap ">
+                    Created By <SortIcon />
+                  </th>
                   <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center ">
                     Action
                   </th>
@@ -231,12 +234,16 @@ export default function AllVehicles({
                         {row.typeVehicle}
                       </td>
 
-                      <td className="py-3.5 px-4 ">
+                      <td className="py-3.5  ">
                         <span
-                          className={`inline-block min-w-[80px] ${statusStyles[row.status]}`}
+                          className={`inline-block  min-w-[80px] ${statusStyles[row.status]}`}
                         >
                           {row.status}
                         </span>
+                      </td>
+                      <td className="py-3.5 text-center px-4 text-[12px] font-normal text-gray-700">
+                        
+                          {row.createdBy?.username || '-'}
                       </td>
 
                       <td className="py-3.5 px-4 text-center">

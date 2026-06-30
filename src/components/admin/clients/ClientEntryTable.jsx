@@ -171,6 +171,9 @@ export default function ClientEntryTable({
                   <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Bill Status <SortIcon />
                   </th>
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Created By <SortIcon />
+                  </th>
 
                   <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap sticky right-0 z-10 bg-[#F7F7F7]">
                     Action <SortIcon />
@@ -255,6 +258,10 @@ export default function ClientEntryTable({
                       </td>
                       <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
                         {row.billStatus}
+                      </td>
+                      <td className="py-3.5 text-center px-4 text-[12px] font-normal text-gray-700">
+                        
+                          {row.createdBy?.username || '-'}
                       </td>
 
                       <td

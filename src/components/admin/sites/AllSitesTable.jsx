@@ -161,6 +161,9 @@ const handleEdit = (row) => {
                   <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center ">
                     Status <SortIcon />
                   </th>
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center ">
+                    CreatedBy <SortIcon />
+                  </th>
                   <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight  whitespace-nowrap  ">
                     Action
                   </th>
@@ -229,6 +232,10 @@ pageData.map((row,index) => {
                         >
                           {row.status}
                         </span>
+                      </td>
+                      <td className="py-3.5 text-center px-4 text-[12px] font-normal text-gray-700">
+                        
+                          {row.createdBy?.username || '-'}
                       </td>
                       <td className="py-3.5 px-4 ">
                         <div className="flex items-center justify-start gap-3">

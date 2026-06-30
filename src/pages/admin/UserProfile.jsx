@@ -14,7 +14,7 @@ function UserProfile() {
     navigate('/app/profile-edit/update')
 }
   return (
-    <div className="w-full md:w-[93%] lg:w-[94%] xl:w-[95%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
+    <div className="w-full md:w-[80%] lg:w-[85%] xl:w-[87%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
         <div className="w-full pb-4">
         <h1 className="text-xl font-medium text-black tracking-tight">
           Profile

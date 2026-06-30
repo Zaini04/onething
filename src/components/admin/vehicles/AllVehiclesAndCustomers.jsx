@@ -7,6 +7,8 @@ import ViewButton from "../../global/ViewButton";
 import { useDispatch, useSelector } from "react-redux";
 import { setEntryVehicleById } from "../../../redux/slices/entryVehiclesSlice";
 import { useSearchParams } from "react-router-dom";
+import DeleteButton from "../../global/DeleteButton";
+import Axios from "../../../configs/api";
 
 function SortIcon() {
   return (
@@ -256,7 +258,7 @@ if (dispatch) {
 
   
 
-  const handleEdit = (row) => {
+  const handleEditEntryVehicle = (row) => {
     setEditedEntryVehicle(row);
     console.log("Edit clicked for client:", row);
   };
@@ -342,6 +344,9 @@ if (dispatch) {
                   </th>
                   <th className="py-4 px-4 text-xs w-16 font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                      Due<SortIcon />
+                  </th>
+                  <th className="py-4 px-4 text-xs w-16 font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                     Created By<SortIcon />
                   </th>
 
                   <th className="py-4 px-4 text-xs w-16 font-semibold text-gray-400 tracking-tight whitespace-nowrap sticky right-0 z-10 bg-[#F7F7F7]">
@@ -459,6 +464,10 @@ if (dispatch) {
                         <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
                           {row.clientDue}
                         </td>
+                        <td className="py-3.5 text-center px-4 text-[12px] font-normal text-gray-700">
+                        
+                          {row.createdBy?.username || '-'}
+                      </td>
 
                         <td
                           className={`py-3.5 px-4 text-[12px] font-normal sticky right-0 transition-colors duration-150 overflow-visible ${
@@ -514,6 +523,13 @@ if (dispatch) {
                                 }
                                 row={row}
                               />
+                              <button       className="inline-block text-left cursor-pointer px-2 py-1.5 text-xs font-medium text-gray-500 hover:bg-gray-300 w-full transition-colors"
+ onClick={()=>handleEditEntryVehicle(row)}>
+                                Edit
+                              </button>
+                               <DeleteButton row={row} deleteFn={(id) => Axios.delete(`/entry-vehicle/${id}`)} 
+                                queryKey="entry-vehicles" 
+                                title="Delete Entry Vehicle" />
                             </div>
                           )}
                         </td>

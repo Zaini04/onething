@@ -110,7 +110,7 @@ const entryFuels = data?.docs || [];
 
 
   return (
-    <div className=" md:w-[93%] lg:w-[94%] xl:w-[95%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
+    <div className=" w-full md:w-[80%] lg:w-[85%] xl:w-[87%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
       <div className=" mt-4  ">
               <div className="flex text-xs items-center gap-x-6 gap-y-4 mb-4 bg-gray-200 py-0.5  px-4 rounded-xl">
                 <button onClick={EntryFuelModel}

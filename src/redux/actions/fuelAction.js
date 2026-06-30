@@ -69,7 +69,6 @@ export const useFuelStockCompaniesDropdown = () => {
 
 export const fetchFuelStockCompaniesList = async () => {
   const {data:{data:{docs,message}}} = await Axios.get("/fuel/all_fuel_stock_companies_list");
-  console.log("flr",docs)
   return docs || [];
 };
 

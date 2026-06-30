@@ -83,10 +83,10 @@ export const deleteUser = (id)=>async(dispatch)=>{
 
 export const fetchUsers = async ({ queryKey }) => {
 
-  const [, page, limit] = queryKey;
+  const [, page, limit,apiFilters] = queryKey;
   const pageSize = limit
   const res = await Axios.get("/user/all-admins", {
-    params: { page, pageSize },
+    params: { page, pageSize,...apiFilters },
   });
 
 
@@ -153,4 +153,14 @@ export const fetchSalesChart = async () => {
 
 
 
+export const fetchOfficeExpenses = async ({ queryKey }) => {
 
+  const [, page, limit,apiFilters] = queryKey;
+  const pageSize = limit
+  const res = await Axios.get("/office-expense/all_expenses", {
+    params: { page, pageSize,...apiFilters },
+  });
+
+
+  return res.data.data;
+};

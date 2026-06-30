@@ -94,7 +94,7 @@ const AddClient = () => {
   };
 
   return (
-    <div className="w-full md:w-[85%] lg:w-[88%] xl:w-[90%]  p-4 md:pl-8 mx-auto bg-[#F9FAFB]  rounded-2xl">
+    <div className="w-full md:w-[80%] lg:w-[85%] xl:w-[87%]  p-4 md:pl-8 bg-[#F9FAFB]  rounded-2xl">
       <div className="flex justify-between items-center text-gray-900 mb-6 tracking-tight">
         <h2 className="text-lg font-medium">{isEditMode ? "Edit Client" : "Add Client"}</h2>
         <button

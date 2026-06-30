@@ -169,6 +169,9 @@ export default function ClientSitesTable() {
                   <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-right pr-8">
                     Status <SortIcon />
                   </th>
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-right pr-8">
+                    Created By <SortIcon />
+                  </th>
                 </tr>
               </thead>
 
@@ -227,12 +230,16 @@ export default function ClientSitesTable() {
                         {row.materialsRates?.map(item => (<p>{item.rate}</p>) )}
                       </td>
 
-                      <td className="py-3.5 px-4 text-right pr-8">
+                      <td className="py-3.5  text-right pr-5">
                         <span
                           className={`inline-block min-w-[80px] ${statusStyles[row.status]}`}
                         >
                           {row.status}
                         </span>
+                      </td>
+                      <td className="py-3.5 text-center px-4 text-[12px] font-normal text-gray-700">
+                        
+                          {row.createdBy?.username || '-'}
                       </td>
                     </tr>
                   );

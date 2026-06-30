@@ -44,7 +44,7 @@ const AddVendor = () => {
   };
 
   return (
-    <div className="w-full mx-auto p-4 md:p-6 bg-[#F9FAFB] rounded-2xl">
+    <div className="w-full md:w-[80%] lg:w-[85%] xl:w-[87%]  p-4 md:pl-8 bg-[#F9FAFB]  rounded-2xl">
       <div className="flex justify-between items-center text-gray-900 mb-6 tracking-tight">
         <h2 className="text-lg font-medium">Add Vendor</h2>
         <button

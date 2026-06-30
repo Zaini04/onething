@@ -244,6 +244,9 @@ export default function VehicleTable({
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Due <SortIcon />
                   </th>
+                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    CreatedBy <SortIcon />
+                  </th>
 
                   <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap sticky right-0 z-10 bg-[#F7F7F7]">
                     Action <SortIcon />
@@ -371,6 +374,10 @@ export default function VehicleTable({
                         <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
                           {row.clientDue}
                         </td>
+                        <td className="py-3.5 text-center px-4 text-[12px] font-normal text-gray-700">
+                        
+                          {row.createdBy?.username || '-'}
+                      </td>
                         <td
                           className={`py-3.5 px-4 text-[12px] font-normal sticky right-0 transition-colors duration-150 ${
                             isRowSelected ? "bg-[#F3F7FE]" : "bg-white"

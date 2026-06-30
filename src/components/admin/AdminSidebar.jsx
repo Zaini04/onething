@@ -7,65 +7,65 @@ import { hasMenuAccess } from "../../hooks/MenuAccess";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../redux/actions/authAction";
 
-function FloatingTooltip({ label, anchorRef, color = "black" }) {
-  const [pos, setPos] = useState(null);
-  const [visible, setVisible] = useState(false);
+// function FloatingTooltip({ label, anchorRef, color = "black" }) {
+//   const [pos, setPos] = useState(null);
+//   const [visible, setVisible] = useState(false);
 
-  useEffect(() => {
-    const el = anchorRef.current;
-    if (!el) return;
-    const show = () => {
-      const rect = el.getBoundingClientRect();
-      setPos({ top: rect.top + rect.height / 2, left: rect.right + 10 });
-      setVisible(true);
-    };
-    const hide = () => setVisible(false);
-    el.addEventListener("mouseenter", show);
-    el.addEventListener("mouseleave", hide);
-    return () => {
-      el.removeEventListener("mouseenter", show);
-      el.removeEventListener("mouseleave", hide);
-    };
-  }, [anchorRef]);
+//   useEffect(() => {
+//     const el = anchorRef.current;
+//     if (!el) return;
+//     const show = () => {
+//       const rect = el.getBoundingClientRect();
+//       setPos({ top: rect.top + rect.height / 2, left: rect.right + 10 });
+//       setVisible(true);
+//     };
+//     const hide = () => setVisible(false);
+//     el.addEventListener("mouseenter", show);
+//     el.addEventListener("mouseleave", hide);
+//     return () => {
+//       el.removeEventListener("mouseenter", show);
+//       el.removeEventListener("mouseleave", hide);
+//     };
+//   }, [anchorRef]);
 
-  if (!pos) return null;
+//   if (!pos) return null;
 
-  return ReactDOM.createPortal(
-    <div
-      style={{
-        position: "fixed",
-        top: pos.top,
-        left: pos.left,
-        transform: "translateY(-50%)",
-        background: color === "red" ? "#ef4444" : "#111",
-        color: "#fff",
-        fontSize: "12px",
-        fontWeight: 500,
-        padding: "5px 10px",
-        borderRadius: "8px",
-        whiteSpace: "nowrap",
-        pointerEvents: "none",
-        zIndex: 99999,
-        opacity: visible ? 1 : 0,
-        transition: "opacity 0.15s",
-      }}
-    >
-      <span
-        style={{
-          position: "absolute",
-          right: "100%",
-          top: "50%",
-          transform: "translateY(-50%)",
-          borderWidth: "5px",
-          borderStyle: "solid",
-          borderColor: `transparent ${color === "red" ? "#ef4444" : "#111"} transparent transparent`,
-        }}
-      />
-      {label}
-    </div>,
-    document.body
-  );
-}
+//   return ReactDOM.createPortal(
+//     <div
+//       style={{
+//         position: "fixed",
+//         top: pos.top,
+//         left: pos.left,
+//         transform: "translateY(-50%)",
+//         background: color === "red" ? "#ef4444" : "#111",
+//         color: "#fff",
+//         fontSize: "12px",
+//         fontWeight: 500,
+//         padding: "5px 10px",
+//         borderRadius: "8px",
+//         whiteSpace: "nowrap",
+//         pointerEvents: "none",
+//         zIndex: 99999,
+//         opacity: visible ? 1 : 0,
+//         transition: "opacity 0.15s",
+//       }}
+//     >
+//       <span
+//         style={{
+//           position: "absolute",
+//           right: "100%",
+//           top: "50%",
+//           transform: "translateY(-50%)",
+//           borderWidth: "5px",
+//           borderStyle: "solid",
+//           borderColor: `transparent ${color === "red" ? "#ef4444" : "#111"} transparent transparent`,
+//         }}
+//       />
+//       {label}
+//     </div>,
+//     document.body
+//   );
+// }
 
 function SidebarItem({ item, isActive, onClick }) {
   const ref = useRef(null);
@@ -74,15 +74,14 @@ function SidebarItem({ item, isActive, onClick }) {
       <div
         ref={ref}
         onClick={onClick}
-        className={`relative w-fit ml-1 flex items-center justify-center py-3 px-3 rounded-4xl transition-all duration-200 cursor-pointer flex-shrink-0 ${
-          isActive ? "bg-black text-white" : "text-gray-700 hover:bg-black hover:text-white"
-        }`}
+        className={`relative w-fit ml-1 flex items-center justify-center py-3 px-3 rounded-xl transition-all duration-200 cursor-pointer flex-shrink-0 `}
       >
-        <div className="flex items-center justify-center max-w-[20px]">
+        <div className="flex items-center gap-2.5  ">
           {item.icon}
+          <p className="text-xs font-medium">{item.label}</p>
         </div>
       </div>
-      <FloatingTooltip label={item.label} anchorRef={ref} />
+      {/* <FloatingTooltip label={item.label} anchorRef={ref} /> */}
     </>
   );
 }
@@ -94,16 +93,17 @@ function LogoutItem({ onClick }) {
       <div
         ref={ref}
         onClick={onClick}
-        className="relative w-full flex items-center justify-center p-3 text-red-400 hover:bg-red-500 hover:text-white rounded-full transition-all duration-200 cursor-pointer flex-shrink-0"
+        className="relative w-full ml-1 flex items-center justify-center p-3 text-red-600 hover:bg-red-500 hover:text-white rounded-xl transition-all duration-200 cursor-pointer flex-shrink-0"
       >
-        <div className="flex items-center justify-center min-w-[24px]">
+        <div className="flex items-center gap-2.5 ">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
             <path d="M12.0526 21C16.9941 21 21 16.9706 21 12C21 7.02944 16.9941 3 12.0526 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M7 8C7 8 3 10.946 3 12C3 13.0541 7 16 7 16M3.5 12H15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
+          <p className="text-sm font-medium">Logout</p>
         </div>
       </div>
-      <FloatingTooltip label="Logout" anchorRef={ref} color="red" />
+      {/* <FloatingTooltip label="Logout" anchorRef={ref} color="red" /> */}
     </>
   );
 }
@@ -298,7 +298,7 @@ const dispatch = useDispatch()
   }
 
   return (
-    <div className="hidden md:flex flex-col items-center z-40 w-16 fixed top-24 left-4 h-[80vh] py-3 rounded-4xl bg-white shadow-md border border-gray-100 overflow-visible px-1.5">
+    <div className="hidden md:flex flex-col items-center z-40 w-44 fixed top-16 left-1 h-[90vh] py-3  bg-white shadow-md border border-gray-100 overflow-visible px-1.5">
 
       <style>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -326,7 +326,13 @@ const dispatch = useDispatch()
               location.pathname === item.link ||
               location.pathname.startsWith(`${item.link}/`);
             return (
-              <div key={item.id} style={{ width: "100%" }}>
+              <div 
+                onClick={() => handleActions(item)}
+
+              className={` cursor-pointer rounded-xl
+${       isActive ? "bg-black text-white" : "text-gray-700 hover:bg-black hover:text-white"
+        }            `} 
+              key={item.id} style={{ width: "100%" }}>
                 <SidebarItem
                   item={item}
                   isActive={isActive}

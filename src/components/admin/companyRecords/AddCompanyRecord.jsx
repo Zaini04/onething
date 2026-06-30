@@ -62,7 +62,6 @@ export default function AddCompanyRecord() {
     onSubmit: (values) => {
       const cleanTotalRate = Number(values.totalRate?.toString().replace(/,/g, "")) || 0;
 
-      // Realtime flag map directly dynamically from safe computation
 
       console.log("acr",values)
 
@@ -85,13 +84,10 @@ export default function AddCompanyRecord() {
     totalSft,
   } = values;
 
-  // ----------------------------------------------------
-  // Data Fetching via Hooks
-  // ----------------------------------------------------
+ 
 //   const { data: clientDropdownData, isLoading:isClientLoading} = useClientDropdown();
   const { data: vehicleDropDownData, isLoading:isvehicleLoading } = useVehicleDropdown();
   const { data: siteMaterials, isLoading:isSiteLoading } = useSiteMaterials(client);
-  // Destructured isLoading to manage spinner state safely ──🔥
 
 //   const clientOptions = clientDropdownData?.map((c) => ({ id: c._id, name: c.name })) || [];
   const vehicleOptions = vehicleDropDownData?.map((v) => ({ id: v._id, name: v.vehicleNo })) || [];
@@ -103,9 +99,7 @@ export default function AddCompanyRecord() {
     name: m.materialType,
   })) || [];
 
-  // ----------------------------------------------------
-  // Cascading Selection State Management
-  // ----------------------------------------------------
+  
 //   const handleClientChange = (clientId) => {
 //     setFieldValue("client", clientId, true);
 //     setFieldValue("site", "");
@@ -137,9 +131,6 @@ export default function AddCompanyRecord() {
     }
   };
 
-  // ----------------------------------------------------
-  // Real-time Costing Calculations Effect
-  // ----------------------------------------------------
   useEffect(() => {
     const parsedRate = Number(rate?.toString().replace(/,/g, "")) || 0;
     const parsedSft = Number(totalSft?.toString().replace(/,/g, "")) || 0;
@@ -153,7 +144,6 @@ export default function AddCompanyRecord() {
 
 
   // console.log("fco",fuelCompanyOptions)
-  // Recalculates dynamically every render loop securely
 
   return (
     <div className="w-full md:w-[85%] lg:w-[88%] xl:w-[90%]  p-4 md:pl-8 mx-auto bg-[#F9FAFB]  rounded-2xl">

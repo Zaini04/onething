@@ -1,32 +1,5 @@
-import { useState } from "react";
-import DeleteButton from "../../global/DeleteButton";
-import { TableSkeletonRows } from "../../global/TableSkeletonRows";
-import Axios from "../../../configs/api";
+import { useState, } from "react";
 
-const initialData = Array.from({ length: 50 }, (_, i) => {
-  const companies = ["PSO", "Shell"];
-  const litters = [25, 600];
-
-  return {
-    id: i + 1,
-    no: String(i + 1).padStart(2, "0"),
-    fuelCompany: i % 2 === 0 ? companies[0] : companies[1],
-    fuelLitter: i === 9 ? litters[1] : litters[0],
-  };
-});
-
-const statusStyles = {
-  Active:
-    "bg-[#E6F6EC] text-[#15803D] font-medium rounded-lg text-xs px-3 py-1 text-center border border-transparent",
-  Inactive:
-    "bg-[#EFF6FF] text-[#1D4ED8] font-medium rounded-lg text-xs px-3 py-1 text-center border border-transparent",
-  view: "p-2 rounded-xl bg-[#E6F7F5] text-[#00A389] hover:bg-[#D4F2EE] transition cursor-pointer",
-
-  Blocked:
-    "bg-[#FEE2E2] text-[#DC2626] font-semibold rounded-lg text-xs px-3 py-1 text-center border border-transparent",
-  Deleted:
-    "bg-[#FEE2E2] text-[#DC2626] font-semibold rounded-lg text-xs px-3 py-1 text-center border border-transparent",
-};
 
 function SortIcon() {
   return (
@@ -42,23 +15,112 @@ function SortIcon() {
   );
 }
 
-export default function AllFuelStockCompanies({setEditedFuelCompany,
-  fuelCompaniesData = [],
+
+
+function TableSkeletonRows({ rowsCount = 5 }) {
+  return Array.from({ length: rowsCount }).map((_, idx) => (
+    <tr key={`skeleton-${idx}`} className="animate-pulse border-b border-gray-50">
+      {/* Checkbox Column */}
+      <td className="py-4 px-5 text-center">
+        <div className="w-4 h-4 bg-gray-200 rounded mx-auto"></div>
+      </td>
+      {/* No Column */}
+      <td className="py-4 px-4">
+        <div className="h-3 w-6 bg-gray-200 rounded"></div>
+      </td>
+      {/* User Name + Image Column */}
+      <td className="py-4 px-4">
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 bg-gray-200 rounded-full"></div>
+          <div className="h-3 w-24 bg-gray-200 rounded"></div>
+        </div>
+      </td>
+      {/* Email Column */}
+      <td className="py-4 px-4">
+        <div className="h-3 w-40 bg-gray-200 rounded"></div>
+      </td>
+      {/* Role Column */}
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-3 w-16 bg-gray-200 rounded"></div>
+      </td>
+      {/* Status Column */}
+      <td className="py-4 px-4 text-center">
+        <div className="h-5 w-16 bg-gray-200 rounded-lg mx-auto"></div>
+      </td>
+      {/* Action Column */}
+      <td className="py-4 px-4 text-center">
+        <div className="flex items-center justify-center gap-2">
+          <div className="w-7 h-7 bg-gray-200 rounded-xl"></div>
+          <div className="w-7 h-7 bg-gray-200 rounded-lg"></div>
+          <div className="w-7 h-7 bg-gray-200 rounded-lg"></div>
+        </div>
+      </td>
+    </tr>
+  ));
+}
+
+
+export default function AllExpenses({
+  officeExpenseData,
   isLoading,
   page,
-  setPage,
   perPage,
+  setPage,
   setPerPage,
   totalPages,
   totalEntries,
   setSelectedRows
 }) {
+  // const initialData = useSelector((state) => state.entryVehicles.items);
+
   const [selected, setSelected] = useState([]);
   const [showPerPage, setShowPerPage] = useState(false);
 
-  const pageData = fuelCompaniesData
+
+
+  const pageData = officeExpenseData 
   const allSelected =
     pageData.length > 0 && pageData.every((r) => selected.includes(r._id));
+
+  
+
+
 
   const toggleAll = () => {
     if (allSelected) {
@@ -109,20 +171,14 @@ export default function AllFuelStockCompanies({setEditedFuelCompany,
     return nums;
   };
 
-
-
-  const handleEdit = (row) => {
-    setEditedFuelCompany(row)
-    console.log("Viewing details for Fuel Entry ID:", row._id);
-  };
-
+  
 
   return (
     <div className="w-full bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm">
       <div className="w-full mx-auto">
-        <div className="bg-white rounded-xl overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse min-w-[500px]">
+        <div className="bg-white rounded-xl overflow-hidden w-full">
+          <div className="overflow-x-auto max-w-full pb-10">
+            <table className="w-full text-left border-collapse min-w-[1050px] table-auto">
               <thead>
                 <tr className="bg-[#F7F7F7] border-b border-gray-100">
                   <th className="py-4 px-5 w-12 text-center">
@@ -133,111 +189,91 @@ export default function AllFuelStockCompanies({setEditedFuelCompany,
                       className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
                     />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
                     No
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
-                    Date
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Date <SortIcon />
                   </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16 whitespace-nowrap">
-                    Fuel Company <SortIcon />
+                  <th className="w-16 py-4  text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Expense Type <SortIcon />
+                  </th>
+                  
+                  <th className="py-4  w-16 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Employee Name <SortIcon />
+                  </th>
+                  <th className="py-4   w-16 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Amount <SortIcon />
+                  </th>
+                  <th className="py-4 px-4  text-xs w-16 font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Remarks <SortIcon />
                   </th>
                  
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16 whitespace-nowrap">
-                    Fuel Liters <SortIcon />
-                  </th>
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16 whitespace-nowrap">
+                  <th className="py-4 w-16  text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Created By <SortIcon />
                   </th>
-                 
-                  <th className="py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16 whitespace-nowrap text-center pr-8">
-                    Action
-                  </th>
+
                 </tr>
               </thead>
 
               <tbody className="divide-y divide-gray-50/60">
-                 {isLoading ? (
-                 <TableSkeletonRows rowsCount={perPage || 5} />
-                              ) : pageData.length === 0 ? (
-                                <tr>
-                                  <td colSpan="7" className="py-8 text-center text-sm text-gray-400">
-                                    No entries found.
-                                  </td>
-                                </tr>
-                              ) :(
-pageData.map((row,index) => {
-                  const isRowSelected = selected.includes(row._id);
-                  return (
-                    <tr
-                      key={row._id}
-                      className={`transition-colors duration-150 ${
-                        isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
-                      }`}
+                {isLoading ? (
+                  <TableSkeletonRows rowsCount={perPage || 5} />
+                ) : pageData.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan="7"
+                      className="py-8 text-center text-sm text-gray-400"
                     >
-                      <td className="py-3.5 px-5 text-center ">
-                        <input
-                          type="checkbox"
-                          checked={isRowSelected}
-                          onChange={() => toggleRow(row._id)}
-                          className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
-                        />
-                      </td>
+                      No entries found.
+                    </td>
+                  </tr>
+                ) : (
+                  pageData.map((row, index) => {
+                    const isRowSelected = selected.includes(row._id);
 
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-500">
-                                                {(page - 1) * perPage + index + 1}
-
-                      </td>
-                      <td className="py-3.5 px-4  text-[12px]  text-start font-normal text-gray-500">
-{new Date(row.updatedAt).toLocaleDateString()}
-
-                      </td>
-
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-900 tracking-wide">
-                        {row.fuelCompany?.fuelCompany}
-                      </td>
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-900 tracking-wide">
-                        {row.fuelLiters}
-                      </td>
-                      <td className="py-3.5 text-center px-4 text-[12px] font-normal text-gray-700">
+                    return (
+                      <tr
+                        key={row._id}
+                        className={`transition-colors duration-150 ${isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"}`}
+                      >
+                        <td className="py-3.5 px-5 text-center">
+                          <input
+                            type="checkbox"
+                            checked={isRowSelected}
+                            onChange={() => toggleRow(row._id)}
+                            className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
+                          />
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
+                          {(page - 1) * perPage + index + 1}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide select-none">
+{new Date(row.date).toLocaleDateString()}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide select-none">
+                       {row.expenseType}
+                        </td>
                         
+                        <td className="py-3.5 px-4">
+                          <span className=" inline-block bg-[#F1F3F5] text-gray-700 text-[11px] font-medium px-2 py-1 rounded border border-gray-200/50">
+                            {row.employeeName}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4  text-[12px] font-normal text-gray-700 whitespace-nowrap">
+                          {row.amount}
+                        </td>
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.remarks}
+                        </td>
+                        <td className="py-3.5 text-center pr-8 text-[12px] font-normal text-gray-700">
                           {row.createdBy?.username || '-'}
                       </td>
-
-                     
-
-                      <td className="py-2.5 px-4 text-center pr-8">
-                        <div className="flex items-center justify-center gap-3">
-                         
-<button
-                            onClick={() => handleEdit(row)}
-                            type="button"
-                            title="Edit Client"
-                            className="w-7 h-7 flex items-center justify-center bg-[#F4F4F5] hover:bg-[#E4E4E7] text-gray-700 rounded-lg transition-colors cursor-pointer active:scale-95"
-                          >
-                              <svg
-                              className="w-3.5 h-3.5"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2.5}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                              />
-                            </svg>
-                          </button>
-   <DeleteButton row={row} deleteFn={(id) => Axios.delete(`/fuel/${id}`)} 
-  queryKey="fuel-stocks" 
-  title="Delete fuel stock company"/>                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-                              )}
-                
+                        
+                      </tr>
+                    );
+                  })
+                )}
               </tbody>
             </table>
           </div>
@@ -311,7 +347,7 @@ pageData.map((row,index) => {
             </div>
 
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
-             <span>
+           <span>
                 {isLoading ? (
                   "Loading entries..."
                 ) : (
