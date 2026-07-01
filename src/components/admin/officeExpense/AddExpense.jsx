@@ -1,5 +1,4 @@
 import { useFormik } from "formik";
-import { FaArrowLeft } from "react-icons/fa";
 import {  useNavigate } from "react-router-dom";
 import FormInput from "../../global/FormInput";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -8,17 +7,20 @@ import { toast } from "react-toastify";
 import { toastError } from "../../../hooks/toastError";
 import { useState } from "react";
 
-export default function AddOfficeExpense() {
+export default function AddOfficeExpense({setEditedExpense,editExpense}) {
   const navigate = useNavigate();
 
   const queryClient = useQueryClient();
-  
+     const isEdit = !!editExpense;
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const clientMutation = useMutation({
+  const ExpenseMutation = useMutation({
     mutationFn: async (payload) => {
       setIsSubmitting(true);
-      
+      if (isEdit) {
+      return Axios.put(`/office-expense/${editExpense._id}`, payload);
+    }
       return Axios.post('/office-expense/add', payload);
     },
     onSuccess: () => {
@@ -38,12 +40,13 @@ export default function AddOfficeExpense() {
 
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      date:  new Date().toISOString().split('T')[0] ,
-      employeeName:  "",
-      expenseType:"Office",
-      amount:  "",
-      remarks:  "",
+      date:  editExpense?.date || new Date().toISOString().split('T')[0] ,
+      employeeName:  editExpense?.employeeName || "",
+      expenseType: editExpense?.expenseType || "Office",
+      amount:  editExpense?.amount || "",
+      remarks:  editExpense?.remarks || "",
      
     },
     validationSchema: '',
@@ -53,7 +56,7 @@ export default function AddOfficeExpense() {
 
       
 
-      clientMutation.mutate(values);
+      ExpenseMutation.mutate(values);
     },
   });
 
@@ -63,7 +66,14 @@ export default function AddOfficeExpense() {
  
 
 
+  const handleClear = () => {
+  formik.resetForm();
 
+  if (isEdit) {
+    setEditedExpense(null);
+    navigate("/app/office-expense");
+  }
+};
 
   // console.log("fco",fuelCompanyOptions)
   // Recalculates dynamically every render loop securely
@@ -115,7 +125,7 @@ export default function AddOfficeExpense() {
           <div className="flex gap-2 justify-center items-center">
             <button
               type="button"
-              onClick={formik.handleReset}
+              onClick={handleClear}
               className="px-5 sm:px-8 py-2.5 border border-gray-200 hover:bg-gray-50 text-gray-900 font-medium text-sm rounded-xl transition-all cursor-pointer shadow-sm active:scale-[0.99]"
               disabled={isSubmitting}
             >
@@ -123,6 +133,7 @@ export default function AddOfficeExpense() {
             </button>
             <button
               type="submit"
+              disabled={isSubmitting}
               className="px-5 sm:px-8 py-2.5 bg-[#1A1C1E] hover:bg-black text-white font-medium text-sm rounded-xl transition-all cursor-pointer shadow-sm active:scale-[0.99]"
               disabled={isSubmitting}
             >

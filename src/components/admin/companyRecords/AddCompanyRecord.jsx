@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import { FaArrowLeft } from "react-icons/fa";
-import {  useNavigate, useParams } from "react-router-dom";
+import {  useLocation, useNavigate, useParams } from "react-router-dom";
 import SearchSelect from "../../global/SearchSelect";
 import FormInput from "../../global/FormInput";
 import { useEffect, useState } from "react";
@@ -19,21 +19,33 @@ export default function AddCompanyRecord() {
 
   const {id} = useParams()
   console.log("pid",id)
+    const location = useLocation();
+
   const queryClient = useQueryClient();
+  const editData = location.state?.companyRecordData; 
   
+  const isEditMode = !!editData; 
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const clientMutation = useMutation({
     mutationFn: async (payload) => {
       setIsSubmitting(true);
+       if (isEditMode) {
+        return Axios.put(`/company-records/entry/${editData._id}`, payload);
+      }
       
       return Axios.post('/company-records/entry', payload);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["company-records"] });
+    onSuccess: async () => {
+      console.log("success")
+      await queryClient.invalidateQueries({ queryKey: ["company-records-data"] });
+        console.log("Invalidated");
       setIsSubmitting(false);
       formik.resetForm();
-      toast.success("Company record created successfully!");
+      
+      toast.success(isEditMode ? "company Record updted successfully":"Company record created successfully!");
+      
       navigate(`/app/company-records/${id}`);
     },
     onError: (err) => {
@@ -46,16 +58,17 @@ export default function AddCompanyRecord() {
 
 
   const formik = useFormik({
+    enableReinitialize:true,
     initialValues: {
-      date:  new Date().toISOString().split('T')[0] ,
-      biltyNo:"",
-      client:  id,
-      site: "",
-      vehicle:  "",
-      materialType:  "",
-      rate:  "",
-      totalSft: "",
-      totalRate: "",
+      date: editData?.date || new Date().toISOString().split('T')[0] ,
+      biltyNo:editData?.biltyNo || "",
+      client: editData?.client._id ||  id,
+      site: editData?.site._id || "",
+      vehicle:  editData?.vehicle._id || "",
+      materialType: editData?.materialType || "",
+      rate: editData?.rate || "",
+      totalSft: editData?.totalSft || "",
+      totalRate: editData?.totalRate || "",
      
     },
     validationSchema: addCompanyRecords,
@@ -146,7 +159,7 @@ export default function AddCompanyRecord() {
   // console.log("fco",fuelCompanyOptions)
 
   return (
-    <div className="w-full md:w-[85%] lg:w-[88%] xl:w-[90%]  p-4 md:pl-8 mx-auto bg-[#F9FAFB]  rounded-2xl">
+    <div className="w-full md:w-[80%] lg:w-[85%] xl:w-[87%]  p-4 md:pl-8 bg-[#F9FAFB]  rounded-2xl">
       {/* Header section */}
       <div className="flex justify-between items-center text-gray-900 mb-6 tracking-tight">
         <h2 className="text-lg font-medium"> Add Company Record</h2>

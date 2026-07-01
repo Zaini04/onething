@@ -1,5 +1,6 @@
-import { useState, } from "react";
-
+import { useState } from "react";
+import DeleteButton from "../../global/DeleteButton";
+import Axios from "../../../configs/api";
 
 function SortIcon() {
   return (
@@ -15,11 +16,12 @@ function SortIcon() {
   );
 }
 
-
-
 function TableSkeletonRows({ rowsCount = 5 }) {
   return Array.from({ length: rowsCount }).map((_, idx) => (
-    <tr key={`skeleton-${idx}`} className="animate-pulse border-b border-gray-50">
+    <tr
+      key={`skeleton-${idx}`}
+      className="animate-pulse border-b border-gray-50"
+    >
       {/* Checkbox Column */}
       <td className="py-4 px-5 text-center">
         <div className="w-4 h-4 bg-gray-200 rounded mx-auto"></div>
@@ -95,8 +97,8 @@ function TableSkeletonRows({ rowsCount = 5 }) {
   ));
 }
 
-
 export default function AllExpenses({
+  setEditedExpense,
   officeExpenseData,
   isLoading,
   page,
@@ -105,22 +107,16 @@ export default function AllExpenses({
   setPerPage,
   totalPages,
   totalEntries,
-  setSelectedRows
+  setSelectedRows,
 }) {
   // const initialData = useSelector((state) => state.entryVehicles.items);
 
   const [selected, setSelected] = useState([]);
   const [showPerPage, setShowPerPage] = useState(false);
 
-
-
-  const pageData = officeExpenseData 
+  const pageData = officeExpenseData;
   const allSelected =
     pageData.length > 0 && pageData.every((r) => selected.includes(r._id));
-
-  
-
-
 
   const toggleAll = () => {
     if (allSelected) {
@@ -171,8 +167,10 @@ export default function AllExpenses({
     return nums;
   };
 
-  
-
+  const handleEdit = (row) => {
+    setEditedExpense(row);
+    console.log("row", row);
+  };
   return (
     <div className="w-full bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm">
       <div className="w-full mx-auto">
@@ -198,7 +196,7 @@ export default function AllExpenses({
                   <th className="w-16 py-4  text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Expense Type <SortIcon />
                   </th>
-                  
+
                   <th className="py-4  w-16 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Employee Name <SortIcon />
                   </th>
@@ -208,11 +206,13 @@ export default function AllExpenses({
                   <th className="py-4 px-4  text-xs w-16 font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Remarks <SortIcon />
                   </th>
-                 
+
                   <th className="py-4 w-16  text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Created By <SortIcon />
                   </th>
-
+                  <th className="py-4 w-16  text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                    Action <SortIcon />
+                  </th>
                 </tr>
               </thead>
 
@@ -249,12 +249,12 @@ export default function AllExpenses({
                           {(page - 1) * perPage + index + 1}
                         </td>
                         <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide select-none">
-{new Date(row.date).toLocaleDateString()}
+                          {new Date(row.date).toLocaleDateString()}
                         </td>
                         <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide select-none">
-                       {row.expenseType}
+                          {row.expenseType}
                         </td>
-                        
+
                         <td className="py-3.5 px-4">
                           <span className=" inline-block bg-[#F1F3F5] text-gray-700 text-[11px] font-medium px-2 py-1 rounded border border-gray-200/50">
                             {row.employeeName}
@@ -267,9 +267,42 @@ export default function AllExpenses({
                           {row.remarks}
                         </td>
                         <td className="py-3.5 text-center pr-8 text-[12px] font-normal text-gray-700">
-                          {row.createdBy?.username || '-'}
-                      </td>
-                        
+                          {row.createdBy?.username || "-"}
+                        </td>
+
+                        <td className="py-3.5  text-center">
+                          <div className="flex items-center justify-start gap-3">
+                            <button
+                              onClick={() => handleEdit(row)}
+                              type="button"
+                              title="Edit Office Expense"
+                              className="w-7 h-7 flex items-center justify-center bg-[#F4F4F5] hover:bg-[#E4E4E7] text-gray-700 rounded-lg transition-colors cursor-pointer active:scale-95"
+                            >
+                              <svg
+                                className="w-3.5 h-3.5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2.5}
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                                />
+                              </svg>
+                            </button>
+
+                            <DeleteButton
+                              row={row}
+                              deleteFn={(id) =>
+                                Axios.delete(`/office-expense/${id}`)
+                              }
+                              queryKey="office-expenses"
+                              title="Delete Vehicle"
+                            />
+                          </div>
+                        </td>
                       </tr>
                     );
                   })
@@ -347,15 +380,15 @@ export default function AllExpenses({
             </div>
 
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
-           <span>
+              <span>
                 {isLoading ? (
                   "Loading entries..."
                 ) : (
                   <span>
-  Showing {totalEntries === 0 ? 0 : (page - 1) * perPage + 1} to{" "}
-  {Math.min(page * perPage, totalEntries)} of{" "}
-  {totalEntries} entries
-</span>
+                    Showing {totalEntries === 0 ? 0 : (page - 1) * perPage + 1}{" "}
+                    to {Math.min(page * perPage, totalEntries)} of{" "}
+                    {totalEntries} entries
+                  </span>
                 )}
               </span>
 

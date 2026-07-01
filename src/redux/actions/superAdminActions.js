@@ -164,3 +164,14 @@ export const fetchOfficeExpenses = async ({ queryKey }) => {
 
   return res.data.data;
 };
+export const fetchPumpBills = async ({ queryKey }) => {
+
+  const [, page, limit,apiFilters] = queryKey;
+  const pageSize = limit
+  const res = await Axios.get("/pump-bills/all_entries", {
+    params: { page, pageSize,...apiFilters },
+  });
+
+
+  return res.data.data;
+};

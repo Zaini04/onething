@@ -29,6 +29,8 @@ import CompanyRecords from "./pages/admin/CompanyRecords";
 import CompanyRecordsDetails from "./pages/admin/CompanyRecordsDetails";
 import AddCompanyRecord from "./components/admin/companyRecords/AddCompanyRecord";
 import OfficeExpenses from "./pages/admin/OfficeExpenses";
+import PumpBills from "./pages/admin/PumpBills";
+import AddPumpBill from "./components/admin/Fuel/AddPumpBill";
 function App() {
   return (
     <>
@@ -72,6 +74,14 @@ theme="light"
               <Route path="clients/edit" element={<AddClient />} />
               <Route path="clients/:id" element={<ClientDetails />} />
             </Route>
+
+            <Route element={<ProtectedRoute requiredMenu = "pump-Bills"/>} >
+              <Route path="pump-bills" element={<PumpBills />} />
+              <Route path="pump-bills/entry" element={<AddPumpBill />} />
+              <Route path="pump-bills/edit" element={<AddPumpBill />} />
+            </Route>
+
+
             <Route element={<ProtectedRoute requiredMenu = "office-expense"/>} >
               <Route path="office-expense" element={<OfficeExpenses />} />
               
@@ -80,6 +90,7 @@ theme="light"
              <Route element={<ProtectedRoute requiredMenu = "company-records"/>} >
               <Route path="company-records" element={<CompanyRecords />} />
               <Route path="company-records/add/:id" element={<AddCompanyRecord />} />
+              <Route path="company-records/edit/:id" element={<AddCompanyRecord />} />
               <Route path="company-records/:id" element={<CompanyRecordsDetails />} />
             </Route>
 

@@ -1,6 +1,9 @@
-import { useState, } from "react";
+import { useState } from "react";
 import DeleteButton from "../../global/DeleteButton";
+import { TableSkeletonRows } from "../../global/TableSkeletonRows";
 import Axios from "../../../configs/api";
+
+
 
 
 function SortIcon() {
@@ -17,113 +20,22 @@ function SortIcon() {
   );
 }
 
-
-
-function TableSkeletonRows({ rowsCount = 5 }) {
-  return Array.from({ length: rowsCount }).map((_, idx) => (
-    <tr key={`skeleton-${idx}`} className="animate-pulse border-b border-gray-50">
-      {/* Checkbox Column */}
-      <td className="py-4 px-5 text-center">
-        <div className="w-4 h-4 bg-gray-200 rounded mx-auto"></div>
-      </td>
-      {/* No Column */}
-      <td className="py-4 px-4">
-        <div className="h-3 w-6 bg-gray-200 rounded"></div>
-      </td>
-      {/* User Name + Image Column */}
-      <td className="py-4 px-4">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 bg-gray-200 rounded-full"></div>
-          <div className="h-3 w-24 bg-gray-200 rounded"></div>
-        </div>
-      </td>
-      {/* Email Column */}
-      <td className="py-4 px-4">
-        <div className="h-3 w-40 bg-gray-200 rounded"></div>
-      </td>
-      {/* Role Column */}
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      {/* Status Column */}
-      <td className="py-4 px-4 text-center">
-        <div className="h-5 w-16 bg-gray-200 rounded-lg mx-auto"></div>
-      </td>
-      {/* Action Column */}
-      <td className="py-4 px-4 text-center">
-        <div className="flex items-center justify-center gap-2">
-          <div className="w-7 h-7 bg-gray-200 rounded-xl"></div>
-          <div className="w-7 h-7 bg-gray-200 rounded-lg"></div>
-          <div className="w-7 h-7 bg-gray-200 rounded-lg"></div>
-        </div>
-      </td>
-    </tr>
-  ));
-}
-
-
-export default function ClientRecordTable({
-  setEditedCompanyRecord,
-  companiesRecordsData,
-  isLoading,
-  page,
-  perPage,
-  setPage,
-  setPerPage,
-  totalPages,
-  totalEntries,
-  setSelectedRows
-}) {
-  // const initialData = useSelector((state) => state.entryVehicles.items);
-
+export default function PumpBillsTable({  setEditedPumpEntry,
+            pumpBillsData = [],
+            isLoading,
+            page,
+            perPage,setPerPage,
+            setPage,
+            totalPages,
+          totalEntries,
+        setSelectedRows
+        }) {
   const [selected, setSelected] = useState([]);
   const [showPerPage, setShowPerPage] = useState(false);
 
-
-
-  const pageData = companiesRecordsData 
+  const pageData = pumpBillsData;
   const allSelected =
-    pageData?.length > 0 && pageData.every((r) => selected.includes(r._id));
-
-  
-
-
+    pageData.length > 0 && pageData.every((r) => selected.includes(r._id));
 
   const toggleAll = () => {
     if (allSelected) {
@@ -174,22 +86,22 @@ export default function ClientRecordTable({
     return nums;
   };
 
-  
   const handleEdit = (row) => {
-    setEditedCompanyRecord(row)
+    setEditedPumpEntry(row)
+    console.log("Edit clicked for pump bill:", row);
   };
 
-  
+
 
   return (
     <div className="w-full bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm">
       <div className="w-full mx-auto">
         <div className="bg-white rounded-xl overflow-hidden w-full">
-          <div className="overflow-x-auto max-w-full pb-10">
+          <div className="overflow-x-auto w-full ">
             <table className="w-full text-left border-collapse min-w-[1050px] table-auto">
               <thead>
                 <tr className="bg-[#F7F7F7] border-b border-gray-100">
-                  <th className="py-4 px-5 w-12 text-center">
+                  <th className="py-4 px-5 w-[50px] text-center">
                     <input
                       type="checkbox"
                       checked={allSelected}
@@ -197,118 +109,123 @@ export default function ClientRecordTable({
                       className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
                     />
                   </th>
-                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight">
                     No
                   </th>
-                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Date <SortIcon />
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight">
+                    Date
+                  </th>
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap ">
+                    Slip No <SortIcon />
+                  </th>
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap ">
+                    Vehicle No <SortIcon />
                   </th>
                   <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Builty No <SortIcon />
-                  </th>
-                  
-                  <th className="py-4 px-4 w-16 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Sites <SortIcon />
-                  </th>
-                  <th className="py-4 px-4  w-16 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Vehicle <SortIcon />
-                  </th>
-                  <th className="py-4 px-4  text-xs w-16 font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Material <SortIcon />
-                  </th>
-                 
-                  <th className="py-4 px-4 text-xs w-16 font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Rate <SortIcon />
+                    Fuel Company  <SortIcon />
                   </th>
                   <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Total Sft <SortIcon />
+                    Today Diesel Rate <SortIcon />
                   </th>
-                  <th className="py-4 w-16 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Total Rate <SortIcon />
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center">
+                    Diesel Liters <SortIcon />
                   </th>
-                  <th className="py-4 w-16 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center">
+                    Lose Oil Liters  <SortIcon />
+                  </th>
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center">
+                    Lose Oil Amount <SortIcon />
+                  </th>
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center">
+                    Total Amount <SortIcon />
+                  </th>
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center">
                     Created By <SortIcon />
                   </th>
-                  <th className="py-4 w-16 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Action <SortIcon />
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight text-center ">
+                    Action
                   </th>
-
                 </tr>
               </thead>
 
               <tbody className="divide-y divide-gray-50/60">
-                {isLoading ? (
-                  <TableSkeletonRows rowsCount={perPage || 5} />
+              {isLoading ? (
+   <TableSkeletonRows rowsCount={perPage || 5} />
                 ) : pageData.length === 0 ? (
                   <tr>
-                    <td
-                      colSpan="7"
-                      className="py-8 text-center text-sm text-gray-400"
-                    >
+                    <td colSpan="7" className="py-8 text-center text-sm text-gray-400">
                       No entries found.
                     </td>
                   </tr>
-                ) : (
-                  pageData.map((row, index) => {
-                    const isRowSelected = selected.includes(row._id);
+                ) :(
+ pageData.map((row,index) => {
+                  const isRowSelected = selected.includes(row._id);
+                  return (
+                    <tr
+                      key={row._id}
+                      className={`transition-colors duration-150 ${
+                        isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
+                      }`}
+                    >
+                      <td className="py-3.5 px-5 text-center">
+                        <input
+                          type="checkbox"
+                          checked={isRowSelected}
+                          onChange={() => toggleRow(row._id)}
+                          className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
+                        />
+                      </td>
 
-                    return (
-                      <tr
-                        key={row._id}
-                        className={`transition-colors duration-150 ${isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"}`}
-                      >
-                        <td className="py-3.5 px-5 text-center">
-                          <input
-                            type="checkbox"
-                            checked={isRowSelected}
-                            onChange={() => toggleRow(row._id)}
-                            className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
-                          />
-                        </td>
-                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
-                          {(page - 1) * perPage + index + 1}
-                        </td>
-                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide select-none">
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 truncate">
+                        {(page - 1) * perPage + index + 1}
+
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-500">
 {new Date(row.date).toLocaleDateString()}
-                        </td>
-                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide select-none">
-                       {row.biltyNo}
-                        </td>
-                        
-                        <td className="py-3.5 px-4">
-                          <span className=" inline-block bg-[#F1F3F5] text-gray-700 text-[11px] font-medium px-2 py-1 rounded border border-gray-200/50">
-                            {row.site?.siteName}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4  text-[12px] font-normal text-gray-700 whitespace-nowrap">
-                          {row.vehicle?.vehicleNo}
-                        </td>
-                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                          {row.materialType}
-                        </td>
-                        
-                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                          {row.rate}
-                        </td>
-                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                            {row.totalSft} sft
-                        </td>
-                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                          {row.totalRate}
-                        </td>
+                      </td>
 
-                        <td className="py-3.5 text-center px-4 text-[12px] font-normal text-gray-700">
+                      
+
+
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide truncate">
+                        {row.slipNo}
+                      </td>
+                      
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide truncate">
+                        {row.vehicle?.vehicleNo || '-'}
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide truncate">
+                        {row.fuelCompany?.fuelCompany || '-'}
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide truncate">
+                        {row.todayDieselRate || '-'}
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide truncate">
+                        {row.totalLiters || '-'}
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide truncate">
+                        {row.totalLoseOilLiters || '-'}
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide truncate">
+                        {row.totalLoseOilAmount || '-'}
+                      </td>
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide truncate">
+                        {row.totalAmounts || '-'}
+                      </td>
+
+                    
+                      <td className="py-3.5 text-center px-4 text-[12px] font-normal text-gray-700">
                         
                           {row.createdBy?.username || '-'}
                       </td>
 
-                       <td className="py-3.5 px-4 text-center">
+                      <td className="py-3.5 px-4 text-center">
                         <div className="flex items-center justify-center gap-2">
                           
                           <button
                             onClick={() => handleEdit(row)}
                             type="button"
-                            title="Edit Company Record"
+                            title="Edit Pump Entry"
                             className="w-7 h-7 flex items-center justify-center bg-[#F4F4F5] hover:bg-[#E4E4E7] text-gray-700 rounded-lg transition-colors cursor-pointer active:scale-95"
                           >
                               <svg
@@ -327,17 +244,17 @@ export default function ClientRecordTable({
                           </button>
 
 
-                          <DeleteButton row={row} deleteFn={(id) => Axios.delete(`/company-records/entry/${id}`)} 
-  queryKey="company-records" 
-  title="Delete Compnay Record" />
+                          <DeleteButton row={row} deleteFn={(id) => Axios.delete(`/pump-bills/entry/${id}`)} 
+  queryKey="pump-bills" 
+  title="Delete Pump Bill Entry" />
 
                         </div>
                       </td>
-                        
-                      </tr>
-                    );
-                  })
-                )}
+                    </tr>
+                  );
+                })
+              )}
+               
               </tbody>
             </table>
           </div>
@@ -411,7 +328,7 @@ export default function ClientRecordTable({
             </div>
 
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
-           <span>
+             <span>
                 {isLoading ? (
                   "Loading entries..."
                 ) : (

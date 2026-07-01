@@ -56,6 +56,7 @@ function DeleteButton({ row, deleteFn, queryKey, title = "Delete Item" }) {
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={() => deleteMutation.mutate()}
+        isLoading={deleteMutation.isPending}
       />
     </>
   );

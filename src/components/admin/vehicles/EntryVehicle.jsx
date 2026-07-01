@@ -176,9 +176,7 @@ export default function EntryVehicle() {
     }
   };
 
-  // ----------------------------------------------------
-  // Real-time Costing Calculations Effect
-  // ----------------------------------------------------
+ 
   useEffect(() => {
     const parsedRate = Number(rate?.toString().replace(/,/g, "")) || 0;
     const parsedSft = Number(totalSftVehicles?.toString().replace(/,/g, "")) || 0;

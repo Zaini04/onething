@@ -26,12 +26,12 @@ const [selectedRows, setSelectedRows] = useState([]);
 
 
     const { data:companyData, isLoading:companyDataLoading } = useQuery({
-    queryKey: ["company-records", page, perPage,apiFilters,id],
+    queryKey: ["company-records-data", page, perPage,apiFilters,id],
     queryFn:  fetchCompanyRecord,
     staleTime: 1000 * 30,
     cacheTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
     keepPreviousData: true,
   });
 
@@ -90,7 +90,9 @@ const [selectedRows, setSelectedRows] = useState([]);
   };
 
   
- 
+ const handleEdit = (row)=>{
+    navigate(`/app/company-records/edit/${id}`, { state: { companyRecordData: row } });
+  }
 
 
   return (
@@ -141,7 +143,8 @@ const [selectedRows, setSelectedRows] = useState([]);
 
       <div className="mt-4">
         <ClientRecordTable
-        entryVehicleData ={companyRecordData}
+                  setEditedCompanyRecord={handleEdit} 
+        companiesRecordsData ={companyRecordData}
   isLoading={companyDataLoading}
   page={page}
   perPage={perPage}

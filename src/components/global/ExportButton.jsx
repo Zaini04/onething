@@ -12,8 +12,8 @@ function ExportButton({ selectedRows, apiFilters,linkRecord }) {
   const handleExportConfirm = async (exportType) => {
     isSubmitting ? setIsExportModalOpen(true) :     setIsExportModalOpen(false);
     console.log("export", exportType);
+    setIsSubmitting(true)
     if (exportType === "PDF") {
-      setIsSubmitting(true)
       try {
          const response = await Axios.post(
         `${linkRecord}/export-pdf`,

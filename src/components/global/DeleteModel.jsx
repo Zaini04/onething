@@ -1,7 +1,7 @@
 import { Trash } from "lucide-react";
 import { createPortal } from "react-dom";
 
-function DeleteModel({ isOpen, onClose, onConfirm }) {
+function DeleteModel({ isOpen, onClose, onConfirm,isLoading }) {
   if (!isOpen) return null;
 
   return createPortal(
@@ -34,10 +34,11 @@ function DeleteModel({ isOpen, onClose, onConfirm }) {
 
           <button
             type="button"
+            disabled={isLoading}
             onClick={onConfirm}
             className="flex-1 py-3 px-4 bg-[#FF6B6B] hover:bg-red-500 text-white font-medium text-sm rounded-xl active:scale-[0.98] transition-all cursor-pointer shadow-md shadow-red-100"
           >
-            Delete
+            {isLoading ? "Deleting": "Delete"}
           </button>
         </div>
       </div>
