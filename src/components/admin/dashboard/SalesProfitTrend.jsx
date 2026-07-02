@@ -11,16 +11,7 @@ import {
 import { fetchSalesChart } from "../../../redux/actions/superAdminActions";
 import { TotalSalesSkeleton } from "./TotalSales";
 
-const data = [
-  { month: "Oct", Revenue: 2, Profit: 1.5 },
-  { month: "Nov", Revenue: 3, Profit: 2 },
-  { month: "Dec", Revenue: 2.5, Profit: 1.8 },
-  { month: "Jan", Revenue: 4, Profit: 2.5 },
-  { month: "Feb", Revenue: 3, Profit: 2 },
-  { month: "Mar", Revenue: 3.5, Profit: 2.2 },
-  { month: "Apr", Revenue: 2, Profit: 1.5 },
-  { month: "May", Revenue: 259.2, Profit: 1.8 },
-];
+
 
 const CustomLegend = () => (
   <div className="flex items-center gap-4 justify-end">
@@ -59,7 +50,7 @@ queryKey: ["sales-chart"],
     staleTime: 1000 * 30,
     cacheTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
     keepPreviousData: true,
   });
   const monthlyChart = data?.docs

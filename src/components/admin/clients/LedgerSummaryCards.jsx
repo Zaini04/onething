@@ -11,10 +11,10 @@ export default function LedgerSummaryCards() {
   const { data, isLoading,isFetching   } = useQuery({
     queryKey: ["client-summary",id],
     queryFn:  fetchClientSummary,
-    staleTime: 1000 * 30,
+    staleTime: 1000 * 10,
     cacheTime: 1000 * 60 * 10,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
     keepPreviousData: true,
   });
 

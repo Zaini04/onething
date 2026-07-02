@@ -126,7 +126,7 @@ const fuelCompanies =
             <button
               type="button"
               onClick={handleClear} // Formik default reset logic handles this smoothly
-              className="flex-1 w-fit sm:flex-none px-2 sm:px-10 py-3.5 text-[14px] font-semibold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 active:scale-[0.98] transition-all cursor-pointer"
+            className="px-5 sm:px-8 py-2.5 bg-white disabled:bg-gray-400 text-black font-medium text-sm rounded-xl transition-all cursor-pointer shadow-sm active:scale-[0.99]"
             >
               Clear
             </button>

@@ -10,12 +10,16 @@ import RoleForm from "../../components/admin/settings/RoleForm";
 // import { useEffect } from "react";
 import {  useUsers } from "../../redux/actions/superAdminActions";
 import AllUserTable from "../../components/admin/users/AllUserTable";
+import { useNavigate } from "react-router-dom";
 
 export default function Settings() {
   const fileInputRef = useRef(null);
   const [logoPreview, setLogoPreview] = useState(null);
   const [companySettings,setCompanySettings]=useState(true)
   const [companyRoles,setCompanyRoles] = useState(false)
+    const [editUser, setEditedUser] = useState(null);
+
+  const navigate = useNavigate();
 
   const [page, setPage] = useState(1);
 const [perPage, setPerPage] = useState(10);
@@ -86,7 +90,10 @@ const totalPages = data?.pages || 1;
   // useEffect(()=>{
   //   userRoles()
   // },[])
-
+const handleEdit = (row) => {
+  setEditedUser(row);          
+  navigate("/app/users#edit"); 
+};
   return (
     <div className="w-full md:w-[80%] lg:w-[85%] xl:w-[87%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">
       <div className="w-full pb-4">
@@ -293,7 +300,9 @@ const totalPages = data?.pages || 1;
       <div className="w-full mt-4 mb-4 bg-white rounded-3xl border border-gray-100 shadow-sm p-8">
     <RoleForm  />
 </div>
-    <AllUserTable  usersData={users} isLoading={isLoading || isFetching}  page={page}
+    <AllUserTable 
+    setEditedUser={handleEdit}
+     usersData={users} isLoading={isLoading || isFetching}  page={page}
   setPage={setPage}
   perPage={perPage}
   setPerPage={setPerPage}

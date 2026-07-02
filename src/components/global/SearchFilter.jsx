@@ -134,7 +134,6 @@ function SearchFilters({ config, filters, onFilterChange, onSubmit }) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full lg:flex-1">
           {config.map((field) => {
 
-            // 1. SEARCHABLE SELECT FILTER
             if (field.type === "select" && field.searchable) {
               return (
                 <div key={field.name} className="relative">
@@ -174,14 +173,13 @@ function SearchFilters({ config, filters, onFilterChange, onSubmit }) {
                       placeholder={ "MM/DD/YYYY - MM/DD/YYYY"}
                       value={displayValue}
                       onClick={() => setIsRangeOpen(!isRangeOpen)}
-                      className="w-full bg-white border placeholder:text-[11px] border-gray-200 rounded-xl px-4 py-2.5 text-sm font-normal text-gray-800 cursor-pointer  hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-black/5"
+                      className="w-full bg-white border placeholder:text-[11px] border-gray-200 rounded-xl px-4 py-2.5 text-[12px] font-normal text-gray-800 cursor-pointer  hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-black/5"
                     />
                     
-                    {/* Left Icon */}
                     
 
                     {/* Right Reset Cross Button */}
-                    {displayValue && (
+                    {displayValue ? (
                       <button
                         type="button"
                         className="absolute right-3 top-3 cursor-pointer z-40 text-gray-400 hover:text-gray-600"
@@ -192,10 +190,15 @@ function SearchFilters({ config, filters, onFilterChange, onSubmit }) {
                       >
                         <X size={16} />
                       </button>
-                    )}
-                    <div className="absolute right-3 top-[13px] text-gray-400 pointer-events-none">
-                      <CalendarIcon size={16} />
+                    ):
+
+                     <div className="absolute right-3 top-[13px] text-gray-400 pointer-events-none">
+                       <CalendarIcon size={16} />
                     </div>
+
+
+                    }
+                   
                   </div>
 
                   {/* ⚡ DROPDOWN BOX: Width is exactly 100% of the Input above */}

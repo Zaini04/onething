@@ -34,6 +34,12 @@ export default function EntryVehicle() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entry-vehicles"] });
+      queryClient.invalidateQueries({ queryKey: ["client-ledger"] });
+      queryClient.invalidateQueries({ queryKey: ["vehicle-ledger"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      queryClient.invalidateQueries({ queryKey: ["today-dashboard"] });
+      queryClient.invalidateQueries({ queryKey: ["sales-chart"] });
+
       queryClient.invalidateQueries({ queryKey: ["fuelCompaniesStockLists"] });
       queryClient.invalidateQueries({ queryKey: ["fuelCompaniesLists"] });
       queryClient.invalidateQueries({ queryKey: ["fuel-stocks"] });
@@ -89,6 +95,7 @@ export default function EntryVehicle() {
         remainingAmount: cleanRemainingAmount,
         isStockManaged: dynamicStockManaged,
       };
+      console.log(values)
 
       clientMutation.mutate(payload);
     },

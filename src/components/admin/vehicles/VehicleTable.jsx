@@ -396,7 +396,7 @@ export default function VehicleTable({
                           {isMenuOpen && (
                             <div
                               ref={menuRef}
-                              className="absolute right-12 top-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-lg shadow-2xl py-2 px-2 w-44 z-[10000] flex flex-col gap-1.5 animation-fade-in"
+                              className="absolute right-12 top-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-lg shadow-2xl  w-40 z-[10000] flex flex-col  animation-fade-in"
                             >
                               {row.paymentReceived === "received" ? (
                                 ""

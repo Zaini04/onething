@@ -60,6 +60,7 @@ const handleEdit = (row) => {
     const totalEntries = data?.docsCount || 10
        const { data: vehicleDropDownData } = useVehicleDropdown();
        const vehicleOptions = vehicleDropDownData?.map((v) => ({ id: v.vehicleNo, name: v.vehicleNo })) || [];
+       const vehicleOwnerOptions = [...new Set(vehicleDropDownData?.map((v)=>v.ownerName)|| [])].map((ownerName) => ({ id: ownerName, name: ownerName })) || [];
 
 
 
@@ -71,7 +72,7 @@ const handleEdit = (row) => {
       type: "select",
       searchable: true,
       placeholder: "Owner Name",
-      options: ["Yoichi", "isagi","zain"],
+      options: vehicleOwnerOptions,
     },
     {
       name: "status",

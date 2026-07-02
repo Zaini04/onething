@@ -3,6 +3,9 @@ import profile from "../../../assets/images/profileImage.jpg";
 import { TableSkeletonRows } from "../../global/TableSkeletonRows";
 import DeleteButton from "../../global/DeleteButton";
 import Axios from "../../../configs/api";
+import { useRef } from "react";
+import { useEffect } from "react";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 const statusStyles = {
   Active:
@@ -73,6 +76,11 @@ export default function AllSitesTable(   {
   const [selected, setSelected] = useState([]);
   const [showPerPage, setShowPerPage] = useState(false);
 
+  const [activeRowMenu, setActiveRowMenu] = useState(null);
+
+  const menuRef = useRef(null);
+
+
   const pageData = sitesData
   const allSelected =
     pageData.length > 0 && pageData.every((r) => selected.includes(r._id));
@@ -127,8 +135,24 @@ export default function AllSitesTable(   {
   };
 const handleEdit = (row) => {
     setEditedSite(row)
+    setActiveRowMenu(null)
     console.log("Edit clicked for client:", row);
   };
+
+   useEffect(() => {
+    function handleClickOutside(event) {
+      
+
+      if (menuRef.current && menuRef.current.contains(event.target)) {
+        return;
+      }
+
+      setActiveRowMenu(null);
+    }
+
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
   return (
     <div className="w-full bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm ">
       <div className="w-full mx-auto">
@@ -164,7 +188,7 @@ const handleEdit = (row) => {
                   <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center ">
                     CreatedBy <SortIcon />
                   </th>
-                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight  whitespace-nowrap  ">
+                  <th className="py-4 px-4 text-xs w-16 font-semibold text-gray-400 tracking-tight whitespace-nowrap sticky right-0 z-10 bg-[#F7F7F7]">
                     Action
                   </th>
                 </tr>
@@ -183,6 +207,8 @@ const handleEdit = (row) => {
                               ) :(
 pageData.map((row,index) => {
                   const isRowSelected = selected.includes(row._id);
+                                      const isMenuOpen = activeRowMenu === row._id;
+
                   return (
                     <tr
                       key={row._id}
@@ -237,37 +263,65 @@ pageData.map((row,index) => {
                         
                           {row.createdBy?.username || '-'}
                       </td>
-                      <td className="py-3.5 px-4 ">
-                        <div className="flex items-center justify-start gap-3">
-                          
-                          <button
-                            onClick={() => handleEdit(row)}
-                            type="button"
-                            title="Edit Client"
-                            className="w-7 h-7 flex items-center justify-center bg-[#F4F4F5] hover:bg-[#E4E4E7] text-gray-700 rounded-lg transition-colors cursor-pointer active:scale-95"
-                          >
-                              <svg
-                              className="w-3.5 h-3.5"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2.5}
+                       <td
+                          className={`py-3.5 px-4 text-[12px] font-normal sticky right-0 transition-colors duration-150 overflow-visible ${
+                            isRowSelected ? "bg-[#F3F7FE]" : "bg-white"
+                          } ${isMenuOpen ? "z-[100]" : "z-10"}`}
+                        >
+                          <div className="flex justify-center items-center w-full h-full">
+                            <BsThreeDotsVertical
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveRowMenu(isMenuOpen ? null : row._id);
+                              }}
+                              className="cursor-pointer text-gray-500 hover:text-black text-xl p-1 rounded-lg hover:bg-gray-100"
+                            />
+                          </div>
+                          {isMenuOpen && (
+                            <div
+                              ref={menuRef}
+                              className="absolute right-12 top-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded shadow-2xl   w-32 z-[9999] flex flex-col  animation-fade-in"
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                              />
-                            </svg>
-                          </button>
+                              <div className="flex flex-col items-center justify-center ">
+                            
+                            <button
+                              onClick={() => handleEdit(row)}
+                              type="button"
+                              title="Edit Site"
+      className="inline-block text-left cursor-pointer px-2 py-2 text-xs font-medium text-blue-500 hover:bg-blue-200/50 border-b border-gray-300 w-full"
+                            >
+                              Edit
+                              {/* <svg
+                                className="w-3.5 h-3.5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2.5}
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                                />
+                              </svg> */}
+                            </button>
+
+                            <DeleteButton
+                              row={row}
+                              deleteFn={(id) => Axios.delete(`/site/${id}`)}
+                              queryKey="sites"
+                              title="Delete Site"
+                            />
+                          </div>
+
+                            </div>)}
 
 
-                          <DeleteButton row={row} deleteFn={(id) => Axios.delete(`/site/${id}`)} 
-  queryKey="vehicles" 
-  title="Delete Vehicle" />
 
-                        </div>
-                      </td>
+                          
+                          
+                          
+                        </td>
                     </tr>
                   );
                 })

@@ -53,10 +53,12 @@ function AdminDashboard() {
         </div>
       </div>
 
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-stretch">
+      <div className="w-full grid grid-cols-1  md:grid-cols-2 xl:grid-cols-3 gap-6 items-stretch">
+       
+        {/* <div className="w-full md:col-span-2 lg:col-span-1 bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-stretch"> */}
         <TotalSales/>
-
-        <div className="w-full bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-stretch">
+{/* </div> */}
+        <div className="w-full md:col-span-2 lg:col-span-1 bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-stretch">
           <StatsCards />
         </div>
 

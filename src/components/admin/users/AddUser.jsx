@@ -116,29 +116,23 @@ options={roleValues}
 
        
 
-        <div className="flex items-center gap-4 pt-4 justify-start lg:justify-end">
-          <button
-            type="button"
-            onClick={handleClear}
-            className="flex-1 sm:flex-none px-2 sm:px-10 py-3.5 bg-white border border-gray-200 hover:border-gray-300 text-gray-900 font-medium text-sm rounded-xl transition cursor-pointer active:scale-[0.99]"
-          >
-            Clear
-          </button>
+        <div className="flex items-center gap-4 mt-8 justify-start lg:justify-end">
+            <button
+              type="button"
+              onClick={handleClear} // Formik default reset logic handles this smoothly
+            className="px-5 sm:px-8 py-2.5 bg-white disabled:bg-gray-400 text-black font-medium text-sm rounded-xl transition-all cursor-pointer shadow-sm active:scale-[0.99]"
+            >
+              Clear
+            </button>
 
-          <button
+           <button
             type="submit"
-            className="flex-1 sm:flex-none px-2 sm:px-10 py-3.5 bg-[#1A1C1E] hover:bg-black text-white font-medium text-sm rounded-xl transition cursor-pointer active:scale-[0.99] shadow-sm shadow-gray-100"
+            disabled={isSubmitting}
+            className="px-5 sm:px-8 py-2.5 bg-[#1A1C1E] disabled:bg-gray-400 text-white font-medium text-sm rounded-xl transition-all cursor-pointer shadow-sm active:scale-[0.99]"
           >
-            {isSubmitting ? (
-              <>
-                <span className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></span>
-                <span>Processing...</span>
-              </>
-            ) : (
-              <span>Confirm</span>
-            )}
+            {isSubmitting ? "Submitting..." : "Confirm"}
           </button>
-        </div>
+          </div>
       </form>
     </div>
   );

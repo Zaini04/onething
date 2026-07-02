@@ -55,6 +55,8 @@ export default function PaymentReceivedModel({ isOpen, onClose, onConfirm }) {
       // 1. Table cache ko refresh karna
       queryClient.invalidateQueries({ queryKey: [cacheKey] });
       queryClient.invalidateQueries({ queryKey: 'fuel-stocks' });
+      queryClient.invalidateQueries({ queryKey: 'client-summary' });
+      queryClient.invalidateQueries({ queryKey: 'client-ledger' });
 
       
       // 2. Fresh populated doc pass karein parent component ko printing popup trigger karne ke liye

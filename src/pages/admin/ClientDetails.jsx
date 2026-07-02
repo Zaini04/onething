@@ -44,7 +44,7 @@ export default function ClientDetails() {
     staleTime: 1000 * 30,
     cacheTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
     keepPreviousData: true,
   });
 

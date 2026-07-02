@@ -4,6 +4,9 @@ import DeleteButton from "../../global/DeleteButton";
 import { useNavigate } from "react-router-dom";
 import { TableSkeletonRows } from "../../global/TableSkeletonRows";
 import Axios from "../../../configs/api";
+import { useRef } from "react";
+import { useEffect } from "react";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 const statusStyles = {
   Active:
@@ -72,12 +75,16 @@ export default function AllVehicles({
   setPerPage,
   totalPages,
   totalEntries,
-  setSelectedRows
+  setSelectedRows,
 }) {
   const [selected, setSelected] = useState([]);
   const [showPerPage, setShowPerPage] = useState(false);
 
-  const pageData = vehiclesData
+  const [activeRowMenu, setActiveRowMenu] = useState(null);
+
+  const menuRef = useRef(null);
+
+  const pageData = vehiclesData;
   const allSelected =
     pageData.length > 0 && pageData.every((r) => selected.includes(r._id));
 
@@ -133,12 +140,29 @@ export default function AllVehicles({
   };
 
   const handleEdit = (row) => {
-    setEditedVehicle(row)
+    setEditedVehicle(row);
+    setActiveRowMenu(null);
   };
 
   const handleView = (row) => {
     navigate(`/app/vehicles/${row._id}`);
+    setActiveRowMenu(null);
   };
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      
+
+      if (menuRef.current && menuRef.current.contains(event.target)) {
+        return;
+      }
+
+      setActiveRowMenu(null);
+    }
+
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   return (
     <div className="w-full  bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm">
@@ -171,137 +195,172 @@ export default function AllVehicles({
                   <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap ">
                     Status <SortIcon />
                   </th>
-                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap ">
+                  <th className="w-16 py-4  text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap ">
                     Created By <SortIcon />
                   </th>
-                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center ">
+                  <th className="py-4 px-4 text-xs w-16 font-semibold text-gray-400 tracking-tight whitespace-nowrap sticky right-0 z-10 bg-[#F7F7F7]">
                     Action
                   </th>
                 </tr>
               </thead>
 
               <tbody className="divide-y divide-gray-50/60">
-
-              {isLoading ? (
+                {isLoading ? (
                   <TableSkeletonRows rowsCount={perPage || 5} />
                 ) : pageData.length === 0 ? (
                   <tr>
-                    <td colSpan="7" className="py-8 text-center text-sm text-gray-400">
+                    <td
+                      colSpan="7"
+                      className="py-8 text-center text-sm text-gray-400"
+                    >
                       No entries found.
                     </td>
                   </tr>
-                ) :(
-                pageData.map((row,index) => {
-                  const isRowSelected = selected.includes(row._id);
-                  return (
-                    <tr
-                      key={row.id}
-                      className={`transition-colors duration-150 ${
-                        isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
-                      }`}
-                    >
-                      <td className="py-3.5 px-5 text-center">
-                        <input
-                          type="checkbox"
-                          checked={isRowSelected}
-                          onChange={() => toggleRow(row._id)}
-                          className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
-                        />
-                      </td>
+                ) : (
+                  pageData.map((row, index) => {
+                    const isRowSelected = selected.includes(row._id);
+                    const isMenuOpen = activeRowMenu === row._id;
 
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
-                          {(page - 1) * perPage + index + 1}
-                      </td>
-
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-900 tracking-wide">
-                        {row.vehicleNo}
-                      </td>
-
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-2.5">
-                          <img
-                            src={row.image || profile}
-                            alt={row.ownerName}
-                            className="w-7 h-7 rounded-full object-cover shadow-sm ring-1 ring-gray-100"
+                    return (
+                      <tr
+                        key={row.id}
+                        className={`transition-colors duration-150 ${
+                          isRowSelected
+                            ? "bg-blue-50/20"
+                            : "hover:bg-gray-50/30"
+                        }`}
+                      >
+                        <td className="py-3.5 px-5 text-center">
+                          <input
+                            type="checkbox"
+                            checked={isRowSelected}
+                            onChange={() => toggleRow(row._id)}
+                            className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
                           />
-                          <span className="text-[12px] font-normal text-gray-800">
-                            {row.ownerName}
+                        </td>
+
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
+                          {(page - 1) * perPage + index + 1}
+                        </td>
+
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-900 tracking-wide">
+                          {row.vehicleNo}
+                        </td>
+
+                        <td className="py-3.5 px-4">
+                          <div className="flex items-center gap-2.5">
+                            <img
+                              src={row.image || profile}
+                              alt={row.ownerName}
+                              className="w-7 h-7 rounded-full object-cover shadow-sm ring-1 ring-gray-100"
+                            />
+                            <span className="text-[12px] font-normal text-gray-800">
+                              {row.ownerName}
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
+                          {row.typeVehicle}
+                        </td>
+
+                        <td className="py-3.5  ">
+                          <span
+                            className={`inline-block  min-w-[80px] ${statusStyles[row.status]}`}
+                          >
+                            {row.status}
                           </span>
-                        </div>
-                      </td>
+                        </td>
+                        <td className="py-3.5 text-start   text-[12px] font-normal text-gray-700">
+                          {row.createdBy?.username || "-"}
+                        </td>
 
-                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                        {row.typeVehicle}
-                      </td>
-
-                      <td className="py-3.5  ">
-                        <span
-                          className={`inline-block  min-w-[80px] ${statusStyles[row.status]}`}
+                        <td
+                          className={`py-3.5 px-4 text-[12px] font-normal sticky right-0 transition-colors duration-150 overflow-visible ${
+                            isRowSelected ? "bg-[#F3F7FE]" : "bg-white"
+                          } ${isMenuOpen ? "z-[100]" : "z-10"}`}
                         >
-                          {row.status}
-                        </span>
-                      </td>
-                      <td className="py-3.5 text-center px-4 text-[12px] font-normal text-gray-700">
-                        
-                          {row.createdBy?.username || '-'}
-                      </td>
-
-                      <td className="py-3.5 px-4 text-center">
-                        <div className="flex items-center justify-center gap-3">
-                          <button
-                            onClick={() => handleView(row)}
-                            className={statusStyles.view}
-                            title="View Record Details"
-                          >
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2}
+                          <div className="flex justify-center items-center w-full h-full">
+                            <BsThreeDotsVertical
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveRowMenu(isMenuOpen ? null : row._id);
+                              }}
+                              className="cursor-pointer text-gray-500 hover:text-black text-xl p-1 rounded-lg hover:bg-gray-100"
+                            />
+                          </div>
+                          {isMenuOpen && (
+                            <div
+                              ref={menuRef}
+                              className="absolute right-12 top-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded shadow-2xl   w-32 z-[9999] flex flex-col  animation-fade-in"
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                              />
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                              />
-                            </svg>
-                          </button>
-                          <button
-                            onClick={() => handleEdit(row)}
-                            type="button"
-                            title="Edit Vehicle"
-                            className="w-7 h-7 flex items-center justify-center bg-[#F4F4F5] hover:bg-[#E4E4E7] text-gray-700 rounded-lg transition-colors cursor-pointer active:scale-95"
-                          >
-                            <svg
-                              className="w-3.5 h-3.5"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2.5}
+                              <div className="flex flex-col items-center justify-center ">
+                            <button
+                              onClick={() => handleView(row)}
+      className="inline-block text-left cursor-pointer px-2 py-2 text-xs font-medium text-gray-500 hover:bg-gray-200/50 border-b border-gray-300 w-full"
+                              title="View Record Details"
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                              />
-                            </svg>
-                          </button>
+                              Details
+                              {/* <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2}
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                />
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                />
+                              </svg> */}
+                            </button>
+                            <button
+                              onClick={() => handleEdit(row)}
+                              type="button"
+                              title="Edit Vehicle"
+      className="inline-block text-left cursor-pointer px-2 py-2 text-xs font-medium text-blue-500 hover:bg-blue-200/50 border-b border-gray-300 w-full"
+                            >
+                              Edit
+                              {/* <svg
+                                className="w-3.5 h-3.5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2.5}
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                                />
+                              </svg> */}
+                            </button>
 
-                          <DeleteButton row={row} deleteFn={(id) => Axios.delete(`/vehicle/${id}`)} 
-  queryKey="vehicles" 
-  title="Delete Vehicle"/>
-                        </div>
-                      </td>
-                    </tr>
-                   );
+                            <DeleteButton
+                              row={row}
+                              deleteFn={(id) => Axios.delete(`/vehicle/${id}`)}
+                              queryKey="vehicles"
+                              title="Delete Vehicle"
+                            />
+                          </div>
+
+                            </div>)}
+
+
+
+                          
+                          
+                          
+                        </td>
+                      </tr>
+                    );
                   })
-                
                 )}
               </tbody>
             </table>
@@ -376,15 +435,15 @@ export default function AllVehicles({
             </div>
 
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
-           <span>
+              <span>
                 {isLoading ? (
                   "Loading entries..."
                 ) : (
                   <span>
-  Showing {totalEntries === 0 ? 0 : (page - 1) * perPage + 1} to{" "}
-  {Math.min(page * perPage, totalEntries)} of{" "}
-  {totalEntries} entries
-</span>
+                    Showing {totalEntries === 0 ? 0 : (page - 1) * perPage + 1}{" "}
+                    to {Math.min(page * perPage, totalEntries)} of{" "}
+                    {totalEntries} entries
+                  </span>
                 )}
               </span>
 

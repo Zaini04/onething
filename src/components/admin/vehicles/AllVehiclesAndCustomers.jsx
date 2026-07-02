@@ -24,50 +24,6 @@ function SortIcon() {
   );
 }
 
-//  const initialData = Array.from({ length: 50 }, (_, i) => {
-//   const names = ["Imran Khan", "Saad"];
-//   const sites = ["Multan", "Overseas", "Lahore"];
-//   const vehicles = [
-//     "Standard Dump Truck",
-//     "Mini Dump Trucks",
-//     "Low-Side Dump Trucks",
-//   ];
-//   const materials = ["Concrete", "Sand"];
-//   const rateTypes = ["per sft", "per vehicle"];
-//   const rate = ["50", "70", "80"];
-//   const totalSft = ["100", "150", "200"];
-//   const totalVehicles = ["5", "10", "15"];
-//   const totalRate = Number(rateTypes[i % 2] === "per sft" ? totalSft[i % 3] * rate[i % 3] : totalVehicles[i % 3] * rate[i % 3]);
-//   const driverExpense = 300;
-//   const loading = 200;
-//   const materialCost = 500;
-//   const otherExpenses = 200;
-//   const diesal = 350;
-//   const paymentReceived = ['received', 'pending'];
-//   const billStatus = ['generated', 'pending'];
-//   return {
-//     id: i + 1,
-//     no: String(i + 1).padStart(2, "0"),
-//     date: "24-10-2025",
-//     clientName: names[i % 2],
-//     site: sites[i % 3],
-//     vehicle: vehicles[i % 3],
-//     material: materials[i % 2],
-//     rateType: rateTypes[i % 2],
-//     rate: rate[i % 3],
-//     totalSft: totalSft[i % 3],
-//     totalVehicles: totalVehicles[i % 3],
-//     totalRate: totalRate,
-//     diesal: diesal,
-//     driverExpense: driverExpense,
-//     loading: loading,
-//     materialCost: materialCost,
-//     otherExpenses: otherExpenses,
-//     remaingAmount: totalRate - driverExpense - diesal - loading - materialCost - otherExpenses,
-//     paymentReceived: paymentReceived[i % 2] ,
-//     billStatus: billStatus[i % 2] ,
-//   };
-// });
 
 
 function TableSkeletonRows({ rowsCount = 5 }) {
@@ -162,7 +118,6 @@ export default function AllVehiclesAndCustomers({
   setSelectedRows
 }) {
   const dispatch = useDispatch();
-  // const initialData = useSelector((state) => state.entryVehicles.items);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [selected, setSelected] = useState([]);
@@ -487,7 +442,7 @@ if (dispatch) {
                           {isMenuOpen && (
                             <div
                               ref={menuRef}
-                              className="absolute right-12 top-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-lg shadow-2xl py-2 px-2 w-44 z-[9999] flex flex-col gap-1.5 animation-fade-in"
+                              className="absolute right-12 top-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-lg shadow-2xl  w-40 z-[9999] flex flex-col  animation-fade-in"
                             >
                               {row.paymentReceived === "received" ? (
                                 ""
@@ -523,7 +478,9 @@ if (dispatch) {
                                 }
                                 row={row}
                               />
-                              <button       className="inline-block text-left cursor-pointer px-2 py-1.5 text-xs font-medium text-gray-500 hover:bg-gray-300 w-full transition-colors"
+                              <button      
+                              
+      className="inline-block text-left cursor-pointer px-2 py-2 text-xs font-medium text-blue-500 hover:bg-blue-200/50 border-b border-gray-300 w-full"
  onClick={()=>handleEditEntryVehicle(row)}>
                                 Edit
                               </button>

@@ -282,7 +282,7 @@ export default function ClientEntryTable({
                         {isMenuOpen && (
                           <div
                             ref={menuRef}
-className={`absolute right-12 bg-white border border-gray-200 rounded-lg shadow-2xl py-2 px-2 w-44 z-[9999] flex flex-col gap-1.5 animation-fade-in
+className={`absolute right-12 bg-white border border-gray-200 rounded-lg shadow-2xl  w-40 z-[9999] flex flex-col  animation-fade-in
       ${
         // Agar pageData ki aakhri 1 ya 2 rows hon to menu ko upar push karo (bottom-2) warna center rakho
         index >= pageData.length - 2 && pageData.length > 2

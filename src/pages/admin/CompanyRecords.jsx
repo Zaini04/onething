@@ -26,7 +26,7 @@ function CompanyRecords() {
   const totalEntries = data?.docsCount || 10
 
   const {data:clientDropDownData} = useClientDropdown()
-         const clientOptions = clientDropDownData?.map((v) => ({ id: v.name, name: v.name })) || [];
+       const clientOptions = [...new Set(clientDropDownData?.map((v)=>v.name)|| [])].map((name)=>({id:name,name:name})) || [];
   
 
   const clientVendorConfig = [

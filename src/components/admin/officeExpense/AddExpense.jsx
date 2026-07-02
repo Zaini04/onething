@@ -84,8 +84,8 @@ export default function AddOfficeExpense({setEditedExpense,editExpense}) {
         <h2 className="text-lg font-medium">Add Expense</h2>
       </div>     
 
-      <form onSubmit={formik.handleSubmit} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100/80">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-x-6 gap-y-7">
+      <form onSubmit={formik.handleSubmit} 
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-x-6 gap-y-7 pt-2">
           <FormInput label="Date" id="date" name="date" type="date" formik={formik} />
             <FormInput
           label="Expense Type"
@@ -118,7 +118,7 @@ export default function AddOfficeExpense({setEditedExpense,editExpense}) {
             formik={formik}
           />
          
-        </div>
+        
 
         {/* Action Controls Row */}
         <div className="flex items-center justify-end gap-4 mt-8 pt-2">

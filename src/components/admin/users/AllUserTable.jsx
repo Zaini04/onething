@@ -2,6 +2,9 @@ import { useState } from "react";
 import DeleteButton from "../../global/DeleteButton";
 import { useDispatch } from "react-redux";
 import { deleteUser } from "../../../redux/actions/superAdminActions";
+import { useRef } from "react";
+import { useEffect } from "react";
+import { BsThreeDotsVertical } from "react-icons/bs";
 // import { useNavigate } from "react-router-dom";
 
 const statusStyles = {
@@ -101,6 +104,11 @@ export default function AllUserTable({
   const [selected, setSelected] = useState([]);
   const [showPerPage, setShowPerPage] = useState(false);
 
+  const [activeRowMenu, setActiveRowMenu] = useState(null);
+
+  const menuRef = useRef(null);
+
+
   const dispatch = useDispatch()
   const pageData = usersData;
   const allSelected =
@@ -147,11 +155,23 @@ export default function AllUserTable({
 
   const handleEdit = (row) => {
   setEditedUser(row);
+  setActiveRowMenu(null);
 };
 
-//   const handleView = (row) => {
-//     console.log("View clicked for vehicle:", row);
-//   };
+ useEffect(() => {
+    function handleClickOutside(event) {
+      
+
+      if (menuRef.current && menuRef.current.contains(event.target)) {
+        return;
+      }
+
+      setActiveRowMenu(null);
+    }
+
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   return (
     <div className="w-full bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm">
@@ -185,7 +205,7 @@ export default function AllUserTable({
                   <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center">
                     Status <SortIcon />
                   </th>
-                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight text-center ">
+                <th className="py-4 px-4 text-xs w-16 font-semibold text-gray-400 tracking-tight whitespace-nowrap sticky right-0 z-10 bg-[#F7F7F7]">
                     Action
                   </th>
                 </tr>
@@ -203,6 +223,8 @@ export default function AllUserTable({
                 ) : (
                   pageData.map((row, index) => {
                     const isRowSelected = selected.includes(row?.id);
+                                        const isMenuOpen = activeRowMenu === row._id;
+
                     return (
                       <tr
                         key={row?._id || index}
@@ -253,42 +275,35 @@ export default function AllUserTable({
                           </span>
                         </td>
 
-                        <td className="py-3.5 px-4 text-center">
-                          <div className="flex items-center justify-center gap-2">
-                            {/* <button
-                              onClick={() => handleView(row)}
-                              className={statusStyles.view}
-                              title="View Record Details"
+                        <td
+                          className={`py-3.5 px-4 text-[12px] font-normal sticky right-0 transition-colors duration-150 overflow-visible ${
+                            isRowSelected ? "bg-[#F3F7FE]" : "bg-white"
+                          } ${isMenuOpen ? "z-[100]" : "z-10"}`}
+                        >
+                          <div className="flex justify-center items-center w-full h-full">
+                            <BsThreeDotsVertical
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveRowMenu(isMenuOpen ? null : row._id);
+                              }}
+                              className="cursor-pointer text-gray-500 hover:text-black text-xl p-1 rounded-lg hover:bg-gray-100"
+                            />
+                          </div>
+                          {isMenuOpen && (
+                            <div
+                              ref={menuRef}
+                              className="absolute right-12 top-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded shadow-2xl   w-32 z-[9999] flex flex-col  animation-fade-in"
                             >
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth={2}
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                />
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                />
-                              </svg>
-                            </button> */}
-
-                            {/* <ViewButton row /> */}
-
+                              <div className="flex flex-col items-center justify-center ">
+                     
                             <button
                               onClick={() => handleEdit(row)}
                               type="button"
-                              title="Edit Vehicle"
-                              className="w-7 h-7 flex items-center justify-center bg-[#F4F4F5] hover:bg-[#E4E4E7] text-gray-700 rounded-lg transition-colors cursor-pointer active:scale-95"
+                              title="Edit User"
+      className="inline-block text-left cursor-pointer px-2 py-2 text-xs font-medium text-blue-500 hover:bg-blue-200/50 border-b border-gray-300 w-full"
                             >
-                              <svg
+                              Edit
+                              {/* <svg
                                 className="w-3.5 h-3.5"
                                 fill="none"
                                 viewBox="0 0 24 24"
@@ -300,13 +315,24 @@ export default function AllUserTable({
                                   strokeLinejoin="round"
                                   d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
                                 />
-                              </svg>
+                              </svg> */}
                             </button>
 
-                            <DeleteButton row={row} deleteFn={(id) => dispatch(deleteUser(id))} 
-  queryKey="users" 
-  title="Delete User" />
+                            <DeleteButton
+                              row={row}
+                              deleteFn={(id) => dispatch(deleteUser(id))}
+                              queryKey="users"
+                              title="Delete User"
+                            />
                           </div>
+
+                            </div>)}
+
+
+
+                          
+                          
+                          
                         </td>
                       </tr>
                     );

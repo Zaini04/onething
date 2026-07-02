@@ -31,7 +31,9 @@ function Clients() {
   const totalPages = data?.pages || 1;
   const totalEntries = data?.docsCount || 10
     const {data:clientDropDownData} = useClientDropdown()
-       const clientOptions = clientDropDownData?.map((v) => ({ id: v.name, name: v.name })) || [];
+       const clientOptions = [...new Set(clientDropDownData?.map((v)=>v.name)|| [])].map((name)=>({id:name,name:name})) || [];
+       
+      // cont c= clientDropDownData?.map((v) => ({ id: v.name, name: v.name })) || [];
 
   
 

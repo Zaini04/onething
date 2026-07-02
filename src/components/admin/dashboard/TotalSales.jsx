@@ -41,18 +41,18 @@ queryKey: ["dashboard"],
     staleTime: 1000 * 30,
     cacheTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
     keepPreviousData: true,
   });
 
 const dashboard = dashboardData?.docs
 
   return (
-    <>
-                   {isLoadings ? <TotalSalesSkeleton/>:<div className="w-full rounded-2xl bg-white p-5 shadow-sm border border-gray-100 flex flex-col justify-between">
+                   isLoadings ? <TotalSalesSkeleton/>:
+                   <div className="w-full md:col-span-2 lg:col-span-1 rounded-2xl bg-white p-5 shadow-sm border border-gray-100 flex flex-col justify-between">
         
           
-          <div>
+          <div className="w-full h-full">
             <p className="text-sm font-medium text-black">
               This Month Sales
             </p>
@@ -113,10 +113,9 @@ const dashboard = dashboardData?.docs
               </div>
             </div>
           </div>
-        </div>}
+        </div>
 
     
-    </>
     
 
            )

@@ -12,7 +12,7 @@ export default function ViewButton({ row, type = "entry-vehicle" }) {
     <button 
       onClick={handleOpenModal}
       type="button"
-      className="inline-block text-left cursor-pointer px-2 py-1.5 text-xs font-medium text-gray-500 hover:bg-gray-300 w-full transition-colors"
+      className="inline-block text-left cursor-pointer px-2 py-2 text-xs font-medium text-gray-500 hover:bg-gray-200/50 border-b border-gray-300 w-full"
     >
       View
     </button>

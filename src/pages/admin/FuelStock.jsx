@@ -15,6 +15,7 @@ function FuelStock() {
   const [perPage, setPerPage] = useState(10);
   const [apiFilters, setApiFilters] = useState({});
     const [link]= useState(`/fuel/stock_records`)
+    const [filters, setFilters] = useState({from: "",   to: "", fuelCompany: "" });
     const [selectedRows, setSelectedRows] = useState([]);
 
 
@@ -63,16 +64,11 @@ const handleEdit = (row) => {
 
 
   const clientVendorConfig = [
-    {
-      name: "fuelLiters",
-      type: "select",
-      placeholder: "Fuel Liter",
-      searchable: true,
-      options: [
-        "10",
-        "30",
-        "25"
-      ],
+   {
+      name: "dateRange", 
+      type: "date-range", 
+      label: "Select Date Range",
+      placeholder: "Choose Range (From - To)",
     },
 
     {
@@ -84,15 +80,30 @@ const handleEdit = (row) => {
     },
   ];
 
-  const [filters, setFilters] = useState({ fuelLiters: "", fuelCompany: "" });
 
-  const handleFilterChange = (name, value) => {
-    setFilters((prev) => ({ ...prev, [name]: value }));
+ const handleFilterChange = (name, value) => {
+    if (name === "dateRange") {
+      setFilters((prev) => ({ 
+        ...prev, 
+        from: value.from, 
+        to: value.to 
+      }));
+    } else {
+      setFilters((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
-  const handleSearchSubmit = (finalFilters) => {
-    setApiFilters(finalFilters)
+
+    const handleSearchSubmit = () => {
+    const payload = {
+      from: filters.from,
+      to: filters.to,
+      fuelCompany:filters.fuelCompany
+    };
+    console.log("Submitting Range Filters to API:", payload);
+    setApiFilters(payload);
   };
+
 
   return (
     <div className="w-full md:w-[80%] lg:w-[85%] xl:w-[87%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-x-hidden">

@@ -1,6 +1,9 @@
 import { useState } from "react";
 import DeleteButton from "../../global/DeleteButton";
 import Axios from "../../../configs/api";
+import { useRef } from "react";
+import { useEffect } from "react";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 function SortIcon() {
   return (
@@ -109,10 +112,14 @@ export default function AllExpenses({
   totalEntries,
   setSelectedRows,
 }) {
-  // const initialData = useSelector((state) => state.entryVehicles.items);
 
   const [selected, setSelected] = useState([]);
   const [showPerPage, setShowPerPage] = useState(false);
+
+  const [activeRowMenu, setActiveRowMenu] = useState(null);
+
+  const menuRef = useRef(null);
+
 
   const pageData = officeExpenseData;
   const allSelected =
@@ -169,8 +176,25 @@ export default function AllExpenses({
 
   const handleEdit = (row) => {
     setEditedExpense(row);
-    console.log("row", row);
+    setActiveRowMenu(null);
   };
+
+   useEffect(() => {
+    function handleClickOutside(event) {
+      
+
+      if (menuRef.current && menuRef.current.contains(event.target)) {
+        return;
+      }
+
+      setActiveRowMenu(null);
+    }
+
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
+
   return (
     <div className="w-full bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm">
       <div className="w-full mx-auto">
@@ -210,8 +234,8 @@ export default function AllExpenses({
                   <th className="py-4 w-16  text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
                     Created By <SortIcon />
                   </th>
-                  <th className="py-4 w-16  text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Action <SortIcon />
+                   <th className="py-4 px-4 text-xs w-16 font-semibold text-gray-400 tracking-tight whitespace-nowrap sticky right-0 z-10 bg-[#F7F7F7]">
+                    Action
                   </th>
                 </tr>
               </thead>
@@ -231,6 +255,8 @@ export default function AllExpenses({
                 ) : (
                   pageData.map((row, index) => {
                     const isRowSelected = selected.includes(row._id);
+                                        const isMenuOpen = activeRowMenu === row._id;
+
 
                     return (
                       <tr
@@ -270,15 +296,35 @@ export default function AllExpenses({
                           {row.createdBy?.username || "-"}
                         </td>
 
-                        <td className="py-3.5  text-center">
-                          <div className="flex items-center justify-start gap-3">
+                         <td
+                          className={`py-3.5 px-4 text-[12px] font-normal sticky right-0 transition-colors duration-150 overflow-visible ${
+                            isRowSelected ? "bg-[#F3F7FE]" : "bg-white"
+                          } ${isMenuOpen ? "z-[100]" : "z-10"}`}
+                        >
+                          <div className="flex justify-center items-center w-full h-full">
+                            <BsThreeDotsVertical
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveRowMenu(isMenuOpen ? null : row._id);
+                              }}
+                              className="cursor-pointer text-gray-500 hover:text-black text-xl p-1 rounded-lg hover:bg-gray-100"
+                            />
+                          </div>
+                          {isMenuOpen && (
+                            <div
+                              ref={menuRef}
+                              className="absolute right-12 top-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded shadow-2xl   w-32 z-[9999] flex flex-col  animation-fade-in"
+                            >
+                              <div className="flex flex-col items-center justify-center ">
+                           
                             <button
                               onClick={() => handleEdit(row)}
                               type="button"
-                              title="Edit Office Expense"
-                              className="w-7 h-7 flex items-center justify-center bg-[#F4F4F5] hover:bg-[#E4E4E7] text-gray-700 rounded-lg transition-colors cursor-pointer active:scale-95"
+                              title="Edit Vehicle"
+      className="inline-block text-left cursor-pointer px-2 py-2 text-xs font-medium text-blue-500 hover:bg-blue-200/50 border-b border-gray-300 w-full"
                             >
-                              <svg
+                              Edit
+                              {/* <svg
                                 className="w-3.5 h-3.5"
                                 fill="none"
                                 viewBox="0 0 24 24"
@@ -290,18 +336,24 @@ export default function AllExpenses({
                                   strokeLinejoin="round"
                                   d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
                                 />
-                              </svg>
+                              </svg> */}
                             </button>
 
                             <DeleteButton
                               row={row}
-                              deleteFn={(id) =>
-                                Axios.delete(`/office-expense/${id}`)
-                              }
+                              deleteFn={(id) => Axios.delete(`/office-expense/${id}`)}
                               queryKey="office-expenses"
-                              title="Delete Vehicle"
+                              title="Delete Office Expense"
                             />
                           </div>
+
+                            </div>)}
+
+
+
+                          
+                          
+                          
                         </td>
                       </tr>
                     );

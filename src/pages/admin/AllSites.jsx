@@ -11,12 +11,11 @@ function AllSites() {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
-  const [status, setStatus] = useState('');
   const [apiFilters, setApiFilters] = useState({siteName: "",  from: "",  to: "",  status: "Active"});
   const [selectedRows, setSelectedRows] = useState([]);
   const [link]= useState(`/site/site_records`)
 
-  const [filters, setFilters] = useState({ siteName: "",  from: "",  to: "",  status: "" });
+  const [filters, setFilters] = useState({ siteName: "",  from: "",  to: "",  status: "Active" });
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ["sites", page, perPage, apiFilters],
     queryFn: fetchSites,
@@ -32,7 +31,8 @@ function AllSites() {
   const totalEntries = data?.docsCount || 10
 
  const {data:siteDropDownData} = useSiteDropdown()
-       const siteOptions = siteDropDownData?.map((v) => ({ id: v.siteName, name: v.siteName })) || [];
+       const siteOptions = [...new Set(siteDropDownData?.map((v)=>v.siteName)|| [])].map((siteName)=>({id:siteName,name:siteName})) || [];
+       
 
        console.log(siteOptions)
   const clientVendorConfig = [
@@ -76,8 +76,7 @@ function AllSites() {
     }
   };
 
-  const handleSearchSubmit = (finalFilters) => {
-    // API ko submit karte waqt sirf 'vehicle', 'from' aur 'to' bhejen gy
+  const handleSearchSubmit = () => {
     const payload = {
       siteName: filters.siteName,
       from: filters.from,
@@ -93,7 +92,7 @@ function AllSites() {
     navigate(`/app/sites/edit`, { state: { siteData: row } });
   }
   return (
-    <div className="md:w-[93%] lg:w-[94%] xl:w-[95%]  px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-hidden">
+    <div className="w-full md:w-[80%] lg:w-[85%] xl:w-[87%] px-4   md:px-8 py-6 min-h-screen bg-[#F7F7F7] overflow-hidden">
       <div className="w-full flex flex-col  animate-in fade-in duration-200">
         <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
           <div>
