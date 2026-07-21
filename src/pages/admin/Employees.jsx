@@ -6,20 +6,22 @@ import ClientsTable from "../../components/admin/clients/ClientsTable";
 import ExportButton from "../../components/global/ExportButton";
 import { useQuery } from "@tanstack/react-query";
 import { fetchClients, useClientDropdown } from "../../redux/actions/clientAction";
+import { fetchEmployees, useEmployeeDropdown } from "../../redux/actions/employeeAction";
+import EmployeeTable from "../../components/admin/employee/EmployeeTable";
 
-function Clients() {
+function Employees() {
   const navigate = useNavigate();
   const [filters, setFilters] = useState({ name: "", from: "",   to: "",   status: "Active" });
   const [selectedRows, setSelectedRows] = useState([]);
-  const [link]= useState(`/client/client_records`)
+  const [link]= useState(`/employee/employees_records`)
 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [apiFilters, setApiFilters] = useState({name: "", from: "",   to: "",   status: "Active"});
   
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["clients", page, perPage, apiFilters],
-    queryFn: fetchClients,
+    queryKey: ["employees", page, perPage, apiFilters],
+    queryFn: fetchEmployees,
     staleTime: 1000 * 30,
     cacheTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
@@ -27,23 +29,23 @@ function Clients() {
     keepPreviousData: true,
   });
 
-  const clients = data?.docs || [];
+  const employeesData = data?.docs || [];
   const totalPages = data?.pages || 1;
   const totalEntries = data?.docsCount || 10
-    const {data:clientDropDownData} = useClientDropdown()
-      //  const clientOptions = [...new Set(clientDropDownData?.map((v)=>v.name)|| [])].map((name)=>({id:name,name:name})) || [];
+    const {data:employeeDropDownData} = useEmployeeDropdown()
+            const emloyeesOptions = employeeDropDownData?.map((v) => ({ id: v._id, name: `${v.name} (${v.phoneNumber || 'No Phone'})` })) || [];
        
-      const clientOptions= clientDropDownData?.map((v) => ({ id: v._id, name: `${v.name} (${v.phoneNumber || 'No Phone'})`})) || [];
+      // cont c= clientDropDownData?.map((v) => ({ id: v.name, name: v.name })) || [];
 
   
 
-  const clientVendorConfig = [
+  const employeeVendorConfig = [
     {
       name: "name",
       type: "select",
       searchable: true,
       placeholder: "Name",
-      options: clientOptions,
+      options: emloyeesOptions,
     },
    {
       name: "dateRange", 
@@ -88,7 +90,8 @@ function Clients() {
 
 
   const handleEdit = (row)=>{
-    navigate(`/app/clients/edit`, { state: { clientData: row } });
+    console.log("employee /app/employee/edit",row)
+    navigate(`/app/employees/edit`, { state: { employeeData: row } });
   }
 
   return (
@@ -97,7 +100,7 @@ function Clients() {
         <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
           <div>
             <h1 className="text-xl font-medium text-black tracking-tight">
-              All Clients
+              All Employees
             </h1>
           </div>
 
@@ -105,19 +108,19 @@ function Clients() {
           <ExportButton selectedRows={selectedRows} apiFilters={apiFilters} linkRecord={link}/>
 
             <button
-              onClick={() => navigate("/app/clients/add")} // Clean page navigation route
+              onClick={() => navigate("/app/employees/add")} // Clean page navigation route
               type="button"
               className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2.5 bg-[#1A1C1E] hover:bg-black text-white font-normal sm:font-medium text-[14px] sm:text-sm rounded-xl active:scale-[0.98] transition-all cursor-pointer shadow-sm shadow-gray-200"
             >
               <Plus size={18} className="stroke-[2.5]" />
-              <span>Add Client</span>
+              <span>Add Employee</span>
             </button>
           </div>
         </div>
 
         <div className="w-full">
           <SearchFilters
-            config={clientVendorConfig}
+            config={employeeVendorConfig}
             filters={filters}
             onFilterChange={handleFilterChange}
             onSubmit={handleSearchSubmit}
@@ -125,9 +128,9 @@ function Clients() {
         </div>
 
         <div className="w-full ">
-          <ClientsTable 
-            setEditedClient={handleEdit}
-            clientsData={clients} 
+          <EmployeeTable 
+            setEditedEmployee={handleEdit}
+            employeesData={employeesData} 
             isLoading={isLoading || isFetching} 
             page={page} 
             perPage={perPage}
@@ -143,4 +146,4 @@ function Clients() {
   );
 }
 
-export default Clients;
+export default Employees;

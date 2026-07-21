@@ -94,6 +94,7 @@ export default function EntryVehicle() {
         totalRate: cleanTotalRate,
         remainingAmount: cleanRemainingAmount,
         isStockManaged: dynamicStockManaged,
+       
       };
       console.log(values)
 
@@ -135,7 +136,7 @@ export default function EntryVehicle() {
   // Destructured isLoading to manage spinner state safely ──🔥
   const { data: fuelCompaniesData, isLoading: isFuelLoading } = useFuelStockCompaniesListsDropdown();
 
-  const clientOptions = clientDropdownData?.map((c) => ({ id: c._id, name: c.name })) || [];
+  const clientOptions = clientDropdownData?.map((c) => ({ id: c._id, name: `${c.name} (${c.phoneNumber || 'No Phone'})` })) || [];
   const vehicleOptions = vehicleDropDownData?.map((v) => ({ id: v._id, name: v.vehicleNo })) || [];
   const siteOptions = siteMaterials?.map((s) => ({ id: s._id, name: s.siteName })) || [];
 

@@ -78,7 +78,7 @@ const { data: clientDropdownData,isLoading:isClientLoading } = useClientDropdown
 const clientOptions =
   clientDropdownData?.map((c) => ({
     id: c._id,
-    name: c.name,
+    name: `${c.name} (${c.phoneNumber || 'No Phone'})`,
   })) || [];
 
   const handleMaterialSelect = (e) => {

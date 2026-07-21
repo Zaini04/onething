@@ -54,7 +54,7 @@ const [selectedRows, setSelectedRows] = useState([]);
   const {data:clientDropDownData} = useClientDropdown()
    const { data: vehicleDropDownData } = useVehicleDropdown();
 
-       const clientOptions = [ ...new Set(clientDropDownData?.map((v)=>v.name)|| [])].map((name)=>({id:name,name:name})) || [];
+      const clientOptions= clientDropDownData?.map((v) => ({ id: v._id, name: `${v.name} (${v.phoneNumber || 'No Phone'})`})) || [];
 
    const vehicleOptions = vehicleDropDownData?.map((v) => ({ id: v._id, name: v.vehicleNo })) || [];
 

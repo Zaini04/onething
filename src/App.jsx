@@ -31,6 +31,9 @@ import AddCompanyRecord from "./components/admin/companyRecords/AddCompanyRecord
 import OfficeExpenses from "./pages/admin/OfficeExpenses";
 import PumpBills from "./pages/admin/PumpBills";
 import AddPumpBill from "./components/admin/Fuel/AddPumpBill";
+import Employees from "./pages/admin/Employees";
+import AddEmployee from "./components/admin/employee/AddEmployee";
+import EmployeesBills from "./pages/admin/EmolyeesBills";
 function App() {
   return (
     <>
@@ -74,6 +77,14 @@ theme="light"
               <Route path="clients/edit" element={<AddClient />} />
               <Route path="clients/:id" element={<ClientDetails />} />
             </Route>
+            <Route element={<ProtectedRoute requiredMenu = "employee"/>} >
+              <Route path="employees" element={<Employees />} />
+              <Route path="employees/add" element={<AddEmployee />} />
+              <Route path="employees/edit" element={<AddEmployee />} />
+
+            </Route>
+
+
 
             <Route element={<ProtectedRoute requiredMenu = "pump-Bills"/>} >
               <Route path="pump-bills" element={<PumpBills />} />
@@ -127,6 +138,11 @@ theme="light"
 
             <Route element={<ProtectedRoute requiredMenu = "settings"/>} >
               <Route path ='settings' element={<Settings />} />
+            </Route>
+            <Route element={<ProtectedRoute requiredMenu = "reports"/>} >
+              <Route path ='reports/employee-bills' element={<EmployeesBills />} />
+              <Route path ='reports/reports/labour-bills' element={<Settings />} />
+              <Route path ='reports/reports/company-bills' element={<Settings />} />
             </Route>
            
             <Route element={<ProtectedRoute requiredMenu = "profile"/>} >

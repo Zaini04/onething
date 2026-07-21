@@ -16,6 +16,7 @@
     "axios": "^1.17.0",
     "crypto-js": "^4.2.0",
     "date-fns": "^4.4.0",
+    "dayjs": "^1.11.21",
     "formik": "^2.4.9",
     "lucide-react": "^1.16.0",
     "react": "^19.2.6",
