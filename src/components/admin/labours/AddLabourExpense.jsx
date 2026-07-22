@@ -6,12 +6,12 @@ import Axios from "../../../configs/api";
 import { toast } from "react-toastify";
 import { toastError } from "../../../hooks/toastError";
 import { useState } from "react";
-import { useEmployeeDropdown } from "../../../redux/actions/employeeAction";
+import { useLabourDropdown } from "../../../redux/actions/labourAction";
 import SearchSelect from "../../global/SearchSelect";
 import DropDownLoader from "../../../hooks/DropDownLoader";
-import { employeeExpenseValidation } from "../../../validations/EmployeeValidation";
+import { labourExpenseValidation } from "../../../validations/LabourValidation";
 
-export default function AddEmployeeExpense({setEditedExpense,editExpense}) {
+export default function AddLabourExpense({setEditedExpense,editExpense}) {
   const navigate = useNavigate();
 
   const queryClient = useQueryClient();
@@ -23,16 +23,16 @@ export default function AddEmployeeExpense({setEditedExpense,editExpense}) {
     mutationFn: async (payload) => {
       setIsSubmitting(true);
       if (isEdit) {
-      return Axios.put(`/employee/employee_expense/${editExpense._id}`, payload);
+      return Axios.put(`/labour/labour_expense/${editExpense._id}`, payload);
     }
-      return Axios.post('/employee/add_employee_expense', payload);
+      return Axios.post('/labour/add_labour_expense', payload);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["employees-bills"] });
+      queryClient.invalidateQueries({ queryKey: ["labours-bills"] });
       setIsSubmitting(false);
       formik.resetForm();
-      toast.success("Company record created successfully!");
-      navigate(`/app/reports/employee-bills`);
+      toast.success("Labour expense saved successfully!");
+      navigate(`/app/reports/labour-bills`);
     },
     onError: (err) => {
       console.error("Mutation Error:", err);
@@ -47,47 +47,33 @@ export default function AddEmployeeExpense({setEditedExpense,editExpense}) {
     enableReinitialize: true,
     initialValues: {
       date:  editExpense?.date || new Date().toISOString().split('T')[0] ,
-      employee:  editExpense?.employee._id || "",
+      labour:  editExpense?.labour._id || "",
       amount:  editExpense?.amount || "",
       notes:  editExpense?.notes || "",
      
     },
-    validationSchema: employeeExpenseValidation,
+    validationSchema: labourExpenseValidation,
     onSubmit: (values) => {
-
-
-
-      
 
       ExpenseMutation.mutate(values);
     },
   });
-
-  
- 
-
- 
-
 
   const handleClear = () => {
   formik.resetForm();
 
   if (isEdit) {
     setEditedExpense(null);
-    navigate("/app/office-expense");
+    navigate("/app/reports/labour-bills");
   }
 };
-const { data: employeeDropdownData,isLoading:isEmployeeLoading } = useEmployeeDropdown();
+const { data: labourDropdownData,isLoading:isLabourLoading } = useLabourDropdown();
 
-const employeeOptions =
-  employeeDropdownData?.map((c) => ({
+const labourOptions =
+  labourDropdownData?.map((c) => ({
     id: c._id,
     name: `${c.name} (${c.phoneNumber || 'No Phone'})`,
   })) || [];
-
-
-  // console.log("fco",fuelCompanyOptions)
-  // Recalculates dynamically every render loop securely
 
   return (
   <div className="w-full lg:max-w-[540px] bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
@@ -100,27 +86,19 @@ const employeeOptions =
           <FormInput label="Date" id="date" name="date" type="date" formik={formik} />
        <div className="relative flex flex-col w-full">
    <SearchSelect
-            label="Select Employee"
-            placeholder={isEmployeeLoading ? "Loading Employees ":"Select Employee"}
-            options={employeeOptions}
-            value={formik.values.employee}
-            onChange={(val) => formik.setFieldValue("employee", val, true)}
-            onBlur={() => formik.setFieldTouched("employee", true, true)}
-            isError={formik.touched.employee && !!formik.errors.employee}
-            errorMessage={formik.errors.employee}
+            label="Select Labour"
+            placeholder={isLabourLoading ? "Loading Labours ":"Select Labour"}
+            options={labourOptions}
+            value={formik.values.labour}
+            onChange={(val) => formik.setFieldValue("labour", val, true)}
+            onBlur={() => formik.setFieldTouched("labour", true, true)}
+            isError={formik.touched.labour && !!formik.errors.labour}
+            errorMessage={formik.errors.labour}
           />       
-            {isEmployeeLoading && (
+            {isLabourLoading && (
               <DropDownLoader/>
             )}
           </div>   
-          
-          
-
-          
-      
-
-        
-          
 
           <FormInput label="Amount" id="amount" type="text" placeholder="Enter expense amount"  formik={formik} />
            <FormInput
@@ -131,10 +109,7 @@ const employeeOptions =
             rows={3}
             formik={formik}
           />
-         
-        
 
-        {/* Action Controls Row */}
         <div className="flex items-center justify-end gap-4 mt-8 pt-2">
           <div className="flex gap-2 justify-center items-center">
             <button
@@ -149,7 +124,6 @@ const employeeOptions =
               type="submit"
               disabled={isSubmitting}
               className="px-5 sm:px-8 py-2.5 bg-[#1A1C1E] hover:bg-black text-white font-medium text-sm rounded-xl transition-all cursor-pointer shadow-sm active:scale-[0.99]"
-              disabled={isSubmitting}
             >
               {isSubmitting ? "Saving..." : "Confirm"}
             </button>

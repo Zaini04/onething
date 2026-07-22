@@ -12,6 +12,26 @@ export const fetchCompanyRecord = async ({ queryKey }) => {
   return res.data.data;
 };
 
+export const fetchCompanyBills= async ({ queryKey }) => {
+
+  const [, page, limit,apiFilters] = queryKey;
+  const pageSize = limit
+  const res = await Axios.get("/company-records/all_clients_expenses", {
+    params: { page, pageSize,...apiFilters },
+  });
+
+
+  return res.data.data;
+};
+
+export const fetchCompanyExpenseSummary = async ({ queryKey }) => {
+  const [, client, from, to] = queryKey;
+  const { data } = await Axios.get("/company-records/expense-summary", {
+    params: { client, from, to },
+  });
+  return data.data; // ya jo bhi response shape hai
+};
+
 
 export const exportCompanyRecordsExcel = async ({
   clientId,

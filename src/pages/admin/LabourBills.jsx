@@ -1,50 +1,51 @@
-import { Plus, TrendingDown, TrendingUp, User, Wallet, X } from "lucide-react";
+import { Plus, TrendingDown, User, X } from "lucide-react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ExportButton from "../../components/global/ExportButton";
 import { useQuery } from "@tanstack/react-query";
 import SearchFilters from "../../components/global/SearchFilter";
-import { fetchEmployeeExpenseSummary, fetchEmployeesBills, useEmployeeDropdown } from "../../redux/actions/employeeAction";
-import EmployeeExpenseTable from "../../components/admin/employee/EmployeeExpenseTable";
-import AddEmployeeExpense from "../../components/admin/employee/AddEmployeeExpense";
-import dayjs from "dayjs"; 
-function EmployeesBills() {
+import { fetchLabourExpenseSummary, fetchLaboursBills, useLabourDropdown } from "../../redux/actions/labourAction";
+import dayjs from "dayjs";
+import LabourExpenseTable from "../../components/admin/labours/LabourExpenseTable";
+import AddLabourExpense from "../../components/admin/labours/AddLabourExpense";
+
+function LabourBills() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [filters, setFilters] = useState({ employee: "", from: dayjs().startOf("month").format("YYYY-MM-DD"),
+  const [filters, setFilters] = useState({ labour: "", from: dayjs().startOf("month").format("YYYY-MM-DD"),
   to: dayjs().endOf("month").format("YYYY-MM-DD"),  });
 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
-  const [apiFilters, setApiFilters] = useState({ employee: "", from: dayjs().startOf("month").format("YYYY-MM-DD"),
+  const [apiFilters, setApiFilters] = useState({ labour: "", from: dayjs().startOf("month").format("YYYY-MM-DD"),
   to: dayjs().endOf("month").format("YYYY-MM-DD"), });
   const [editExpense, setEditedExpense] = useState(null);
 
   const [selectedRows, setSelectedRows] = useState([]);
-  const [link] = useState(`/employee/expense_records`);
+  const [link] = useState(`/labour/expense_records`);
 
   const mode = location.hash.replace("#", "");
   const addExpenseModelOpen = mode === "add" || mode === "edit";
 
   const handleAdd = () => {
       setEditedExpense(null);
-    navigate("/app/reports/employee-bills#add");
+    navigate("/app/reports/labour-bills#add");
   };
   const handleEdit = (row) => {
     setEditedExpense(row);
-    navigate("/app/reports/employee-bills#edit");
+    navigate("/app/reports/labour-bills#edit");
   };
 
   const handleToggleSidebar = () => {
     if (addExpenseModelOpen) {
-      navigate("/app/reports/employee-bills");
+      navigate("/app/reports/labour-bills");
     } else {
-      navigate("/app/reports/employee-bills#add");
+      navigate("/app/reports/labour-bills#add");
     }
   };
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["employees-bills", page, perPage, apiFilters],
-    queryFn: fetchEmployeesBills,
+    queryKey: ["labours-bills", page, perPage, apiFilters],
+    queryFn: fetchLaboursBills,
     staleTime: 1000 * 30,
     cacheTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
@@ -52,31 +53,30 @@ function EmployeesBills() {
     keepPreviousData: true,
   });
 
-  const EmployeeExpenseData = data?.docs || [];
+  const LabourExpenseData = data?.docs || [];
   const totalPages = data?.pages || 1;
   const totalEntries = data?.docsCount || 10;
 
-      const {data:employeeDropDownData} = useEmployeeDropdown()
-        //  const emloyeesOptions = [...new Set(employeeDropDownData?.map((v)=>v.name)|| [])].map((name)=>({id:name,name:name,phoneNumber:phoneNumber})) || [];
-  
-            const emloyeesOptions = employeeDropDownData?.map((v) => ({ id: v._id, name: `${v.name} (${v.phoneNumber || 'No Phone'})` })) || [];
+      const {data:labourDropDownData} = useLabourDropdown()
+
+            const laboursOptions = labourDropDownData?.map((v) => ({ id: v._id, name: `${v.name} (${v.phoneNumber || 'No Phone'})` })) || [];
 
 
             const { data: summaryData,  } = useQuery({
-  queryKey: ["employee-expense-summary", apiFilters.employee, apiFilters.from, apiFilters.to],
-  queryFn: fetchEmployeeExpenseSummary,
-  enabled: !!apiFilters.employee, // yehi condition card ko start pe hide rakhti hai
+  queryKey: ["labour-expense-summary", apiFilters.labour, apiFilters.from, apiFilters.to],
+  queryFn: fetchLabourExpenseSummary,
+  enabled: !!apiFilters.labour,
   staleTime: 1000 * 30,
 });
 
 
-  const EmployeeBillsConfig = [
+  const LabourBillsConfig = [
    {
-      name: "employee",
+      name: "labour",
       type: "select",
       searchable: true,
-      placeholder: "Employee Name",
-      options: emloyeesOptions,
+      placeholder: "Labour Name",
+      options: laboursOptions,
     },
 
     {
@@ -99,14 +99,13 @@ function EmployeesBills() {
       setFilters((prev) => ({ ...prev, [name]: value }));
     }
   };
-// 1. Submit controller ko fix karein taake wo local controlled 'filters' state se data read kare, random parameter se nahi
+
 const handleSearchSubmit = () => {
   console.log("Submitting Filters to API:", filters);
   setApiFilters({
-    employee: filters.employee || "",
+    labour: filters.labour || "",
     from: filters.from || "",
     to: filters.to || "",
-    status: filters.status || ""
   });
 };
 
@@ -115,7 +114,7 @@ const handleSearchSubmit = () => {
       <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
         <div>
           <h1 className="text-xl font-medium text-black tracking-tight">
-            All Employees Bills
+            All Labours Bills
           </h1>
         </div>
 
@@ -146,7 +145,7 @@ const handleSearchSubmit = () => {
                 className="flex justify-center items-center gap-x-2"
               >
                 <Plus size={18} className="stroke-[2.5]" />
-                <span>Add Employee Bill</span>
+                <span>Add Labour Bill</span>
               </button>
             )}
           </button>
@@ -155,13 +154,13 @@ const handleSearchSubmit = () => {
 
       <div className="w-full mb-6">
         <SearchFilters
-          config={EmployeeBillsConfig}
+          config={LabourBillsConfig}
           filters={filters}
           onFilterChange={handleFilterChange}
           onSubmit={handleSearchSubmit}
         />
       </div>
-      {apiFilters.employee && summaryData && (
+      {apiFilters.labour && summaryData && (
   <div className="w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-5 mb-6">
     <div className="flex items-center justify-between mb-4">
       <div className="flex items-center gap-3">
@@ -170,10 +169,10 @@ const handleSearchSubmit = () => {
         </div>
         <div>
           <h3 className="text-sm font-semibold text-gray-900">
-            {summaryData.employee.name}
+            {summaryData.labour.name}
           </h3>
           <p className="text-xs text-gray-500">
-            {summaryData.employee.phoneNumber}
+            {summaryData.labour.phoneNumber}
           </p>
         </div>
       </div>
@@ -183,19 +182,7 @@ const handleSearchSubmit = () => {
       </span>
     </div>
 
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <div className="flex items-center gap-3 p-4 rounded-xl bg-gray-50">
-        <div className="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
-          <Wallet size={16} className="text-blue-600" />
-        </div>
-        <div>
-          <p className="text-xs text-gray-500">Monthly Salary</p>
-          <p className="text-base font-semibold text-gray-900">
-            {summaryData.employee.monthlySalary.toLocaleString()}
-          </p>
-        </div>
-      </div>
-
+    <div className="grid grid-cols-1 gap-4">
       <div className="flex items-center gap-3 p-4 rounded-xl bg-red-50">
         <div className="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center shrink-0">
           <TrendingDown size={16} className="text-red-600" />
@@ -204,18 +191,6 @@ const handleSearchSubmit = () => {
           <p className="text-xs text-gray-500">Spent This Period</p>
           <p className="text-base font-semibold text-red-600">
             {summaryData.totalSpent.toLocaleString()}
-          </p>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-3 p-4 rounded-xl bg-green-50">
-        <div className="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center shrink-0">
-          <TrendingUp size={16} className="text-green-600" />
-        </div>
-        <div>
-          <p className="text-xs text-gray-500">Remaining Salary</p>
-          <p className="text-base font-semibold text-green-600">
-            {summaryData.remainingSalary.toLocaleString()}
           </p>
         </div>
       </div>
@@ -231,9 +206,9 @@ const handleSearchSubmit = () => {
             addExpenseModelOpen ? "w-full lg:w-[65%] shrink-0" : "w-full"
           }`}
         >
-          <EmployeeExpenseTable
-           setEditedEmployee={handleEdit}
-            employeesData={EmployeeExpenseData} 
+          <LabourExpenseTable
+           setEditedLabour={handleEdit}
+            laboursData={LabourExpenseData} 
             isLoading={isLoading || isFetching} 
             page={page} 
             perPage={perPage}
@@ -255,7 +230,7 @@ const handleSearchSubmit = () => {
         >
           {addExpenseModelOpen && (
             <div className="w-full ">
-              <AddEmployeeExpense editExpense={editExpense} setEditedExpense={setEditedExpense} />
+              <AddLabourExpense editExpense={editExpense} setEditedExpense={setEditedExpense} />
             </div>
           )}
 
@@ -271,4 +246,4 @@ const handleSearchSubmit = () => {
   );
 }
 
-export default EmployeesBills;
+export default LabourBills;

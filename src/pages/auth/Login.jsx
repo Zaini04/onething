@@ -88,7 +88,7 @@ function Login() {
 
       <div className="flex items-center gap-2 mb-8">
         {/* <img className="w-5 h-5" src={loginIcon} alt="Login Icon" /> */}
-        <svg
+        {/* <svg
           width="20"
           height="30"
           viewBox="0 0 42 51"
@@ -99,16 +99,16 @@ function Login() {
             d="M0.0536779 42.4815C9.43849 42.4694 18.0983 39.3113 25.0678 33.9884V50.8427H41.6723V33.9851H25.0721C35.2176 26.2346 41.7799 13.8965 41.7799 4.28707e-06L25.0678 0C25.0678 14.0771 13.8446 25.4888 0 25.4888L1.26682e-05 42.4815H0.0536779Z"
             fill="white"
           />
-        </svg>
+        </svg> */}
 
-        <p className="font-extrabold text-2xl mt-1 text-white">onething.</p>
+        <p className="font-extrabold text-2xl mt-1 text-white">MAHAR BROTHERS.</p>
       </div>
 
       <div className="w-full max-w-xs sm:max-w-md lg:max-w-none lg:w-4/12 bg-white shadow-lg rounded-2xl p-6 sm:p-8 m-2">
 
         <div className="w-full flex flex-col gap-y-6">
           <div className=" flex flex-col gap-y-1 mb-4">
-            <p className="font-medium text-lg">Admin Log In</p>
+            <p className="font-medium text-lg">Log In</p>
             <p className="text-xs font-normal">Please Enter Your Details</p>
           </div>
 

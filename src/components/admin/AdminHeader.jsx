@@ -61,8 +61,8 @@ const dispatch = useDispatch()
               )}
             </div>
 
-            <img className="w-5 h-5" src={loginIcon} alt="Login Icon " />
-            <p className="font-bold text-[16px] mt-1 ">onething.</p>
+            {/* <img className="w-5 h-5" src={loginIcon} alt="Login Icon " /> */}
+        <p className="font-bold text-sm sm:text-lg mt-1 ">MAHAR BROTHERS.</p>
           </div>
 
           <div

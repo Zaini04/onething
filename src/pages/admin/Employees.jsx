@@ -2,10 +2,8 @@ import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SearchFilters from "../../components/global/SearchFilter";
 import { useState } from "react";
-import ClientsTable from "../../components/admin/clients/ClientsTable";
 import ExportButton from "../../components/global/ExportButton";
 import { useQuery } from "@tanstack/react-query";
-import { fetchClients, useClientDropdown } from "../../redux/actions/clientAction";
 import { fetchEmployees, useEmployeeDropdown } from "../../redux/actions/employeeAction";
 import EmployeeTable from "../../components/admin/employee/EmployeeTable";
 

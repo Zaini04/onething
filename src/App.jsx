@@ -34,6 +34,11 @@ import AddPumpBill from "./components/admin/Fuel/AddPumpBill";
 import Employees from "./pages/admin/Employees";
 import AddEmployee from "./components/admin/employee/AddEmployee";
 import EmployeesBills from "./pages/admin/EmolyeesBills";
+import Labours from "./pages/admin/Labours";
+import AddLabour from "./components/admin/labours/AddLabour";
+import LabourBills from "./pages/admin/LabourBills";
+import CompanyBills from "./pages/admin/CompanyBills";
+import AddCompanyBill from "./components/admin/companyRecords/AddCompanyBill";
 function App() {
   return (
     <>
@@ -81,6 +86,12 @@ theme="light"
               <Route path="employees" element={<Employees />} />
               <Route path="employees/add" element={<AddEmployee />} />
               <Route path="employees/edit" element={<AddEmployee />} />
+
+            </Route>
+            <Route element={<ProtectedRoute requiredMenu = "employee"/>} >
+              <Route path="labours" element={<Labours />} />
+              <Route path="labours/add" element={<AddLabour />} />
+              <Route path="labours/edit" element={<AddLabour />} />
 
             </Route>
 
@@ -141,8 +152,9 @@ theme="light"
             </Route>
             <Route element={<ProtectedRoute requiredMenu = "reports"/>} >
               <Route path ='reports/employee-bills' element={<EmployeesBills />} />
-              <Route path ='reports/reports/labour-bills' element={<Settings />} />
-              <Route path ='reports/reports/company-bills' element={<Settings />} />
+              <Route path ='reports/labour-bills' element={<LabourBills />} />
+              <Route path ='reports/company-bills' element={<CompanyBills />} />
+              <Route path ='reports/company-bill/add' element={<AddCompanyBill />} />
             </Route>
            
             <Route element={<ProtectedRoute requiredMenu = "profile"/>} >

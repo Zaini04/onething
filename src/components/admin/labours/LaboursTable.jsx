@@ -1,11 +1,23 @@
-import { useState, } from "react";
-import DeleteButton from "../../global/DeleteButton";
-import Axios from "../../../configs/api";
-import { useRef } from "react";
-import { useEffect } from "react";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { useState } from "react";
 import profile from "../../../assets/images/profileImage.jpg";
+import DeleteButton from "../../global/DeleteButton";
+import { useNavigate } from "react-router-dom";
+import { TableSkeletonRows } from "../../global/TableSkeletonRows";
+import Axios from "../../../configs/api";
+import { useEffect } from "react";
+import { useRef } from "react";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
+const statusStyles = {
+  Active:
+    "bg-[#E6F6EC] text-[#15803D] font-medium rounded-lg text-xs px-3 py-1.5 text-center border border-transparent",
+  Inactive:
+    "bg-[#EFF6FF] text-[#1D4ED8] font-medium rounded-lg text-xs px-3 py-1.5 text-center border border-transparent",
+  Blocked:
+    "bg-[#FEE2E2] text-[#DC2626] font-semibold rounded-lg text-xs px-3 py-1.5 text-center border border-transparent",
+  Deleted:
+    "bg-[#FEE2E2] text-[#DC2626] font-semibold rounded-lg text-xs px-3 py-1.5 text-center border border-transparent",
+};
 
 function SortIcon() {
   return (
@@ -21,117 +33,27 @@ function SortIcon() {
   );
 }
 
-
-
-function TableSkeletonRows({ rowsCount = 5 }) {
-  return Array.from({ length: rowsCount }).map((_, idx) => (
-    <tr key={`skeleton-${idx}`} className="animate-pulse border-b border-gray-50">
-      {/* Checkbox Column */}
-      <td className="py-4 px-5 text-center">
-        <div className="w-4 h-4 bg-gray-200 rounded mx-auto"></div>
-      </td>
-      {/* No Column */}
-      <td className="py-4 px-4">
-        <div className="h-3 w-6 bg-gray-200 rounded"></div>
-      </td>
-      {/* User Name + Image Column */}
-      <td className="py-4 px-4">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 bg-gray-200 rounded-full"></div>
-          <div className="h-3 w-24 bg-gray-200 rounded"></div>
-        </div>
-      </td>
-      {/* Email Column */}
-      <td className="py-4 px-4">
-        <div className="h-3 w-40 bg-gray-200 rounded"></div>
-      </td>
-      {/* Role Column */}
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      <td className="py-4 px-4">
-        <div className="h-3 w-16 bg-gray-200 rounded"></div>
-      </td>
-      {/* Status Column */}
-      <td className="py-4 px-4 text-center">
-        <div className="h-5 w-16 bg-gray-200 rounded-lg mx-auto"></div>
-      </td>
-      {/* Action Column */}
-      <td className="py-4 px-4 text-center">
-        <div className="flex items-center justify-center gap-2">
-          <div className="w-7 h-7 bg-gray-200 rounded-xl"></div>
-          <div className="w-7 h-7 bg-gray-200 rounded-lg"></div>
-          <div className="w-7 h-7 bg-gray-200 rounded-lg"></div>
-        </div>
-      </td>
-    </tr>
-  ));
-}
-
-
-export default function ClientRecordTable({
-  setEditedCompanyRecord,
-  companiesRecordsData,
-  isLoading,
-  page,
-  perPage,
-  setPage,
-  setPerPage,
-  totalPages,
-  totalEntries,
-  setSelectedRows
-}) {
-  // const initialData = useSelector((state) => state.entryVehicles.items);
-
+export default function LabourTable({  setEditedLabour,
+            laboursData = [],
+            isLoading,
+            page,
+            perPage,setPerPage,
+            setPage,
+            totalPages,
+          totalEntries,
+        setSelectedRows
+        }) {
   const [selected, setSelected] = useState([]);
   const [showPerPage, setShowPerPage] = useState(false);
+
   const [activeRowMenu, setActiveRowMenu] = useState(null);
 
   const menuRef = useRef(null);
 
-
-
-
-  const pageData = companiesRecordsData 
+  const navigate = useNavigate();
+  const pageData = laboursData;
   const allSelected =
-    pageData?.length > 0 && pageData.every((r) => selected.includes(r._id));
-
-  
-
-
+    pageData.length > 0 && pageData.every((r) => selected.includes(r._id));
 
   const toggleAll = () => {
     if (allSelected) {
@@ -182,36 +104,38 @@ export default function ClientRecordTable({
     return nums;
   };
 
-  
   const handleEdit = (row) => {
-    setEditedCompanyRecord(row)
+    setEditedLabour(row);
+    setActiveRowMenu(null);
+    console.log("Edit clicked for Labour:", row);
+  };
+
+  const handleView = (id) => {
+    console.log("View details for labour ID:", id);
     setActiveRowMenu(null);
   };
 
    useEffect(() => {
-    function handleClickOutside(event) {
-      
-
-      if (menuRef.current && menuRef.current.contains(event.target)) {
-        return;
+      function handleClickOutside(event) {
+        if (menuRef.current && menuRef.current.contains(event.target)) {
+          return;
+        }
+        setActiveRowMenu(null);
       }
 
-      setActiveRowMenu(null);
-    }
-
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, []);
+      document.addEventListener("click", handleClickOutside);
+      return () => document.removeEventListener("click", handleClickOutside);
+    }, []);
 
   return (
     <div className="w-full bg-white rounded-2xl py-2 px-1 border border-gray-100 shadow-sm">
       <div className="w-full mx-auto">
         <div className="bg-white rounded-xl overflow-hidden w-full">
-          <div className="overflow-x-auto max-w-full pb-10">
+          <div className="overflow-x-auto w-full ">
             <table className="w-full text-left border-collapse min-w-[1050px] table-auto">
               <thead>
                 <tr className="bg-[#F7F7F7] border-b border-gray-100">
-                  <th className="py-4 px-5 w-12 text-center">
+                  <th className="py-4 px-5 w-[50px] text-center">
                     <input
                       type="checkbox"
                       checked={allSelected}
@@ -219,131 +143,102 @@ export default function ClientRecordTable({
                       className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
                     />
                   </th>
-                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight w-16">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight">
                     No
                   </th>
-                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Date <SortIcon />
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap ">
+                    Labour Name <SortIcon />
+                  </th>
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap ">
+                    Phone Number <SortIcon />
                   </th>
                   <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Client <SortIcon />
+                    Created Date <SortIcon />
                   </th>
                   <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Client No <SortIcon />
+                    Location <SortIcon />
                   </th>
-                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Builty No <SortIcon />
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center">
+                    Status <SortIcon />
                   </th>
-                  
-                  <th className="py-4 px-4 w-16 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Sites <SortIcon />
-                  </th>
-                  <th className="py-4 px-4  w-16 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Vehicle <SortIcon />
-                  </th>
-                  <th className="py-4 px-4  text-xs w-16 font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Material <SortIcon />
-                  </th>
-                 
-                  <th className="py-4 px-4 text-xs w-16 font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Rate <SortIcon />
-                  </th>
-                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Total Sft <SortIcon />
-                  </th>
-                  <th className="py-4 w-16 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
-                    Total Rate <SortIcon />
-                  </th>
-                  <th className="py-4 w-16 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap">
+                  <th className="w-16 py-4 px-4 text-xs font-semibold text-gray-400 tracking-tight whitespace-nowrap text-center">
                     Created By <SortIcon />
                   </th>
                   <th className="py-4 px-4 text-xs w-16 font-semibold text-gray-400 tracking-tight whitespace-nowrap sticky right-0 z-10 bg-[#F7F7F7]">
                     Action
                   </th>
-
                 </tr>
               </thead>
 
               <tbody className="divide-y divide-gray-50/60">
-                {isLoading ? (
-                  <TableSkeletonRows rowsCount={perPage || 5} />
+              {isLoading ? (
+   <TableSkeletonRows rowsCount={perPage || 5} />
                 ) : pageData.length === 0 ? (
                   <tr>
-                    <td
-                      colSpan="7"
-                      className="py-8 text-center text-sm text-gray-400"
-                    >
+                    <td colSpan="9" className="py-8 text-center text-sm text-gray-400">
                       No entries found.
                     </td>
                   </tr>
-                ) : (
-                  pageData.map((row, index) => {
-                    const isRowSelected = selected.includes(row._id);
-                    
-                                        const isMenuOpen = activeRowMenu === row._id;
+                ) :(
+ pageData.map((row,index) => {
+                  const isRowSelected = selected.includes(row._id);
+                                      const isMenuOpen = activeRowMenu === row._id;
 
-                    return (
-                      <tr
-                        key={row._id}
-                        className={`transition-colors duration-150 ${isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"}`}
-                      >
-                        <td className="py-3.5 px-5 text-center">
-                          <input
-                            type="checkbox"
-                            checked={isRowSelected}
-                            onChange={() => toggleRow(row._id)}
-                            className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
+                  return (
+                    <tr
+                      key={row._id}
+                      className={`transition-colors duration-150 ${
+                        isRowSelected ? "bg-blue-50/20" : "hover:bg-gray-50/30"
+                      }`}
+                    >
+                      <td className="py-3.5 px-5 text-center">
+                        <input
+                          type="checkbox"
+                          checked={isRowSelected}
+                          onChange={() => toggleRow(row._id)}
+                          className="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
+                        />
+                      </td>
+
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 truncate">
+                        {(page - 1) * perPage + index + 1}
+                      </td>
+
+                      <td className="py-3.5 px-4">
+                        <div className="flex items-center gap-2.5 max-w-full">
+                          <img
+                            src={row?.image || profile}
+                            alt={row.name}
+                            className="w-7 h-7 rounded-full object-cover shadow-sm flex-shrink-0 ring-1 ring-gray-100"
                           />
-                        </td>
-                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800">
-                          {(page - 1) * perPage + index + 1}
-                        </td>
-                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide select-none">
-{new Date(row.date).toLocaleDateString()}
-                        </td>
-                          <td className="py-3.5 px-4">
-                                                  <div className="flex items-center gap-2.5">
-                                                    <img
-                                                      src={profile}
-                                                      alt={row.client?.name}
-                                                      className="w-7 h-7 rounded-full object-cover shadow-sm ring-1 ring-gray-100"
-                                                    />
-                                                    <span className="text-[12px] font-normal text-gray-800 whitespace-nowrap">
-                                                      {row.client?.name}
-                                                    </span>
-                                                  </div>
-                                                </td>
-                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide select-none">
-                       {row.client?.phoneNumber}
-                        </td>
-                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide select-none">
-                       {row.biltyNo}
-                        </td>
-                        
-                        <td className="py-3.5 px-4">
-                          <span className=" inline-block bg-[#F1F3F5] text-gray-700 text-[11px] font-medium px-2 py-1 rounded border border-gray-200/50">
-                            {row.site?.siteName}
+                          <span className="text-[12px] font-normal text-gray-800 truncate">
+                            {row.name}
                           </span>
-                        </td>
-                        <td className="py-3.5 px-4  text-[12px] font-normal text-gray-700 whitespace-nowrap">
-                          {row.vehicle?.vehicleNo}
-                        </td>
-                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                          {row.materialType}
-                        </td>
-                        
-                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                          {row.rate}
-                        </td>
-                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                            {row.totalSft} sft
-                        </td>
-                        <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700">
-                          {row.totalRate}
-                        </td>
+                        </div>
+                      </td>
 
-                        <td className="py-3.5 text-center px-4 text-[12px] font-normal text-gray-700">
-                        
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-800 tracking-wide truncate">
+                        {row.phoneNumber}
+                      </td>
+
+                      <td className="py-3.5 px-4 text-[12px] font-normal text-gray-700 truncate">
+{new Date(row.createdAt).toLocaleDateString()}
+                      </td>
+
+                      <td className="py-3.5 px-4">
+                        <span className="inline-block bg-[#F1F3F5] text-gray-700 text-[11px] font-medium px-2 py-1 rounded border border-gray-200/50 truncate max-w-full">
+                          {row.city}
+                        </span>
+                      </td>
+
+                      <td className="py-3.5  text-center">
+                        <span
+                          className={`inline-block min-w-[85px] ${statusStyles[row.status]}`}
+                        >
+                          {row.status}
+                        </span>
+                      </td>
+                      <td className="py-3.5 text-center px-4 text-[12px] font-normal text-gray-700">
                           {row.createdBy?.username || '-'}
                       </td>
 
@@ -367,50 +262,29 @@ export default function ClientRecordTable({
                               className="absolute right-12 top-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded shadow-2xl   w-32 z-[9999] flex flex-col  animation-fade-in"
                             >
                               <div className="flex flex-col items-center justify-center ">
-                          
                             <button
                               onClick={() => handleEdit(row)}
                               type="button"
-                              title="Edit Company Record"
+                              title="Edit Labour"
       className="inline-block text-left cursor-pointer px-2 py-2 text-xs font-medium text-blue-500 hover:bg-blue-200/50 border-b border-gray-300 w-full"
                             >
                               Edit
-                              {/* <svg
-                                className="w-3.5 h-3.5"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth={2.5}
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                                />
-                              </svg> */}
                             </button>
 
                             <DeleteButton
                               row={row}
-                              deleteFn={(id) => Axios.delete(`/company-records/entry/${id}`)}
-                              queryKey="company-records"
-                              title="Delete Company Record"
+                              deleteFn={(id) => Axios.delete(`/labour/${id}`)}
+                              queryKey="labours"
+                              title="Delete Labour"
                             />
                           </div>
 
                             </div>)}
-
-
-
-                          
-                          
-                          
                         </td>
-                        
-                      </tr>
-                    );
-                  })
-                )}
+                    </tr>
+                  );
+                })
+              )}
               </tbody>
             </table>
           </div>
@@ -484,7 +358,7 @@ export default function ClientRecordTable({
             </div>
 
             <div className="flex items-center gap-4 text-xs text-gray-400 font-medium w-full sm:w-auto justify-between sm:justify-end">
-           <span>
+             <span>
                 {isLoading ? (
                   "Loading entries..."
                 ) : (
